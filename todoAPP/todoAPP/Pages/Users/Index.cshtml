@@ -1,0 +1,18 @@
+﻿@page
+@model todoAPP.Pages.Users.IndexModel
+@{
+}
+
+
+<table>
+    <tbody>
+        @foreach(var obj in Model.Users)
+        {
+                <tr>
+                    <td>@obj.ID</td>
+                    <td>@obj.Username</td>
+                    <td>@obj.Nickname</td>
+                </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,37 @@
+﻿@page
+@model todoAPP.Pages.TodoList.IndexModel
+
+<form method="post">
+    <input asp-for="TodoForm.Text" />
+    <button type="submit" asp-page-handler="TodoForm">新增</button>
+    @*<input type="submit" />*@
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                狀態
+            </th>
+            <th>
+                事項
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var obj in Model.TodoList)
+        {
+            <tr>
+                @if (@obj.Status == 1)
+                {
+                    <td>已完成</td>
+                }
+                else
+                {
+                    <td>未完成</td>
+                }
+                <td>@obj.Text</td>
+            </tr>
+        }
+    </tbody>
+</table>
