@@ -76,7 +76,7 @@ namespace todoAPP.Pages.API
 
 
             var t = _db.TodoList.Add(todoForm);
-            _db.SaveChangesAsync();
+            _db.SaveChanges();
             return new JsonResult(t.Entity);
         }
 
@@ -98,7 +98,7 @@ namespace todoAPP.Pages.API
                 entity.Status = 0;
             }
 
-            _db.SaveChangesAsync();
+            _db.SaveChanges();
             return new JsonResult(entity);
         }
 
@@ -113,8 +113,7 @@ namespace todoAPP.Pages.API
             else
             {
                 _db.TodoList.Remove(entity);
-                _db.SaveChangesAsync();
-
+                _db.SaveChanges();
             }
 
             return new JsonResult(entity);
