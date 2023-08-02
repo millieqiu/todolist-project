@@ -23,6 +23,30 @@ namespace todoAPP.Pages.API
             _db = db;
         }
 
+        [HttpGet]
+        public IActionResult ListAll(int lastId)
+        {
+            int count = _db.TodoList.Count();
+            List<Todo> list = _db.TodoList.OrderBy(x => x.ID).ToList();
+
+            return new JsonResult(list);
+        }
+
+        [HttpGet]
+        public IActionResult Pagination(int lastId)
+        {
+            int count = _db.TodoList.Count();
+            List<Todo> list = _db.TodoList.OrderBy(x => x.ID)
+                .Where(x => x.ID > lastId)
+                .Take(10).ToList();
+            PagenationResponse response = new PagenationResponse();
+            response.LastId = lastId;
+            response.NumOfPages = count / 10 + 1;
+            response.List = list;
+
+            return new JsonResult(response);
+        }
+
         [HttpPost]
         public IActionResult Create([FromForm] Todo todoForm)
         {
@@ -32,9 +56,9 @@ namespace todoAPP.Pages.API
             }
 
 
-            _db.TodoList.AddAsync(todoForm);
+            var t = _db.TodoList.Add(todoForm);
             _db.SaveChangesAsync();
-            return new JsonResult(todoForm);
+            return new JsonResult(t.Entity);
         }
 
         [HttpPut]
@@ -46,7 +70,7 @@ namespace todoAPP.Pages.API
                 return BadRequest();
             }
 
-            if(entity.Status == 0)
+            if (entity.Status == 0)
             {
                 entity.Status = 1;
             }
@@ -76,6 +100,14 @@ namespace todoAPP.Pages.API
 
             return new JsonResult(entity);
         }
+
+        public class PagenationResponse
+        {
+            public int LastId { get; set; }
+            public int NumOfPages { get; set; }
+            public List<Todo> List { get; set; }
+        }
+
     }
 }
 
