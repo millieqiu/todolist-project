@@ -26,7 +26,7 @@ namespace todoAPP.Pages.API
         [HttpPost]
         public IActionResult Create([FromForm] Todo todoForm)
         {
-            if(_db.TodoList.Find(todoForm.UserId) == null)
+            if (_db.TodoList.Find(todoForm.UserId) == null)
             {
                 return BadRequest();
             }
@@ -38,6 +38,23 @@ namespace todoAPP.Pages.API
         }
 
 
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var entity = _db.TodoList.Find(id);
+            if (entity == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                _db.TodoList.Remove(entity);
+                _db.SaveChangesAsync();
+
+            }
+
+            return new JsonResult(entity);
+        }
     }
 }
 
