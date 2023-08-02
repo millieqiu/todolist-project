@@ -1,0 +1,79 @@
+﻿@page
+@model todoAPP.Pages.TodoPageModel
+@{
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="CSS/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/c31150b190.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <!-- Header 樣式 -->
+    <header class="header">
+        <a href="">
+            <h1 class="h1 brand-color-main">TO DO LIST</h1>
+        </a>
+        <button class="button-sm button-outlined">登出</button>
+    </header>
+
+    <!-- Main 區塊 -->
+    <section class="section">
+        <div class="main flex-center">
+            <h2 class="h2 brand-color-drak"><span id="user_name"></span>，使用 To-do 規劃美好的一天。</h2>
+            <div class="list-container">
+                <form action="">
+                    <div class="add-container">
+                        <input type="text" class="add-input paragraph1 gray-03" placeholder="添加你的待辦事項...">
+                        <button class="button-mid button-primary">新增</button>
+                    </div>
+                </form>
+                <div class="list">
+                    <div class="task">
+                        <label class="task-content">
+                            <input type="checkbox" name="" id="" class="checkbox">
+                            <span class="gray-01 paragraph1" for="">我是一個待辦事項的範例</span>
+                        </label>
+                 
+                        <div class="icon">
+                            <i class="fa-solid fa-trash gray-04"></i>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <label class="task-content">
+                            <input type="checkbox" name="" id="" class="checkbox">
+                            <span class="gray-01 paragraph1" for="">我是一個待辦事項的範例</span>
+                        </label>
+                        
+                        <div class="icon">
+                            <i class="fa-solid fa-trash gray-04"></i>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <label class="task-content">
+                            <input type="checkbox" name="" id="" class="checkbox">
+                            <span class="gray-01 paragraph1" for="">我是一個待辦事項的範例</span>
+                        </label>
+                        
+                        <div class="icon">
+                            <i class="fa-solid fa-trash gray-04"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="pagination" class="pagenumbers"></div>
+        </div>
+
+    </section>
+
+</body>
+
+</html>

@@ -1,0 +1,316 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=El+Messiri:wght@700&display=swap');
+
+html,
+body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 100%;
+    font-family: 'El Messiri', 'Noto Sans TC', sans-serif;
+    background-color: #FAFAFA;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-section {
+    width: 100%;
+    background-color: #FFF;
+    margin-bottom: 120px;
+}
+
+.section {
+    padding: 0px 312px;
+}
+
+/* Header */
+.header {
+    width: 100%;
+    padding: 12px 312px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #FFF;
+    margin-bottom: 120px;
+}
+
+    .header a {
+        text-decoration: none;
+    }
+
+/* Main */
+.main {
+    width: 100%;
+}
+
+/* 登陸頁 */
+.form-container {
+    width: 100%;
+    background-color: #FFF;
+    border-radius: 16px;
+    box-shadow: 1px 1px 25px 0px rgba(42, 42, 42, 0.12);
+}
+
+    .form-container form {
+        margin: 64px 48px;
+        gap: 48px;
+    }
+
+.input-container {
+    gap: 24px;
+}
+
+    .input-container div {
+        gap: 8px;
+    }
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+}
+
+/* TO-DO 頁 */
+
+.list-container {
+    width: 100%;
+    margin-top: 48px;
+    margin-bottom: 36px;
+    padding: 64px 48px;
+    background-color: #EDF1F5;
+    box-shadow: 1px 1px 8px 0px rgba(42, 42, 42, 0.08);
+}
+
+.add-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.add-input {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #3397CF;
+    padding: 24px 12px;
+    background: #FFF;
+}
+
+.list {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.task-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.task {
+    padding: 24px;
+    background-color: #FAFAFA;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon {
+    padding: 6px 8px;
+    border-radius: 4px;
+}
+
+    .icon:hover {
+        background-color: #FFE4E4;
+    }
+
+        .icon:hover .fa-trash {
+            color: #F14040;
+        }
+
+/* Pagination 樣式 */
+.pagenumbers {
+    margin-top: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+    .pagenumbers li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+        padding: 10px;
+        appearance: none;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        margin: 1px;
+        transition: 0.5s;
+        color: #3397CF;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .pagenumbers li:hover,
+        .pagenumbers li.active {
+            background-color: #3397CF;
+        }
+
+/* checkbox 樣式 */
+.checkbox {
+    height: 20px;
+    width: 20px;
+}
+
+    .checkbox:checked + span {
+        text-decoration: line-through;
+        color: #A0A0A0;
+    }
+
+
+/* input 樣式 */
+.input {
+    padding: 16px 12px;
+    border-radius: 8px;
+    border: 1px solid #C7C7C7;
+}
+
+    .input:focus {
+        outline: none;
+        border: 1px solid #676767;
+    }
+
+
+/* 文字設定 */
+.h1 {
+    font-size: 42px;
+    margin: 0;
+}
+
+.h2 {
+    font-family: 'Noto Sans TC';
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 120%;
+    margin: 0;
+}
+
+.h6 {
+    font-family: 'Noto Sans TC';
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 150%;
+}
+
+.paragraph1 {
+    font-family: 'Noto Sans TC';
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.paragraph2 {
+    font-family: 'Noto Sans TC';
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+/* 色彩樣式 */
+.brand-color-main {
+    color: #3397CF;
+}
+
+.brand-color-drak {
+    color: #00324E;
+}
+
+.brand-color-light {
+    color: #EDF1F5;
+}
+
+.gray-01 {
+    color: #2A2A2A;
+}
+
+.gray-02 {
+    color: #676767;
+}
+
+.gray-03 {
+    color: #A0A0A0;
+}
+
+.gray-04 {
+    color: #C7C7C7;
+}
+
+.gray-05 {
+    color: #FAFAFA;
+}
+
+/* 按鈕樣式 */
+.button-lg {
+    padding: 16px 180px;
+    border-radius: 8px;
+}
+
+.button-mid {
+    padding: 24px 36px;
+    border-radius: 8px;
+}
+
+.button-sm {
+    padding: 16px 24px;
+    border-radius: 8px;
+}
+
+.button-primary {
+    background-color: #3397CF;
+    border: #3397CF;
+    color: #FAFAFA;
+}
+
+    .button-primary:hover {
+        background-color: #00324E;
+        border: #00324E;
+        color: #FAFAFA;
+    }
+
+.button-outlined {
+    background-color: transparent;
+    border: 1px solid #00324E;
+    color: #00324E;
+}
+
+    .button-outlined:hover {
+        background-color: #EDF1F5;
+        border: 1px solid #00324E;
+        color: #00324E;
+    }
+
+
+/* 排版樣式 */
+.flex-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.title-mb {
+    margin-bottom: 48px;
+}
