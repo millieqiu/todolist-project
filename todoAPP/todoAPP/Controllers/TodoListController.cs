@@ -5,8 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using todoAPP.Models;
 using todoAPP.ViewModel;
+using static System.Net.Mime.MediaTypeNames;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,23 +27,39 @@ namespace todoAPP.Pages.API
         }
 
         [HttpGet]
-        public IActionResult ListAll(int lastId)
+        public IActionResult ListAll()
         {
-            int count = _db.TodoList.Count();
-            List<Todo> list = _db.TodoList.OrderBy(x => x.ID).ToList();
+            List<TodoViewModel> list = _db.TodoList
+                .Select(x => new TodoViewModel
+                {
+                    ID = x.ID,
+                    Status = x.Status,
+                    Text = x.Text
+                })
+                .ToList();
 
             return new JsonResult(list);
         }
 
         [HttpGet]
-        public IActionResult Pagination(int lastId)
+        public IActionResult Pagination(int page)
         {
+            if (page < 1)
+            {
+                page = 1;
+            }
             int count = _db.TodoList.Count();
-            List<Todo> list = _db.TodoList.OrderBy(x => x.ID)
-                .Where(x => x.ID > lastId)
-                .Take(10).ToList();
+            List<TodoViewModel> list = _db.TodoList
+                .Select(x => new TodoViewModel
+                {
+                    ID = x.ID,
+                    Status = x.Status,
+                    Text = x.Text
+                })
+                .Skip((page - 1) * 10)
+                .Take(10)
+                .ToList();
             PagenationResponse response = new PagenationResponse();
-            response.LastId = lastId;
             response.NumOfPages = count / 10 + 1;
             response.List = list;
 
