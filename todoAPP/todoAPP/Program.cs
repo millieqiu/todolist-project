@@ -12,6 +12,8 @@ public class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
 
+        builder.Services.AddControllers();
+
         builder.Services.AddDbContext<DataContext>(options =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("TodoDbConnection"));
@@ -35,6 +37,12 @@ public class Program
         app.UseAuthorization();
 
         app.MapRazorPages();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorPages();
+            endpoints.MapControllers();
+        });
 
         app.Run();
     }
