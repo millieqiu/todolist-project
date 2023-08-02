@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 using todoAPP.Models;
+using todoAPP.ViewModel;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -99,13 +100,6 @@ namespace todoAPP.Pages.API
             }
 
             return new JsonResult(entity);
-        }
-
-        public class PagenationResponse
-        {
-            public int LastId { get; set; }
-            public int NumOfPages { get; set; }
-            public List<Todo> List { get; set; }
         }
 
     }
