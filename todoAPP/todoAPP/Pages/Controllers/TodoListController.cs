@@ -37,6 +37,27 @@ namespace todoAPP.Pages.API
             return new JsonResult(todoForm);
         }
 
+        [HttpPut]
+        public IActionResult ChangeStatus([FromForm] int id)
+        {
+            Todo? entity = _db.TodoList.Find(id);
+            if (entity == null)
+            {
+                return BadRequest();
+            }
+
+            if(entity.Status == 0)
+            {
+                entity.Status = 1;
+            }
+            else
+            {
+                entity.Status = 0;
+            }
+
+            _db.SaveChangesAsync();
+            return new JsonResult(entity);
+        }
 
         [HttpDelete]
         public IActionResult Delete(int id)
