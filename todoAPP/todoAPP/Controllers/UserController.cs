@@ -7,6 +7,11 @@ using todoAPP.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 using todoAPP.ViewModel;
+using System.Text;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace todoAPP.Pages.Controllers
 {
@@ -20,6 +25,47 @@ namespace todoAPP.Pages.Controllers
         public UserController(DataContext db)
         {
             _db = db;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login([FromForm] LoginViewModel loginForm)
+        {
+            User? user = _db.Users
+                .Where(x => x.Username == loginForm.Username)
+                .SingleOrDefault();
+            if (user == null)
+            {
+                return BadRequest("User dosen't exists.");
+            }
+
+            byte[] salt = Convert.FromBase64String(user.Salt);
+            string derivedPassword = PasswordGenerator(loginForm.Password, salt);
+
+            bool equal = KeyDerivation.Equals(user.Password, derivedPassword);
+            if(equal == false)
+            {
+                return BadRequest("Validation error.");
+            }
+
+            var claims = new List<Claim>() {
+                new Claim(ClaimTypes.Sid,user.ID.ToString()), //使用者ID
+                new Claim(ClaimTypes.Name,user.Username)  //使用者名稱
+            };
+
+            var identity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
+            var userPrincipal = new ClaimsPrincipal(identity);
+            var props = new AuthenticationProperties();
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal, props);
+
+            return Ok("Login success");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return Ok("Logout success");
         }
 
         [HttpPost]

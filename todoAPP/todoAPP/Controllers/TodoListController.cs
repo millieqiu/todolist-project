@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using todoAPP.Models;
@@ -14,6 +15,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace todoAPP.Pages.API
 {
+    [Authorize]
     [ApiController]
     [Route("/api/[controller]/[action]")]
     public class TodoListController : Controller

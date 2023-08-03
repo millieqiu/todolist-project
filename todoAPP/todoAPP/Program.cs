@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using todoAPP.Models;
 
 namespace todoAPP;
@@ -19,6 +21,16 @@ public class Program
             options.UseSqlServer(builder.Configuration.GetConnectionString("TodoDbConnection"));
         });
 
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(
+            options =>
+            {
+                options.LoginPath = "/Index";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+                options.SlidingExpiration = true;
+            }
+            );
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -34,6 +46,7 @@ public class Program
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapRazorPages();
