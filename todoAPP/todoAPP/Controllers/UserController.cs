@@ -54,6 +54,7 @@ namespace todoAPP.Pages.Controllers
 
             var identity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
             var userPrincipal = new ClaimsPrincipal(identity);
+            Thread.CurrentPrincipal = userPrincipal;
             var props = new AuthenticationProperties();
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal, props);
 

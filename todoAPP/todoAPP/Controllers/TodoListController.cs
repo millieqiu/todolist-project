@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +34,7 @@ namespace todoAPP.Pages.API
         public IActionResult ListAll()
         {
             List<TodoViewModel> list = _db.TodoList
+                .Where(x => x.UserId == GetUserId())
                 .Select(x => new TodoViewModel
                 {
                     ID = x.ID,
@@ -50,21 +53,21 @@ namespace todoAPP.Pages.API
             {
                 page = 1;
             }
-            int count = _db.TodoList.Count();
+
             List<TodoViewModel> list = _db.TodoList
+                .Where(x=>x.UserId == GetUserId())
+                .Skip((page - 1) * 10)
+                .Take(10)
                 .Select(x => new TodoViewModel
                 {
                     ID = x.ID,
                     Status = x.Status,
                     Text = x.Text
-                })
-                .Skip((page - 1) * 10)
-                .Take(10)
-                .ToList();
-            PagenationResponse response = new PagenationResponse();
-            response.NumOfPages = count / 10 + 1;
-            response.List = list;
+                }).ToList();
 
+            PagenationResponse response = new PagenationResponse();
+            response.NumOfPages = list.Count() / 10 + 1;
+            response.List = list;
             return new JsonResult(response);
         }
 
@@ -76,6 +79,7 @@ namespace todoAPP.Pages.API
                 return BadRequest();
             }
 
+            todoForm.UserId = GetUserId();
 
             var t = _db.TodoList.Add(todoForm);
             _db.SaveChanges();
@@ -119,6 +123,19 @@ namespace todoAPP.Pages.API
             }
 
             return new JsonResult(entity);
+        }
+
+        private int GetUserId()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                string Sid = claims.First().Value;
+                Int32.TryParse(Sid, out int userId);
+                return userId;
+            }
+            return 0;
         }
 
     }
