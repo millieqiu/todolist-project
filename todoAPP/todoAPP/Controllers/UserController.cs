@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using todoAPP.Models;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
+using todoAPP.ViewModel;
 
 namespace todoAPP.Pages.Controllers
 {
@@ -22,17 +23,56 @@ namespace todoAPP.Pages.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register([FromForm] User userForm)
+        public IActionResult Register([FromForm] RegisterReqViewModel registerForm)
         {
-            if (_db.Users.Where(x=>x.Username == userForm.Username) != null)
+            List<User> list = _db.Users
+                .Where(x => x.Username == registerForm.Username)
+                .ToList();
+            if (list.Count > 0)
             {
                 return BadRequest("Username exist");
             }
 
+            byte[] salt = CreateSalt();
+            string derivedPassword = PasswordGenerator(registerForm.Password, salt);
 
-            var result = _db.Users.Add(userForm);
-            _db.SaveChangesAsync();
-            return new JsonResult(result.Entity);
+            User user = new User
+            {
+                Username = registerForm.Username,
+                Password = derivedPassword,
+                Nickname = registerForm.Nickname,
+                Salt = Convert.ToBase64String(salt)
+            };
+
+            var result = _db.Users.Add(user);
+            _db.SaveChanges();
+            RegisterRespViewModel respObj = new RegisterRespViewModel
+            {
+                ID = result.Entity.ID,
+                Username = result.Entity.Username,
+                Nickname = result.Entity.Nickname
+            };
+            return Ok(respObj);
+        }
+
+        private static string PasswordGenerator(string password, byte[] salt)
+        {
+            byte[] key = KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,//鹽
+                prf: KeyDerivationPrf.HMACSHA512,//偽隨機函數
+                iterationCount: 1000,//雜湊執行次數
+                numBytesRequested: 256 / 8
+                );
+            return Convert.ToBase64String(key);
+        }
+
+        private static byte[] CreateSalt()
+        {
+            byte[] randomBytes = new byte[128 / 8];
+            RandomNumberGenerator generator = RandomNumberGenerator.Create();
+            generator.GetBytes(randomBytes);
+            return randomBytes;
         }
     }
 }

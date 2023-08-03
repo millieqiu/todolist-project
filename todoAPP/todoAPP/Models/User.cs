@@ -15,6 +15,9 @@ namespace todoAPP.Models
         public string Password { get; set; }
 
         [Required]
+        public string Salt { get; set; }
+
+        [Required]
         public string Nickname { get; set; }
 	}
 }
