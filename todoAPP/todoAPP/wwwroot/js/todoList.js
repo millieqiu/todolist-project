@@ -8,6 +8,16 @@ function onClickCreateTodoItem() {
     createTodoItem(todoText);
 }
 
+function onClickDeleteTodoItem(todoID) {
+    $.ajax({
+        url: "/api/TodoList/Delete?id=" + todoID,
+        type: "DELETE",
+        success: function () {
+            getTodoList();
+        } 
+    })
+}
+
 function getUserInfo() {
     $.ajax({
         url: "/api/User/GetUserInfo",
@@ -37,7 +47,7 @@ function getTodoList(page) {
                                                 <input type="checkbox" name="" id="checkbox_item_${value.id}" class="checkbox" onclick="onChangeStatus(${value.id})" ${status}>
                                                 <span class="gray-01 paragraph1" for="">${value.text}</span>
                                             </label>
-                                            <div class="icon">
+                                            <div class="icon" id="delete_item_${value.id}" onClick="onClickDeleteTodoItem(${value.id})">
                                                 <i class="fa-solid fa-trash gray-04"></i>
                                             </div>
                                         </div>`).html();
