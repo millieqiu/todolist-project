@@ -39,7 +39,7 @@ function createTodoItem(text) {
             Text: text,
         },
         success: function (res) {
-            console.log(res);
+            getTodoList();
         }
     })
 }
