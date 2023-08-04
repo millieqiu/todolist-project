@@ -33,18 +33,18 @@
                     <input-container class="input-container flex-column">
                         <div class="flex-column">
                             <label class="paragraph2" for="">常用信箱</label>
-                            <input class="input gray-02 paragraph1" type="email" name="email" id="email"
+                            <input class="input gray-02 paragraph1" type="email" name="email" id="loginEmail"
                 pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="輸入 Email"
                 oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')" required>
                         </div>
                         <div class="flex-column">
                             <label class="paragraph2" for="">密碼</label>
-                            <input class="input gray-02 paragraph1" type="password" name="password" id="password" placeholder="輸入密碼"
+                            <input class="input gray-02 paragraph1" type="password" name="password" id="loginPassword" placeholder="輸入密碼"
                 required>
                         </div>
                     </input-container>
                     <div class="btn-container">
-                        <button class="button-lg button-primary">註冊 / 登入</button>
+                        <button class="button-lg button-primary" onClick="onClickLogin()">註冊 / 登入</button>
                     </div>
                 </form>
             </div>

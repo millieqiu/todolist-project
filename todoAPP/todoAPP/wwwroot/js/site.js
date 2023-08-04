@@ -1,33 +1,19 @@
-﻿function getTodoList() {
-    $.ajax({
-        url: "/api/TodoList/ListAll",
-        method: "get",
-        success: function (res) {
-            $.each(res, function (key, value) {
-                $('#todolist').append(`<div class="task">
-                                            <label class="task-content">
-                                                <input type="checkbox" name="" id="${value.id}" class="checkbox" onclick="onChangeStatus(${value.id})">
-                                                <span class="gray-01 paragraph1" for="">${value.text}</span>
-                                            </label>
-                                            <div class="icon">
-                                                <i class="fa-solid fa-trash gray-04"></i>
-                                            </div>
-                                        </div>`).html();
-            });
-        }
-    })
+﻿function onClickLogin() {
+    const loginEmail = document.getElementById('loginEmail').value;
+    const loginPassword = document.getElementById('loginPassword').value;
+    login(loginEmail, loginPassword);
 }
 
-function onChangeStatus(todoID) {
-    
+function login(username, password) {
     $.ajax({
-        url: "/api/TodoList/ChangeStatus",
-        method: "put",
+        url: "/api/User/Login",
+        method: "post",
         data: {
-            id: todoID,
+            Username: username,
+            Password: password,
         },
         success: function (res) {
-            //console.log(res);
+            window.location.replace("/TodoPage");
         }
     })
 }
