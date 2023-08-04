@@ -4,6 +4,10 @@
     login(loginEmail, loginPassword);
 }
 
+function onClickLogout() {
+    logout();
+}
+
 function login(username, password) {
     $.ajax({
         url: "/api/User/Login",
@@ -14,6 +18,16 @@ function login(username, password) {
         },
         success: function (res) {
             window.location.replace("/TodoPage");
+        }
+    })
+}
+
+function logout() {
+    $.ajax({
+        url: "/api/User/Logout",
+        method: "post",
+        success: function (res) {
+            window.location.replace("/Index");
         }
     })
 }
