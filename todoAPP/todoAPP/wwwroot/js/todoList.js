@@ -1,10 +1,21 @@
 ﻿window.onload = function () {
+    getUserInfo();
     getTodoList();
 }
 
 function onClickCreateTodoItem() {
     const todoText = document.getElementById('todoText').value;
     createTodoItem(todoText);
+}
+
+function getUserInfo() {
+    $.ajax({
+        url: "/api/User/GetUserInfo",
+        method: "get",
+        success: function (res) {
+            $('#user_name').html(res.nickname);
+        }
+    })
 }
 
 function getTodoList(page) {

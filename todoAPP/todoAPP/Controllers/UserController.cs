@@ -55,7 +55,8 @@ namespace todoAPP.Pages.Controllers
 
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.Sid,user.ID.ToString()), //使用者ID
-                new Claim(ClaimTypes.Name,user.Username)  //使用者名稱
+                new Claim(ClaimTypes.NameIdentifier,user.Username),  //使用者名稱
+                new Claim(ClaimTypes.Name,user.Nickname)  //使用者名稱
             };
 
             var identity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
@@ -64,7 +65,37 @@ namespace todoAPP.Pages.Controllers
             var props = new AuthenticationProperties();
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal, props);
 
-            return Ok("Login success");
+            UserInfoViewModel respObj = new UserInfoViewModel
+            {
+                ID = user.ID,
+                Username = user.Username,
+                Nickname = user.Nickname
+            };
+            return Ok(respObj);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                string Sid = claims.First().Value;
+                string username = claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+                string nickname = claims.First(x => x.Type == ClaimTypes.Name).Value;
+                Int32.TryParse(Sid, out int userId);
+
+                UserInfoViewModel info = new UserInfoViewModel()
+                {
+                    ID = userId,
+                    Username = username,
+                    Nickname = nickname,
+                };
+                return Ok(info);
+            }
+            return BadRequest();
         }
 
         [Authorize]
@@ -99,7 +130,7 @@ namespace todoAPP.Pages.Controllers
 
             var result = _db.Users.Add(user);
             _db.SaveChanges();
-            RegisterRespViewModel respObj = new RegisterRespViewModel
+            UserInfoViewModel respObj = new UserInfoViewModel
             {
                 ID = result.Entity.ID,
                 Username = result.Entity.Username,

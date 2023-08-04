@@ -9,14 +9,5 @@ namespace todoAPP.ViewModel
 
         public string Nickname { get; set; }
     }
-
-    public class RegisterRespViewModel
-    {
-        public int ID { get; set; }
-
-        public string Username { get; set; }
-
-        public string Nickname { get; set; }
-    }
 }
 
