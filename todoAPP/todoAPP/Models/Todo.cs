@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace todoAPP.Models
 {
@@ -17,7 +18,8 @@ namespace todoAPP.Models
         [StringLength(100)]
         public string Text { get; set; }
 
-        public User User { get; set; }
+        [JsonIgnore]
+        public User? User { get; set; }
     }
 }
 

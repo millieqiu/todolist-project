@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using todoAPP.Models;
 using todoAPP.ViewModel;
 using static System.Net.Mime.MediaTypeNames;
@@ -74,12 +75,13 @@ namespace todoAPP.Pages.API
         [HttpPost]
         public IActionResult Create([FromForm] Todo todoForm)
         {
-            if (_db.TodoList.Find(todoForm.User.ID) == null)
+            User? user = _db.Users.Find(GetUserId());
+            if (user == null)
             {
                 return BadRequest();
             }
 
-            todoForm.User.ID = GetUserId();
+            todoForm.User = user;
 
             var t = _db.TodoList.Add(todoForm);
             _db.SaveChanges();

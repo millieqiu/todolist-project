@@ -2,6 +2,11 @@
     getTodoList();
 }
 
+function onClickCreateTodoItem() {
+    const todoText = document.getElementById('todoText').value;
+    createTodoItem(todoText);
+}
+
 function getTodoList() {
     $.ajax({
         url: "/api/TodoList/ListAll",
@@ -18,6 +23,19 @@ function getTodoList() {
                                             </div>
                                         </div>`).html();
             });
+        }
+    })
+}
+
+function createTodoItem(text) {
+    $.ajax({
+        url: "/api/TodoList/Create",
+        method: "post",
+        data: {
+            Text: text,
+        },
+        success: function (res) {
+            console.log(res);
         }
     })
 }
