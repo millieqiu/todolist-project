@@ -27,6 +27,10 @@ function getTodoList(page) {
         method: "get",
         success: function (res) {
             $('#todolist').html("");
+            $('#pagination').html("");
+            for (let i = 1; i <= res.numOfPages; i++) {
+                $('#pagination').append(`<li onClick="getTodoList(${i})">${i}</li>`)
+            }
             $.each(res.list, function (key, value) {
                 let status = "";
                 if (value.status == 1) {
