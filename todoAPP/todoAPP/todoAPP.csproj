@@ -9,11 +9,9 @@
   <ItemGroup>
     <None Remove="Models\" />
     <None Remove="Pages\Users\" />
-    <None Remove="Pages\TodoList\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Pages\TodoList\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />

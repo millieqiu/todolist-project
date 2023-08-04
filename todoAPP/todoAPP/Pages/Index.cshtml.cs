@@ -12,9 +12,16 @@ public class IndexModel : PageModel
         _logger = logger;
     }
 
-    public void OnGet()
+    public async Task<IActionResult> OnGet()
     {
-
+        if (User.Identity.IsAuthenticated)
+        {
+            return Redirect("/TodoPage");
+        }
+        else
+        {
+            return Page();
+        }
     }
 }
 
