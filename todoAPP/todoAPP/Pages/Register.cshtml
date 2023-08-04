@@ -32,11 +32,17 @@
                     <input-container class="input-container flex-column">
                         <div class="flex-column">
                             <label class="paragraph2" for="">姓名 / 暱稱</label>
-                            <input class="input gray-02 paragraph1" type="text" name="name" id="name" placeholder="輸入姓名或暱稱" required>
+                            <input class="input gray-02 paragraph1" type="text" name="name" id="registerName" placeholder="輸入姓名或暱稱" required>
+                        </div>
+                        <div class="flex-column">
+                            <label class="paragraph2" for="">常用信箱</label>
+                            <input class="input gray-02 paragraph1" type="email" name="email" id="registerEmail"
+                                   pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="輸入 Email"
+                                   oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')" required>
                         </div>
                         <div class="flex-column">
                             <label class="paragraph2" for="">設定密碼</label>
-                            <input class="input gray-02 paragraph1" type="password" name="password" id="password"
+                            <input class="input gray-02 paragraph1" type="password" name="password" id="registerPassword"
                                    placeholder="請設定輸入密碼" pattern="[a-zA-Z0-9]{8,}" oninput="setCustomValidity('');"
                                    oninvalid="setCustomValidity('請使用英數且至少八個字元')" required>
                         </div>
@@ -49,7 +55,7 @@
                         </div>
                     </input-container>
                     <div class="btn-container">
-                        <button class="button-lg button-primary">下一步</button>
+                        <button class="button-lg button-primary" onclick="onClickRegister()">下一步</button>
                     </div>
                 </form>
             </div>

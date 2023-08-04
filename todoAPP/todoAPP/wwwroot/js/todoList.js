@@ -7,12 +7,16 @@ function onClickCreateTodoItem() {
     createTodoItem(todoText);
 }
 
-function getTodoList() {
+function getTodoList(page) {
+    if (page == undefined) {
+        page = 1;
+    }
     $.ajax({
-        url: "/api/TodoList/ListAll",
+        url: "/api/TodoList/Pagination?page="+page,
         method: "get",
         success: function (res) {
-            $.each(res, function (key, value) {
+            $('#todolist').html("");
+            $.each(res.list, function (key, value) {
                 let status = "";
                 if (value.status == 1) {
                     status = "checked";

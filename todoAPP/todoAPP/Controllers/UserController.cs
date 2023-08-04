@@ -35,7 +35,13 @@ namespace todoAPP.Pages.Controllers
                 .SingleOrDefault();
             if (user == null)
             {
-                return BadRequest("User dosen't exists.");
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "Login",
+                    status = 1,
+                    errMsg = "User dosen't exists.",
+                };
+                return BadRequest(err);
             }
 
             byte[] salt = Convert.FromBase64String(user.Salt);
