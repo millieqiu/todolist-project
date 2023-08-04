@@ -5,8 +5,16 @@ namespace todoAPP.Pages
 {
     public class RegisterModel : PageModel
     {
-        public void OnGet()
+        public async Task<IActionResult> OnGet()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return Redirect("/TodoPage");
+            }
+            else
+            {
+                return Page();
+            }
         }
     }
 }
