@@ -114,7 +114,23 @@ namespace todoAPP.Pages.Controllers
                 .ToList();
             if (list.Count > 0)
             {
-                return BadRequest("Username exist");
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "Register",
+                    status = 1,
+                    errMsg = "Username is already exists",
+                };
+                return BadRequest(err);
+            }
+            else if (registerForm.Password != registerForm.ConfirmPassword)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "Register",
+                    status = 2,
+                    errMsg = "Confirmation password incorrect",
+                };
+                return BadRequest(err);
             }
 
             byte[] salt = CreateSalt();

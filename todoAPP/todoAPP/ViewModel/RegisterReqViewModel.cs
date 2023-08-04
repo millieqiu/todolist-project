@@ -7,6 +7,8 @@ namespace todoAPP.ViewModel
 
         public string Password { get; set; }
 
+        public string ConfirmPassword { get; set; }
+
         public string Nickname { get; set; }
     }
 }

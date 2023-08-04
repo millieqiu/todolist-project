@@ -12,7 +12,8 @@ function onClickRegister() {
     const registerEmail = document.getElementById('registerEmail').value;
     const registerName = document.getElementById('registerName').value;
     const registerPassword = document.getElementById('registerPassword').value;
-    register(registerEmail, registerPassword, registerName);
+    const registerConfirmPassword = document.getElementById('confirm-password').value;
+    register(registerEmail, registerPassword, registerConfirmPassword, registerName);
 }
 
 function login(username, password) {
@@ -44,18 +45,25 @@ function logout() {
     })
 }
 
-function register(username, password, nickname) {
+function register(username, password, confirmPassword, nickname) {
     $.ajax({
         url: "/api/User/Register",
         method: "post",
         data: {
             Username: username,
             Password: password,
+            ConfirmPassword: confirmPassword,
             Nickname: nickname,
-        },
+        }, 
         success: function (res) {
             window.location.replace("/Index");
+        },
+        error: function (req, status) {
+            if (req.responseJSON.service == "Register" && req.responseJSON.status == 2) {
+                alert("密碼與確認密碼不符合")
+            }
         }
+
     })
 
 }
