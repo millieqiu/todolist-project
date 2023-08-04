@@ -55,6 +55,8 @@ namespace todoAPP.Pages.API
                 page = 1;
             }
 
+            int count = _db.TodoList.Where(x => x.User.ID == GetUserId()).Count();
+
             List<TodoViewModel> list = _db.TodoList
                 .Where(x=>x.User.ID == GetUserId())
                 .Skip((page - 1) * 10)
@@ -67,7 +69,7 @@ namespace todoAPP.Pages.API
                 }).ToList();
 
             PagenationResponse response = new PagenationResponse();
-            response.NumOfPages = list.Count() / 10 + 1;
+            response.NumOfPages = count / 10 + 1;
             response.List = list;
             return new JsonResult(response);
         }
