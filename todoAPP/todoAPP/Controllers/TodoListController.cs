@@ -34,7 +34,7 @@ namespace todoAPP.Pages.API
         public IActionResult ListAll()
         {
             List<TodoViewModel> list = _db.TodoList
-                .Where(x => x.UserId == GetUserId())
+                .Where(x => x.User.ID == GetUserId())
                 .Select(x => new TodoViewModel
                 {
                     ID = x.ID,
@@ -55,7 +55,7 @@ namespace todoAPP.Pages.API
             }
 
             List<TodoViewModel> list = _db.TodoList
-                .Where(x=>x.UserId == GetUserId())
+                .Where(x=>x.User.ID == GetUserId())
                 .Skip((page - 1) * 10)
                 .Take(10)
                 .Select(x => new TodoViewModel
@@ -74,12 +74,12 @@ namespace todoAPP.Pages.API
         [HttpPost]
         public IActionResult Create([FromForm] Todo todoForm)
         {
-            if (_db.TodoList.Find(todoForm.UserId) == null)
+            if (_db.TodoList.Find(todoForm.User.ID) == null)
             {
                 return BadRequest();
             }
 
-            todoForm.UserId = GetUserId();
+            todoForm.User.ID = GetUserId();
 
             var t = _db.TodoList.Add(todoForm);
             _db.SaveChanges();
