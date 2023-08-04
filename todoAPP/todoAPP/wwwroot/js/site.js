@@ -13,9 +13,21 @@
                                                 <i class="fa-solid fa-trash gray-04"></i>
                                             </div>
                                         </div>`).html();
-
-                return res;
             });
+        }
+    })
+}
+
+function onChangeStatus(todoID) {
+    
+    $.ajax({
+        url: "/api/TodoList/ChangeStatus",
+        method: "put",
+        data: {
+            id: todoID,
+        },
+        success: function (res) {
+            //console.log(res);
         }
     })
 }
