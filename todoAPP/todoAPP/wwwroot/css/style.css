@@ -51,6 +51,7 @@ body {
     background-color: #FFF;
     border-radius: 16px;
     box-shadow: 1px 1px 25px 0px rgba(42, 42, 42, 0.12);
+    margin-bottom: 60px;
 }
 
     .form-container form {

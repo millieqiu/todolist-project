@@ -32,11 +32,20 @@
                     <input-container class="input-container flex-column">
                         <div class="flex-column">
                             <label class="paragraph2" for="">姓名 / 暱稱</label>
-                            <input class="input gray-02 paragraph1" type="text" name="" id="" placeholder="輸入姓名或暱稱">
+                            <input class="input gray-02 paragraph1" type="text" name="name" id="name" placeholder="輸入姓名或暱稱" required>
+                        </div>
+                        <div class="flex-column">
+                            <label class="paragraph2" for="">設定密碼</label>
+                            <input class="input gray-02 paragraph1" type="password" name="password" id="password"
+                                   placeholder="請設定輸入密碼" pattern="[a-zA-Z0-9]{8,}" oninput="setCustomValidity('');"
+                                   oninvalid="setCustomValidity('請使用英數且至少八個字元')" required>
                         </div>
                         <div class="flex-column">
                             <label class="paragraph2" for="">確認密碼</label>
-                            <input class="input gray-02 paragraph1" type="password" name="" id="" placeholder="請再次輸入密碼">
+                            <input class="input gray-02 paragraph1" type="password" name="password" id="confirm-password"
+                                   placeholder="請再次輸入密碼" oninput="setCustomValidity('');"
+                                   onchange="if(document.getElementById('password').value != document.getElementById('confirm-password').value){setCustomValidity('密碼不符合');}"
+                                   required>
                         </div>
                     </input-container>
                     <div class="btn-container">
