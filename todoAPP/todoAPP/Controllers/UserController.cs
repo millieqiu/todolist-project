@@ -71,13 +71,7 @@ namespace todoAPP.Pages.Controllers
             var props = new AuthenticationProperties();
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal, props);
 
-            UserInfoViewModel respObj = new UserInfoViewModel
-            {
-                ID = user.ID,
-                Username = user.Username,
-                Nickname = user.Nickname
-            };
-            return Ok(respObj);
+            return Ok();
         }
 
         [Authorize]
@@ -109,7 +103,7 @@ namespace todoAPP.Pages.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return Ok("Logout success");
+            return Ok();
         }
 
         [HttpPost]
@@ -152,13 +146,8 @@ namespace todoAPP.Pages.Controllers
 
             var result = _db.Users.Add(user);
             _db.SaveChanges();
-            UserInfoViewModel respObj = new UserInfoViewModel
-            {
-                ID = result.Entity.ID,
-                Username = result.Entity.Username,
-                Nickname = result.Entity.Nickname
-            };
-            return Ok(respObj);
+
+            return Ok();
         }
 
         private static string PasswordGenerator(string password, byte[] salt)
