@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,7 +50,13 @@ namespace todoAPP.Pages.Controllers
             bool equal = KeyDerivation.Equals(user.Password, derivedPassword);
             if(equal == false)
             {
-                return BadRequest("Validation error.");
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "Login",
+                    status = 2,
+                    errMsg = "Validation error.",
+                };
+                return BadRequest(err);
             }
 
             var claims = new List<Claim>() {

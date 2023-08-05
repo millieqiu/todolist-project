@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -80,7 +80,13 @@ namespace todoAPP.Pages.API
             User? user = _db.Users.Find(GetUserId());
             if (user == null)
             {
-                return BadRequest();
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "CreateTodoItem",
+                    status = 1,
+                    errMsg = "User dosen't exists.",
+                };
+                return BadRequest(err);
             }
 
             todoForm.User = user;
@@ -96,7 +102,13 @@ namespace todoAPP.Pages.API
             Todo? entity = _db.TodoList.Find(id);
             if (entity == null)
             {
-                return BadRequest();
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "EditTodoItem",
+                    status = 1,
+                    errMsg = $"Item id={id} not found",
+                };
+                return BadRequest(err);
             }
 
             if (entity.Status == 0)
@@ -118,7 +130,13 @@ namespace todoAPP.Pages.API
             var entity = _db.TodoList.Find(id);
             if (entity == null)
             {
-                return BadRequest();
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "EditTodoItem",
+                    status = 1,
+                    errMsg = $"Item id={id} not found",
+                };
+                return BadRequest(err);
             }
             else
             {
