@@ -30,7 +30,7 @@ function login(username, password) {
         contentType: "application/json; charset=utf-8",
         data: userInfo,
         success: function (res) {
-            window.location.replace("/TodoPage");
+            window.location.assign("/TodoPage");
         },
         error: function (req, status) {
             if (req.responseJSON.service == "Login" && req.responseJSON.status == 1) {
@@ -63,7 +63,8 @@ function register(username, password, confirmPassword, nickname) {
         contentType: "application/json; charset=utf-8",
         data: userInfo, 
         success: function (res) {
-            window.location.replace("/Index");
+            alert("註冊成功！");
+            window.location.assign("/Index");
         },
         error: function (req, status) {
             if (req.responseJSON.service == "Register" && req.responseJSON.status == 2) {
