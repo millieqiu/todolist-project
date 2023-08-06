@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model todoAPP.Pages.TodoPageModel
 @{
     ViewData["Title"] = "My To-do List";
@@ -10,10 +10,10 @@
         <div class="main flex-center">
             <h2 class="h2 brand-color-drak"><span id="user_name"></span>，使用 To-do 規劃美好的一天。</h2>
             <div class="list-container">
-                <form action="">
+                <form method="post" action="" onsubmit="onClickCreateTodoItem(event)">
                     <div class="add-container">
                         <input type="text" class="add-input paragraph1 gray-03" id="todoText" placeholder="添加你的待辦事項...">
-                        <button class="button-mid button-primary" onClick="onClickCreateTodoItem()">新增</button>
+                        <button class="button-mid button-primary">新增</button>
                     </div>
                 </form>
                 <div class="list" id="todolist">

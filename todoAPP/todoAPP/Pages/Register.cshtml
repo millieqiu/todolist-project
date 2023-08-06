@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model todoAPP.Pages.RegisterModel
 @{
 
@@ -9,7 +9,7 @@
     <section class="section">
         <div class="main flex-center">
             <div class="form-container flex-column">
-                <form class="flex-column" action="">
+                <form class="flex-column" method="post" action="" onsubmit="onClickRegister(event)">
                     <h2 class="h2 brand-color-drak">初次見面，很高興認識你 :)</h2>
                     <input-container class="input-container flex-column">
                         <div class="flex-column">
@@ -39,7 +39,7 @@
                         </div>
                     </input-container>
                     <div class="btn-container">
-                        <button class="button-lg button-primary" onclick="onClickRegister()">下一步</button>
+                        <button class="button-lg button-primary">下一步</button>
                     </div>
                 </form>
             </div>
