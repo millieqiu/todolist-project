@@ -44,7 +44,7 @@ namespace todoAPP.Pages.API
                 })
                 .ToList();
 
-            return new JsonResult(list);
+            return Ok(list);
         }
 
         [HttpGet]
@@ -71,7 +71,7 @@ namespace todoAPP.Pages.API
             PagenationResponse response = new PagenationResponse();
             response.NumOfPages = count / 10 + 1;
             response.List = list;
-            return new JsonResult(response);
+            return Ok(response);
         }
 
         [HttpPost]
@@ -94,6 +94,7 @@ namespace todoAPP.Pages.API
             var t = _db.TodoList.Add(todoForm);
             _db.SaveChanges();
             return new JsonResult(t.Entity);
+            return Ok(t.Entity);
         }
 
         [HttpPut]
@@ -121,7 +122,7 @@ namespace todoAPP.Pages.API
             }
 
             _db.SaveChanges();
-            return new JsonResult(entity);
+            return Ok(entity);
         }
 
         [HttpDelete]
@@ -144,7 +145,7 @@ namespace todoAPP.Pages.API
                 _db.SaveChanges();
             }
 
-            return new JsonResult(entity);
+            return Ok(entity);
         }
 
         private int GetUserId()
