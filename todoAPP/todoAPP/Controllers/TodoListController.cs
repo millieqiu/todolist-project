@@ -4,18 +4,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using todoAPP.Models;
+using todoAPP.RequestModel;
 using todoAPP.ViewModel;
-using static System.Net.Mime.MediaTypeNames;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace todoAPP.Pages.API
 {
@@ -49,54 +42,45 @@ namespace todoAPP.Pages.API
         }
 
         [HttpGet]
-        public IActionResult Pagination(int page)
+        public IActionResult ListPagination(int currentPage)
         {
-            if (page < 1)
+            if (currentPage < 1)
             {
-                page = 1;
+                currentPage = 1;
             }
 
-            int count = _db.TodoList.Where(x => x.User.ID == GetUserId()).Count();
-
-            List<TodoViewModel> list = _db.TodoList
-                .Where(x => x.User.ID == GetUserId())
-                .Skip((page - 1) * 10)
-                .Take(10)
-                .Select(x => new TodoViewModel
-                {
-                    ID = x.ID,
-                    Status = x.Status,
-                    Text = x.Text
-                }).ToList();
-
-            PagenationResponse response = new PagenationResponse()
+            PaginationViewModel response = new PaginationViewModel()
             {
-                NumOfPages = count / 10 + 1,
-                CurrentPage = page,
-                List = list,
+                NumOfPages = GetNumOfPages(),
+                CurrentPage = currentPage,
+                List = GetPaginatedData(currentPage),
             };
 
             return Ok(response);
         }
 
         [HttpPost]
-        public IActionResult Create([FromForm] Todo todoForm)
+        public IActionResult Create(CreateTodoRequestModel request)
         {
             User? user = _db.Users.Find(GetUserId());
             if (user == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "CreateTodoItem",
-                    status = 1,
-                    errMsg = "User dosen't exists.",
+                    Service = "CreateTodoItem",
+                    Status = 1,
+                    ErrMsg = "User dosen't exists.",
                 };
                 return BadRequest(err);
             }
 
-            todoForm.User = user;
+            Todo item = new Todo()
+            {
+                Text = request.Text,
+                User = user,
+            };
 
-            var t = _db.TodoList.Add(todoForm);
+            var t = _db.TodoList.Add(item);
 
             try
             {
@@ -106,28 +90,29 @@ namespace todoAPP.Pages.API
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "CreateTodoItem",
-                    status = 2,
-                    errMsg = "Update error",
+                    Service = "CreateTodoItem",
+                    Status = 2,
+                    ErrMsg = "Update error",
                 };
                 return BadRequest(err);
             }
 
+            ModifyTodoViewModel response = GetModifyResponse(t.Entity, request.Page);
 
-            return Ok(t.Entity);
+            return Ok(response);
         }
 
         [HttpPut]
-        public IActionResult ChangeStatus([FromForm] int id)
+        public IActionResult ChangeStatus(ModifyTodoRequestModel request)
         {
-            Todo? entity = _db.TodoList.Find(id);
+            Todo? entity = _db.TodoList.Find(request.ID);
             if (entity == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "EditTodoItem",
-                    status = 1,
-                    errMsg = $"Item id={id} not found",
+                    Service = "EditTodoItem",
+                    Status = 1,
+                    ErrMsg = $"Item id={request.ID} not found",
                 };
                 return BadRequest(err);
             }
@@ -149,26 +134,29 @@ namespace todoAPP.Pages.API
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "EditTodoItem",
-                    status = 2,
-                    errMsg = "Update error",
+                    Service = "EditTodoItem",
+                    Status = 2,
+                    ErrMsg = "Update error",
                 };
                 return BadRequest(err);
             }
-            return Ok(entity);
+
+            ModifyTodoViewModel response = GetModifyResponse(entity, request.Page);
+
+            return Ok(response);
         }
 
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(ModifyTodoRequestModel request)
         {
-            Todo? entity = _db.TodoList.Find(id);
+            Todo? entity = _db.TodoList.Find(request.ID);
             if (entity == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "DeleteTodoItem",
-                    status = 1,
-                    errMsg = $"Item id={id} not found",
+                    Service = "DeleteTodoItem",
+                    Status = 1,
+                    ErrMsg = $"Item id={request.ID} not found",
                 };
                 return BadRequest(err);
             }
@@ -183,14 +171,16 @@ namespace todoAPP.Pages.API
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "DeleteTodoItem",
-                    status = 2,
-                    errMsg = "Update error",
+                    Service = "DeleteTodoItem",
+                    Status = 2,
+                    ErrMsg = "Update error",
                 };
                 return BadRequest(err);
             }
 
-            return Ok(entity);
+            ModifyTodoViewModel response = GetModifyResponse(entity, request.Page);
+
+            return Ok(response);
         }
 
         private int GetUserId()
@@ -206,6 +196,52 @@ namespace todoAPP.Pages.API
             return 0;
         }
 
+        private List<TodoViewModel> GetPaginatedData(int page)
+        {
+            List<TodoViewModel> list = _db.TodoList
+                .Where(x => x.User.ID == GetUserId())
+                .Skip((page - 1) * 10)
+                .Take(10)
+                .Select(x => new TodoViewModel
+                {
+                    ID = x.ID,
+                    Status = x.Status,
+                    Text = x.Text
+                }).ToList();
+
+            return list;
+        }
+
+        private double GetNumOfPages()
+        {
+            int count = _db.TodoList.Where(x => x.User.ID == GetUserId()).Count();
+            return Math.Ceiling(count / 10.0) + 1;
+        }
+
+        private ModifyTodoViewModel GetModifyResponse(Todo item, int currentPage)
+        {
+
+            if (currentPage < 1)
+            {
+                currentPage = 1;
+            }
+
+            return new ModifyTodoViewModel()
+            {
+                Item = new TodoViewModel()
+                {
+                    ID = item.ID,
+                    Status = item.Status,
+                    Text = item.Text,
+                },
+                Pagination = new PaginationViewModel()
+                {
+                    NumOfPages = GetNumOfPages(),
+                    CurrentPage = currentPage,
+                    List = GetPaginatedData(currentPage),
+                },
+            };
+        }
     }
 }
 
