@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -215,7 +215,7 @@ namespace todoAPP.Pages.API
         private double GetNumOfPages()
         {
             int count = _db.TodoList.Where(x => x.User.ID == GetUserId()).Count();
-            return Math.Ceiling(count / 10.0) + 1;
+            return Math.Ceiling(count / 10.0);
         }
 
         private ModifyTodoViewModel GetModifyResponse(Todo item, int currentPage)
