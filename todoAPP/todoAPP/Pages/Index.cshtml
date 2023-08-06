@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Welcome";
@@ -32,13 +32,13 @@
                     <h2 class="h2 brand-color-drak">歡迎使用 To-Do List！</h2>
                     <input-container class="input-container flex-column">
                         <div class="flex-column">
-                            <label class="paragraph2" for="">常用信箱</label>
+                            <label class="paragraph2" for="loginEmail">常用信箱</label>
                             <input class="input gray-02 paragraph1" type="email" name="email" id="loginEmail"
                 pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="輸入 Email"
                 oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')" required>
                         </div>
                         <div class="flex-column">
-                            <label class="paragraph2" for="">密碼</label>
+                            <label class="paragraph2" for="loginPassword">密碼</label>
                             <input class="input gray-02 paragraph1" type="password" name="password" id="loginPassword" placeholder="輸入密碼"
                 required>
                         </div>
