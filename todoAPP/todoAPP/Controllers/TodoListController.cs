@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace todoAPP.Pages.API
             int count = _db.TodoList.Where(x => x.User.ID == GetUserId()).Count();
 
             List<TodoViewModel> list = _db.TodoList
-                .Where(x=>x.User.ID == GetUserId())
+                .Where(x => x.User.ID == GetUserId())
                 .Skip((page - 1) * 10)
                 .Take(10)
                 .Select(x => new TodoViewModel
@@ -68,9 +69,13 @@ namespace todoAPP.Pages.API
                     Text = x.Text
                 }).ToList();
 
-            PagenationResponse response = new PagenationResponse();
-            response.NumOfPages = count / 10 + 1;
-            response.List = list;
+            PagenationResponse response = new PagenationResponse()
+            {
+                NumOfPages = count / 10 + 1,
+                CurrentPage = page,
+                List = list,
+            };
+
             return Ok(response);
         }
 
@@ -92,8 +97,23 @@ namespace todoAPP.Pages.API
             todoForm.User = user;
 
             var t = _db.TodoList.Add(todoForm);
-            _db.SaveChanges();
-            return new JsonResult(t.Entity);
+
+            try
+            {
+                var state = _db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "CreateTodoItem",
+                    status = 2,
+                    errMsg = "Update error",
+                };
+                return BadRequest(err);
+            }
+
+
             return Ok(t.Entity);
         }
 
@@ -121,28 +141,53 @@ namespace todoAPP.Pages.API
                 entity.Status = 0;
             }
 
-            _db.SaveChanges();
+            try
+            {
+                var state = _db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "EditTodoItem",
+                    status = 2,
+                    errMsg = "Update error",
+                };
+                return BadRequest(err);
+            }
             return Ok(entity);
         }
 
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var entity = _db.TodoList.Find(id);
+            Todo? entity = _db.TodoList.Find(id);
             if (entity == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "EditTodoItem",
+                    service = "DeleteTodoItem",
                     status = 1,
                     errMsg = $"Item id={id} not found",
                 };
                 return BadRequest(err);
             }
-            else
+
+            _db.TodoList.Remove(entity);
+
+            try
             {
-                _db.TodoList.Remove(entity);
-                _db.SaveChanges();
+                var state = _db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    service = "DeleteTodoItem",
+                    status = 2,
+                    errMsg = "Update error",
+                };
+                return BadRequest(err);
             }
 
             return Ok(entity);
