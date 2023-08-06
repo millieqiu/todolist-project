@@ -1,11 +1,14 @@
-﻿using System;
+using System;
+
 namespace todoAPP.ViewModel
 {
 	public class ErrorViewModel
 	{
-		public string service { get; set; }
-		public int status { get; set; }
-		public string errMsg { get; set; }
+		public string Service { get; set; }
+
+		public int Status { get; set; }
+
+		public string ErrMsg { get; set; }
     }
 }
 

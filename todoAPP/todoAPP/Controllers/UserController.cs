@@ -37,9 +37,9 @@ namespace todoAPP.Pages.Controllers
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "Login",
-                    status = 1,
-                    errMsg = "User dosen't exists.",
+                    Service = "Login",
+                    Status = 1,
+                    ErrMsg = "User dosen't exists.",
                 };
                 return BadRequest(err);
             }
@@ -52,9 +52,9 @@ namespace todoAPP.Pages.Controllers
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "Login",
-                    status = 2,
-                    errMsg = "Validation error.",
+                    Service = "Login",
+                    Status = 2,
+                    ErrMsg = "Validation error.",
                 };
                 return BadRequest(err);
             }
@@ -116,9 +116,9 @@ namespace todoAPP.Pages.Controllers
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "Register",
-                    status = 1,
-                    errMsg = "Username is already exists",
+                    Service = "Register",
+                    Status = 1,
+                    ErrMsg = "Username is already exists",
                 };
                 return BadRequest(err);
             }
@@ -126,9 +126,9 @@ namespace todoAPP.Pages.Controllers
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
-                    service = "Register",
-                    status = 2,
-                    errMsg = "Confirmation password incorrect",
+                    Service = "Register",
+                    Status = 2,
+                    ErrMsg = "Confirmation password incorrect",
                 };
                 return BadRequest(err);
             }
