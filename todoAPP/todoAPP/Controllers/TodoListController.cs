@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -42,18 +42,18 @@ namespace todoAPP.Pages.API
         }
 
         [HttpGet]
-        public IActionResult ListPagination(int currentPage)
+        public IActionResult ListPagination(int page)
         {
-            if (currentPage < 1)
+            if (page < 1)
             {
-                currentPage = 1;
+                page = 1;
             }
 
             PaginationViewModel response = new PaginationViewModel()
             {
                 NumOfPages = GetNumOfPages(),
-                CurrentPage = currentPage,
-                List = GetPaginatedData(currentPage),
+                CurrentPage = page,
+                List = GetPaginatedData(page),
             };
 
             return Ok(response);
