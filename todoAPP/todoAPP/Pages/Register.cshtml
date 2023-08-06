@@ -26,7 +26,9 @@
                             <label class="paragraph2" for="">設定密碼</label>
                             <input class="input gray-02 paragraph1" type="password" name="password" id="registerPassword"
                                    placeholder="請設定輸入密碼" pattern="[a-zA-Z0-9]{8,}" oninput="setCustomValidity('');"
-                                   oninvalid="setCustomValidity('請使用英數且至少八個字元')" required>
+                                   oninvalid="setCustomValidity('請使用英數且至少八個字元')"
+                               onchange="if(document.getElementById('confirm-password').value != document.getElementById('password').value){setCustomValidity('密碼不符合');}"
+                                   required>
                         </div>
                         <div class="flex-column">
                             <label class="paragraph2" for="">確認密碼</label>
