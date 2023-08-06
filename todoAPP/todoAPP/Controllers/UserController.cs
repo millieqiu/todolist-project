@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using todoAPP.RequestModel;
 
 namespace todoAPP.Pages.Controllers
 {
@@ -28,7 +29,7 @@ namespace todoAPP.Pages.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromForm] LoginViewModel loginForm)
+        public async Task<IActionResult> Login(LoginRequestModel loginForm)
         {
             User? user = _db.Users
                 .Where(x => x.Username == loginForm.Username)
@@ -83,7 +84,7 @@ namespace todoAPP.Pages.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register([FromForm] RegisterReqViewModel registerForm)
+        public IActionResult Register(RegisterRequestModel registerForm)
         {
             bool hasAccount = _db.Users
                 .Where(x => x.Username == registerForm.Username)
@@ -95,16 +96,6 @@ namespace todoAPP.Pages.Controllers
                     Service = "Register",
                     Status = 1,
                     ErrMsg = "Username is already exists",
-                };
-                return BadRequest(err);
-            }
-            else if (registerForm.Password != registerForm.ConfirmPassword)
-            {
-                ErrorViewModel err = new ErrorViewModel()
-                {
-                    Service = "Register",
-                    Status = 2,
-                    ErrMsg = "Confirmation password incorrect",
                 };
                 return BadRequest(err);
             }

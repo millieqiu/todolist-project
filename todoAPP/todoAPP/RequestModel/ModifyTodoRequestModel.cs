@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace todoAPP.ViewModel
+namespace todoAPP.RequestModel
 {
     public class ModifyTodoRequestModel
     {
