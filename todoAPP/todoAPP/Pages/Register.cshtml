@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model todoAPP.Pages.RegisterModel
 @{
 
@@ -19,7 +19,7 @@
                         <div class="flex-column">
                             <label class="paragraph2" for="">常用信箱</label>
                             <input class="input gray-02 paragraph1" type="email" name="email" id="registerEmail"
-                                   pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="輸入 Email"
+                                   placeholder="輸入 Email"
                                    oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')" required>
                         </div>
                         <div class="flex-column">
@@ -34,7 +34,7 @@
                             <label class="paragraph2" for="">確認密碼</label>
                             <input class="input gray-02 paragraph1" type="password" name="password" id="confirm-password"
                                    placeholder="請再次輸入密碼" oninput="setCustomValidity('');"
-                                   onchange="if(document.getElementById('password').value != document.getElementById('confirm-password').value){setCustomValidity('密碼不符合');}"
+                                   onchange="if(document.getElementById('registerPassword').value != document.getElementById('confirm-password').value){setCustomValidity('密碼不符合');}"
                                    required>
                         </div>
                     </input-container>
