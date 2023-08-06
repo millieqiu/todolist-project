@@ -1,33 +1,9 @@
 ﻿@page
 @model todoAPP.Pages.TodoPageModel
 @{
+    ViewData["Title"] = "My To-do List";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-    <link rel="stylesheet" href="CSS/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://kit.fontawesome.com/c31150b190.js" crossorigin="anonymous"></script>
-    <script src="~/js/todoList.js" asp-append-version="true"></script>
-</head>
-
-<body>
-
-    <!-- Header 樣式 -->
-    <header class="header">
-        <a href="">
-            <h1 class="h1 brand-color-main">TO DO LIST</h1>
-        </a>
-        @if (User.Identity.IsAuthenticated == true)
-        {
-            <button class="button-sm button-outlined" onclick="onClickLogout()">登出</button>
-        }
-    </header>
 
     <!-- Main 區塊 -->
     <section class="section">
@@ -52,7 +28,3 @@
         </div>
 
     </section>
-
-</body>
-
-</html>

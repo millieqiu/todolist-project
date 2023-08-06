@@ -4,10 +4,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - todoAPP</title>
+    <link rel="stylesheet" href="~/css/normalize.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/todoAPP.styles.css" asp-append-version="true" />
 </head>
 <body>
+
+    <!-- Header 樣式 -->
+    <header class="header">
+        <a href="">
+            <h1 class="h1 brand-color-main">TO DO LIST</h1>
+        </a>
+        @if (User.Identity.IsAuthenticated == true)
+        {
+            <button class="button-sm button-outlined" onclick="onClickLogout()">登出</button>
+        }
+    </header>
 
     @RenderBody()
     
