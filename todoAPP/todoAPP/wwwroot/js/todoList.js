@@ -1,17 +1,26 @@
-﻿window.onload = function () {
+window.onload = function () {
     getUserInfo();
     getTodoList();
 }
 
-function onClickCreateTodoItem() {
+function onClickCreateTodoItem(event) {
+    event.preventDefault();
     const todoText = document.getElementById('todoText').value;
     createTodoItem(todoText);
 }
 
-function onClickDeleteTodoItem(todoID) {
+function onClickDeleteTodoItem(event,todoID) {
+    event.preventDefault();
+
+    let todoItem = JSON.stringify({
+        "id": todoID,
+    });
+
     $.ajax({
         url: "/api/TodoList/Delete?id=" + todoID,
         type: "DELETE",
+        contentType: "application/json; charset=utf-8",
+        data: todoItem,
         success: function () {
             getTodoList();
         } 
@@ -51,7 +60,7 @@ function getTodoList(page) {
                                                 <input type="checkbox" name="" id="checkbox_item_${value.id}" class="checkbox" onclick="onChangeStatus(${value.id})" ${status}>
                                                 <span class="gray-01 paragraph1" for="">${value.text}</span>
                                             </label>
-                                            <div class="icon" id="delete_item_${value.id}" onClick="onClickDeleteTodoItem(${value.id})">
+                                            <div class="icon" id="delete_item_${value.id}" onClick="onClickDeleteTodoItem(event,${value.id})">
                                                 <i class="fa-solid fa-trash gray-04"></i>
                                             </div>
                                         </div>`).html();
@@ -61,12 +70,15 @@ function getTodoList(page) {
 }
 
 function createTodoItem(text) {
+    let todoItem = JSON.stringify({
+        "Text": text,
+    });
+
     $.ajax({
         url: "/api/TodoList/Create",
         method: "post",
-        data: {
-            Text: text,
-        },
+        contentType: "application/json; charset=utf-8",
+        data: todoItem,
         success: function (res) {
             getTodoList();
         }
@@ -74,13 +86,15 @@ function createTodoItem(text) {
 }
 
 function onChangeStatus(todoID) {
+    let todoItem = JSON.stringify({
+        "id": todoID,
+    });
 
     $.ajax({
         url: "/api/TodoList/ChangeStatus",
         method: "put",
-        data: {
-            id: todoID,
-        },
+        contentType: "application/json; charset=utf-8",
+        data: todoItem,
         success: function (res) {
             //console.log(res);
         }

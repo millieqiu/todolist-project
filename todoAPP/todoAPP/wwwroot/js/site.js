@@ -9,7 +9,8 @@ function onClickLogout() {
     logout();
 }
 
-function onClickRegister() {
+function onClickRegister(event) {
+    event.preventDefault();
     const registerEmail = document.getElementById('registerEmail').value;
     const registerName = document.getElementById('registerName').value;
     const registerPassword = document.getElementById('registerPassword').value;
@@ -18,13 +19,16 @@ function onClickRegister() {
 }
 
 function login(username, password) {
+    let userInfo = JSON.stringify({
+        "username": username,
+        "password": password,
+    });
+
     $.ajax({
         url: "/api/User/Login",
         method: "post",
-        data: {
-            Username: username,
-            Password: password,
-        },
+        contentType: "application/json; charset=utf-8",
+        data: userInfo,
         success: function (res) {
             window.location.replace("/TodoPage");
         },
@@ -47,15 +51,17 @@ function logout() {
 }
 
 function register(username, password, confirmPassword, nickname) {
+    let userInfo = JSON.stringify({
+        "username": username,
+        "password": password,
+        "confirmPassword": confirmPassword,
+        "nickname": nickname,
+    });
     $.ajax({
         url: "/api/User/Register",
         method: "post",
-        data: {
-            Username: username,
-            Password: password,
-            ConfirmPassword: confirmPassword,
-            Nickname: nickname,
-        }, 
+        contentType: "application/json; charset=utf-8",
+        data: userInfo, 
         success: function (res) {
             window.location.replace("/Index");
         },
@@ -64,7 +70,6 @@ function register(username, password, confirmPassword, nickname) {
                 alert("密碼與確認密碼不符合")
             }
         }
-
     })
 
 }
