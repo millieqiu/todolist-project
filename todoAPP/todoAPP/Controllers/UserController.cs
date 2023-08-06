@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -85,10 +85,10 @@ namespace todoAPP.Pages.Controllers
         [HttpPost]
         public IActionResult Register([FromForm] RegisterReqViewModel registerForm)
         {
-            List<User> list = _db.Users
+            bool hasAccount = _db.Users
                 .Where(x => x.Username == registerForm.Username)
-                .ToList();
-            if (list.Count > 0)
+                .Any();
+            if (hasAccount == true)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
