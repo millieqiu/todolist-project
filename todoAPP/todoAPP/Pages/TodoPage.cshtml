@@ -23,7 +23,10 @@
         <a href="">
             <h1 class="h1 brand-color-main">TO DO LIST</h1>
         </a>
-        <button class="button-sm button-outlined" onclick="onClickLogout()">登出</button>
+        @if (User.Identity.IsAuthenticated == true)
+        {
+            <button class="button-sm button-outlined" onclick="onClickLogout()">登出</button>
+        }
     </header>
 
     <!-- Main 區塊 -->
