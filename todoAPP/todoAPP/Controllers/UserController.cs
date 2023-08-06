@@ -75,30 +75,6 @@ namespace todoAPP.Pages.Controllers
         }
 
         [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> GetUserInfo()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                IEnumerable<Claim> claims = identity.Claims;
-                string Sid = claims.First().Value;
-                string username = claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-                string nickname = claims.First(x => x.Type == ClaimTypes.Name).Value;
-                Int32.TryParse(Sid, out int userId);
-
-                UserInfoViewModel info = new UserInfoViewModel()
-                {
-                    ID = userId,
-                    Username = username,
-                    Nickname = nickname,
-                };
-                return Ok(info);
-            }
-            return BadRequest();
-        }
-
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
