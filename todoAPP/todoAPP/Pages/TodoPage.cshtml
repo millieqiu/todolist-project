@@ -5,19 +5,18 @@
 }
 
 <!-- Main 區塊 -->
-<section class="section">
+<section class="section" id="app">
+    {{message}}
     <div class="main flex-center">
         <h2 class="h2 brand-color-drak"><span id="user_name"></span>@User.Identity.Name，使用 To-do 規劃美好的一天。</h2>
         <div class="list-container">
-            <form method="post" action="" onsubmit="onClickCreateTodoItem(event)">
+            <form method="post" action="" v-on:submit.prevent="onClickCreateTodoItem">
                 <div class="add-container">
-                    <input type="text" class="add-input paragraph1 gray-03" id="todoText" placeholder="添加你的待辦事項...">
+                    <input type="text" class="add-input paragraph1 gray-03" id="todoText" placeholder="添加你的待辦事項..." ref="todoText">
                     <button class="button-mid button-primary">新增</button>
                 </div>
             </form>
             <div class="list" id="todolist">
-
-
 
             </div>
         </div>
@@ -27,5 +26,3 @@
     </div>
 
 </section>
-
-<script src="~/js/todoList.js" asp-append-version="true"></script>
