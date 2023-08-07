@@ -328,3 +328,14 @@ body {
 .title-mb {
     margin-bottom: 48px;
 }
+
+/* RWD　設定*/
+@media(max-width: 920px) {
+    .section {
+        padding: 0 120px;
+    }
+
+    .header {
+        padding: 12px 120px;
+    }
+}
