@@ -1,4 +1,4 @@
-﻿function onClickLoginOrRegister(event) {
+﻿function onClickLogin(event) {
     event.preventDefault();
     const loginEmail = document.getElementById('loginEmail').value;
     const loginPassword = document.getElementById('loginPassword').value;
