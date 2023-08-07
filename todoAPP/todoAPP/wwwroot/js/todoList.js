@@ -1,5 +1,4 @@
 ﻿window.onload = function () {
-    getUserInfo();
     getTodoList();
 }
 
@@ -24,16 +23,6 @@ function onClickDeleteTodoItem(event,todoID) {
         success: function (res) {
             setTodoList(res.pagination);
         } 
-    })
-}
-
-function getUserInfo() {
-    $.ajax({
-        url: "/api/User/GetUserInfo",
-        method: "get",
-        success: function (res) {
-            $('#user_name').html(res.nickname);
-        }
     })
 }
 
