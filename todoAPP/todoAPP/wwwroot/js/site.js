@@ -34,8 +34,7 @@ function login(username, password) {
         },
         error: function (req, status) {
             if (req.responseJSON.service == "Login" && req.responseJSON.status == 1) {
-                alert("帳號不存在，為您跳轉至註冊頁面進行註冊");
-                window.location.assign("/Register");
+                alert("此帳號不存在");
             }
             else if (req.responseJSON.service == "Login" && req.responseJSON.status == 2) {
                 alert("帳號或密碼錯誤");

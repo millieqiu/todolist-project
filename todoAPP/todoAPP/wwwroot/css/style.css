@@ -70,7 +70,10 @@ body {
 
 .btn-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    gap: 12px;
 }
 
 /* TO-DO 頁 */
@@ -302,6 +305,11 @@ body {
         border: 1px solid #00324E;
         color: #00324E;
     }
+
+.text-button {
+    font-size: 12px;
+    color: #00324E;
+}
 
 
 /* 排版樣式 */
