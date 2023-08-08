@@ -82,8 +82,21 @@ new Vue({
             })
         },
         onClickCreateTodoItem() {
-            createTodoItem(this.$refs.todoText.value);
+            let todoItem = JSON.stringify({
+                "Text": this.$refs.todoText.value,
+            });
+
+            $.ajax({
+                url: "/api/TodoList/Create",
+                method: "post",
+                contentType: "application/json; charset=utf-8",
+                data: todoItem,
+                success: function (res) {
+                    setTodoList(res.pagination);
+                }
+            })
         },
+        
     },
 });
 
@@ -119,11 +132,11 @@ window.onload = function () {
     getTodoList();
 }
 
-function onClickCreateTodoItem(event) {
-    event.preventDefault();
-    const todoText = document.getElementById('todoText').value;
-    createTodoItem(todoText);
-}
+//function onClickCreateTodoItem(event) {
+    //event.preventDefault();
+    //const todoText = document.getElementById('todoText').value;
+    //createTodoItem(todoText);
+//}
 
 function onClickDeleteTodoItem(event, todoID) {
     event.preventDefault();
@@ -154,22 +167,6 @@ function getTodoList(page) {
         success: function (res) {
             setTodoList(res);
         }
-    })
-}
-
-function createTodoItem(text) {
-    let todoItem = JSON.stringify({
-        "Text": text,
-});
-
-    $.ajax({
-url: "/api/TodoList/Create",
-method: "post",
-contentType: "application/json; charset=utf-8",
-data: todoItem,
-success: function (res) {
-setTodoList(res.pagination);
-}
     })
 }
 
@@ -205,7 +202,7 @@ function setTodoList(res) {
                                                 <input type="checkbox" name="" id="checkbox_item_${value.id}" class="checkbox" onclick="onChangeStatus(${value.id})" ${status}>
                                                 <span class="gray-01 paragraph1" for="">${value.text}</span>
                                             </label>
-                                            <div class="icon" id="delete_item_${value.id}" onClick="onClickDeleteTodoItem(event,${value.id})">
+                                            <div class="icon" id="delete_item_${value.id}" v-on:click.prevent="onClickDeleteTodoItem(${value.id})">
                                                 <i class="fa-solid fa-trash gray-04"></i>
                                             </div>
                                         </div>`).html();
