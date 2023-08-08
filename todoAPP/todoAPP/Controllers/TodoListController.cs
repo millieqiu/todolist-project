@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using todoAPP.Models;
 using todoAPP.RequestModel;
 using todoAPP.ViewModel;
@@ -105,7 +106,10 @@ namespace todoAPP.Pages.API
         [HttpPut]
         public IActionResult ChangeStatus(ModifyTodoRequestModel request)
         {
-            Todo? entity = _db.TodoList.Find(request.ID);
+            Todo? entity = _db.TodoList.Include(x => x.User)
+                .Where(x => x.User.ID == GetUserId() && x.ID == request.ID)
+                .SingleOrDefault();
+
             if (entity == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
@@ -149,7 +153,10 @@ namespace todoAPP.Pages.API
         [HttpDelete]
         public IActionResult Delete(ModifyTodoRequestModel request)
         {
-            Todo? entity = _db.TodoList.Find(request.ID);
+            Todo? entity = _db.TodoList.Include(x => x.User)
+                .Where(x => x.User.ID == GetUserId() && x.ID == request.ID)
+                .SingleOrDefault();
+
             if (entity == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
