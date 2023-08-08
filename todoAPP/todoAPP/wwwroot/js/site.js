@@ -3,19 +3,83 @@ new Vue({
     el: '#app',
     data: {
         message: 'Hello World',
-
+        todos: [],
     },
     methods: {
+        //Login
         onClickLogin() {
             //const loginEmail = document.getElementById('loginEmail').value;
             //const loginPassword = document.getElementById('loginPassword').value;
-            login(this.$refs.loginEmail.value, this.$refs.loginPassword.value);
+            let userInfo = JSON.stringify({
+                "username": this.$refs.loginEmail.value,
+                "password": this.$refs.loginPassword.value,
+            });
+
+            $.ajax({
+                url: "/api/User/Login",
+                method: "post",
+                contentType: "application/json; charset=utf-8",
+                data: userInfo,
+                success: function (res) {
+                    window.location.assign("/TodoPage");
+                },
+                error: function (req, status) {
+                    if (req.responseJSON.service == "Login" && req.responseJSON.status == 1) {
+                        alert("此帳號不存在");
+                    }
+                    else if (req.responseJSON.service == "Login" && req.responseJSON.status == 2) {
+                        alert("帳號或密碼錯誤");
+                    }
+                    else {
+                        alert("無法登入，請聯絡系統管理員");
+                    }
+                }
+            });
         },
+        //Logout
         onClickLogout() {
-            logout();
+            $.ajax({
+                url: "/api/User/Logout",
+                method: "post",
+                success: function (res) {
+                    window.location.assign("/Index");
+                },
+                error: function (req, status) {
+                    alert("登出失敗，請重新嘗試登出");
+                }
+            })
         },
         onClickRegister() {
-            register(this.$refs.registerEmail.value, this.$refs.registerPassword.value, this.$refs.confirmPassword.value, this.$refs.registerName.value);
+            let userInfo = JSON.stringify({
+                "username": this.$refs.registerEmail.value,
+                "password": this.$refs.registerPassword.value,
+                "confirmPassword": this.$refs.confirmPassword.value,
+                "nickname": this.$refs.registerName.value,
+            });
+            $.ajax({
+                url: "/api/User/Register",
+                method: "post",
+                contentType: "application/json; charset=utf-8",
+                data: userInfo,
+                success: function (res) {
+                    alert("註冊成功！");
+                    window.location.assign("/Index");
+                },
+                error: function (req, status) {
+                    if (req.responseJSON.service && req.responseJSON.service == "Register" && req.responseJSON.status == 1) {
+                        alert("帳號已存在");
+                    }
+                    else if (req.responseJSON.errors.Username && req.responseJSON.errors.Username.includes("The Username field is not a valid e-mail address.")) {
+                        alert("Email格式錯誤");
+                    }
+                    else if (req.responseJSON.errors.ConfirmPassword) {
+                        alert("密碼與確認密碼不符合");
+                    }
+                    else {
+                        alert("無法註冊帳號，請聯絡系統管理員");
+                    }
+                }
+            })
         },
         onClickCreateTodoItem() {
             createTodoItem(this.$refs.todoText.value);
@@ -47,80 +111,7 @@ new Vue({
     //register(registerEmail, registerPassword, registerConfirmPassword, registerName);
 //}
 
-function login(username, password) {
-    let userInfo = JSON.stringify({
-        "username": username,
-        "password": password,
-    });
 
-    $.ajax({
-        url: "/api/User/Login",
-        method: "post",
-        contentType: "application/json; charset=utf-8",
-        data: userInfo,
-        success: function (res) {
-            window.location.assign("/TodoPage");
-        },
-        error: function (req, status) {
-            if (req.responseJSON.service == "Login" && req.responseJSON.status == 1) {
-                alert("此帳號不存在");
-            }
-            else if (req.responseJSON.service == "Login" && req.responseJSON.status == 2) {
-                alert("帳號或密碼錯誤");
-            }
-            else {
-                alert("無法登入，請聯絡系統管理員");
-            }
-        }
-    })
-}
-
-function logout() {
-    $.ajax({
-        url: "/api/User/Logout",
-        method: "post",
-        success: function (res) {
-            window.location.assign("/Index");
-        },
-        error: function (req, status) {
-            alert("登出失敗，請重新嘗試登出");
-        }
-    })
-}
-
-function register(username, password, confirmPassword, nickname) {
-    let userInfo = JSON.stringify({
-        "username": username,
-        "password": password,
-        "confirmPassword": confirmPassword,
-        "nickname": nickname,
-    });
-    $.ajax({
-        url: "/api/User/Register",
-        method: "post",
-        contentType: "application/json; charset=utf-8",
-        data: userInfo, 
-        success: function (res) {
-            alert("註冊成功！");
-            window.location.assign("/Index");
-        },
-        error: function (req, status) {
-            if (req.responseJSON.service && req.responseJSON.service == "Register" && req.responseJSON.status == 1) {
-                alert("帳號已存在");
-            }
-            else if (req.responseJSON.errors.Username && req.responseJSON.errors.Username.includes("The Username field is not a valid e-mail address.")) {
-                alert("Email格式錯誤");
-            }
-            else if (req.responseJSON.errors.ConfirmPassword) {
-                alert("密碼與確認密碼不符合");
-            }
-            else {
-                alert("無法註冊帳號，請聯絡系統管理員");
-            }
-        }
-    })
-
-}
 
 //todoList.js
 
@@ -169,16 +160,16 @@ function getTodoList(page) {
 function createTodoItem(text) {
     let todoItem = JSON.stringify({
         "Text": text,
-    });
+});
 
     $.ajax({
-        url: "/api/TodoList/Create",
-        method: "post",
-        contentType: "application/json; charset=utf-8",
-        data: todoItem,
-        success: function (res) {
-            setTodoList(res.pagination);
-        }
+url: "/api/TodoList/Create",
+method: "post",
+contentType: "application/json; charset=utf-8",
+data: todoItem,
+success: function (res) {
+setTodoList(res.pagination);
+}
     })
 }
 

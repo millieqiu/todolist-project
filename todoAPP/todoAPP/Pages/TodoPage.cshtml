@@ -5,20 +5,30 @@
 }
 
 <!-- Main 區塊 -->
-<section class="section" id="app">
+<section class="section">
     {{message}}
     <div class="main flex-center">
         <h2 class="h2 brand-color-drak"><span id="user_name"></span>@User.Identity.Name，使用 To-do 規劃美好的一天。</h2>
         <div class="list-container">
-            <form method="post" action="" v-on:submit.prevent="onClickCreateTodoItem">
+            <form method="post" action="" v-on:submit.prevent="onClickCreateTodoItem()">
                 <div class="add-container">
                     <input type="text" class="add-input paragraph1 gray-03" id="todoText" placeholder="添加你的待辦事項..." ref="todoText">
                     <button class="button-mid button-primary">新增</button>
                 </div>
             </form>
-            <div class="list" id="todolist">
-
-            </div>
+            <ul class="list" id="todolist">
+                <!--
+                <li class="task">
+                    <label class="task-content">
+                        <input type="checkbox" name="" id="checkbox_item_${value.id}" class="checkbox" onclick="onChangeStatus(${value.id})" ${status}>
+                        <span class="gray-01 paragraph1" for=""></span>
+                    </label>
+                    <div class="icon" id="delete_item_${value.id}" onClick="onClickDeleteTodoItem(event,${value.id})">
+                        <i class="fa-solid fa-trash gray-04"></i>
+                    </div>
+                </li>
+                -->
+            </ul>
         </div>
         <div id="pagination" class="pagenumbers">
             @*<li>1</li>*@
