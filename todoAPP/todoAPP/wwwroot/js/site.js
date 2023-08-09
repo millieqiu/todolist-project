@@ -1,18 +1,42 @@
 ﻿// 建立 Vue
-new Vue({
+const app = new Vue({
     el: '#app',
-    data: {
-        message: 'Hello World',
-        todos: [],
+    data() {
+        //Todo: 要渲染的資料會放在data裡面 (不要用refs)
+        return {
+            //Login info
+            loginEmail: '',
+            loginPassword: '',
+
+            //Register info
+            registerEmail: '',
+            registerPassword: '',
+            confirmPassword: '',
+            registerName: '',
+
+            todoText: '',
+
+            message: 'Hello World', //測試用資料
+
+            todos: [], //傳遞API讀取的資料
+            numOfPages: 0, //資料型態為數字，給定預設值0 (因為沒有任何items前不應該有頁碼)
+            currentPage: 0,
+
+        }
     },
+
+    //執行Vue實體後先載入getTodoList()函式讀取資料
+    mounted() {
+        this.getTodoList(1); //todo: 改將預設值寫在函式裡
+    },
+
     methods: {
         //Login
         onClickLogin() {
-            //const loginEmail = document.getElementById('loginEmail').value;
-            //const loginPassword = document.getElementById('loginPassword').value;
+            //refs - 用來控制Component(子項目)
             let userInfo = JSON.stringify({
-                "username": this.$refs.loginEmail.value,
-                "password": this.$refs.loginPassword.value,
+                username: this.loginEmail,
+                password: this.loginPassword,
             });
 
             $.ajax({
@@ -51,10 +75,10 @@ new Vue({
         },
         onClickRegister() {
             let userInfo = JSON.stringify({
-                "username": this.$refs.registerEmail.value,
-                "password": this.$refs.registerPassword.value,
-                "confirmPassword": this.$refs.confirmPassword.value,
-                "nickname": this.$refs.registerName.value,
+                username: this.registerEmail,
+                password: this.registerPassword,
+                confirmPassword: this.confirmPassword,
+                nickname: this.registerName,
             });
             $.ajax({
                 url: "/api/User/Register",
@@ -81,9 +105,29 @@ new Vue({
                 }
             })
         },
+        getTodoList(page) {
+            var self = this; //在這邊給定範圍內的this都是self
+
+            $.ajax({
+                url: "/api/TodoList/ListPagination?page=" + page,
+                method: "get",
+                contentType: "application/json; charset=utf-8",
+                
+                success: function (res) {
+                    //在這裡寫this的話會指向ajax
+                    self.numOfPages = res.numOfPages;
+                    self.currentPage = res.currentPage;
+                    self.todos = res.list;
+                }
+            })
+        },
         onClickCreateTodoItem() {
+            var self = this;
+
+
             let todoItem = JSON.stringify({
-                "Text": this.$refs.todoText.value,
+                Text: this.todoText,
+                page: this.currentPage,
             });
 
             $.ajax({
@@ -92,119 +136,49 @@ new Vue({
                 contentType: "application/json; charset=utf-8",
                 data: todoItem,
                 success: function (res) {
-                    setTodoList(res.pagination);
+                    self.getTodoList(self.currentPage);
                 }
             })
         },
-        
+        onClickDeleteTodoItem(id) {
+            //todo: delete功能
+            var self = this;
+
+            let todoItem = JSON.stringify({
+                id: id,
+                page: this.currentPage,
+            });
+
+            $.ajax({
+                url: "/api/TodoList/Delete",
+                method: "delete",
+                contentType: "application/json; charset=utf-8",
+                data: todoItem,
+                success: function (res) {
+                    self.getTodoList(self.currentPage);
+                }
+            })
+        },
+        onChangeStatus(id) {
+            //todo: check功能
+            let todoItem = JSON.stringify({
+                id: id,
+                page: this.currentPage,
+            });
+
+            $.ajax({
+                url: "/api/TodoList/ChangeStatus",
+                method: "put",
+                contentType: "application/json; charset=utf-8",
+                data: todoItem,
+                success: function (res) {
+                    getTodoList(page);
+                }
+            })
+        },
     },
 });
 
 
 
-// site.js
-
-//function onClickLogin(event) {
-    // event.preventDefault();
-    //const loginEmail = document.getElementById('loginEmail').value;
-    //const loginPassword = document.getElementById('loginPassword').value;
-    //login(loginEmail, loginPassword);
-//}
-
-//function onClickLogout() {
-    //logout();
-//}
-
-//function onClickRegister(event) {
-    //event.preventDefault();
-    //const registerEmail = document.getElementById('registerEmail').value;
-    //const registerName = document.getElementById('registerName').value;
-    //const registerPassword = document.getElementById('registerPassword').value;
-    //const registerConfirmPassword = document.getElementById('confirm-password').value;
-    //register(registerEmail, registerPassword, registerConfirmPassword, registerName);
-//}
-
-
-
 //todoList.js
-
-window.onload = function () {
-    getTodoList();
-}
-
-//function onClickCreateTodoItem(event) {
-    //event.preventDefault();
-    //const todoText = document.getElementById('todoText').value;
-    //createTodoItem(todoText);
-//}
-
-function onClickDeleteTodoItem(event, todoID) {
-    event.preventDefault();
-
-    let todoItem = JSON.stringify({
-        "id": todoID,
-    });
-
-    $.ajax({
-        url: "/api/TodoList/Delete?id=" + todoID,
-        type: "DELETE",
-        contentType: "application/json; charset=utf-8",
-        data: todoItem,
-        success: function (res) {
-            setTodoList(res.pagination);
-        }
-    })
-}
-
-function getTodoList(page) {
-    //有可能是null或其他
-    if (!page) {
-        page = 1;
-    }
-    $.ajax({
-        url: "/api/TodoList/ListPagination?page=" + page,
-        method: "get",
-        success: function (res) {
-            setTodoList(res);
-        }
-    })
-}
-
-function onChangeStatus(todoID) {
-    let todoItem = JSON.stringify({
-        "id": todoID,
-    });
-
-    $.ajax({
-        url: "/api/TodoList/ChangeStatus",
-        method: "put",
-        contentType: "application/json; charset=utf-8",
-        data: todoItem,
-        success: function (res) {
-            setTodoList(res.pagination);
-        }
-    })
-}
-
-function setTodoList(res) {
-    $('#todolist').html("");
-    $('#pagination').html("");
-    for (let i = 1; i <= res.numOfPages; i++) {
-        $('#pagination').append(`<li onClick="getTodoList(${i})">${i}</li>`)
-    }
-    $.each(res.list, function (key, value) {
-        let status = "";
-        if (value.status == 1) {
-            status = "checked";
-        }
-        $('#todolist').append(`<div class="task">
-                                            <label class="task-content">
-                                                <input type="checkbox" name="" id="checkbox_item_${value.id}" class="checkbox" onclick="onChangeStatus(${value.id})" ${status}>
-                                                <span class="gray-01 paragraph1" for="">${value.text}</span>
-                                            </label>
-                                            <div class="icon" id="delete_item_${value.id}" v-on:click.prevent="onClickDeleteTodoItem(${value.id})">
-                                                <i class="fa-solid fa-trash gray-04"></i>
-                                            </div>
-                                        </div>`).html();
-    });
-}

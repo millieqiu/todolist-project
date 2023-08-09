@@ -17,16 +17,16 @@
                             <label class="paragraph2" for="loginEmail">常用信箱</label>
                             <input class="input gray-02 paragraph1" type="email" name="email" id="loginEmail"
                 pattern="[a-z0-9._%+\-]+@@[a-z0-9.\-]+\.[a-z]{2,4}$" placeholder="輸入 Email"
-                               oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')" required ref="loginEmail">
+                               oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')" required v-model="loginEmail">
                         </div>
                         <div class="flex-column">
                             <label class="paragraph2" for="loginPassword">密碼</label>
                             <input class="input gray-02 paragraph1" type="password" name="password" id="loginPassword" placeholder="輸入密碼"
-                               required ref="loginPassword">
+                               required v-model="loginPassword">
                         </div>
                     </input-container>
                     <div class="btn-container">
-                    <button class="button-lg button-primary" v-on:click="onClickLogin">登入</button>
+                    <button class="button-lg button-primary" v-on:click.prevent="onClickLogin">登入</button>
                     <a class="text-button" href="/Register" target="_self">還沒有帳號嗎？立即註冊</a>
                     </div>
                 </form>

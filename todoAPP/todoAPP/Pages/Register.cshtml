@@ -14,12 +14,12 @@
                     <input-container class="input-container flex-column">
                         <div class="flex-column">
                             <label class="paragraph2" for="">姓名 / 暱稱</label>
-                        <input class="input gray-02 paragraph1" type="text" name="name" id="registerName" placeholder="輸入姓名或暱稱" ref="registerName" required>
+                        <input class="input gray-02 paragraph1" type="text" name="name" id="registerName" placeholder="輸入姓名或暱稱" v-model="registerName" required>
                         </div>
                         <div class="flex-column">
                             <label class="paragraph2" for="">常用信箱</label>
                             <input class="input gray-02 paragraph1" type="email" name="email" id="registerEmail"
-                               placeholder="輸入 Email" ref="registerEmail"
+                               placeholder="輸入 Email" v-model="registerEmail"
                                    oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')" required>
                         </div>
                         <div class="flex-column">
@@ -28,14 +28,14 @@
                                    placeholder="請設定輸入密碼" pattern="[a-zA-Z0-9]{8,}" oninput="setCustomValidity('');"
                                    oninvalid="setCustomValidity('請使用英數且至少八個字元')"
                                onchange="if(document.getElementById('confirm-password').value != document.getElementById('password').value){setCustomValidity('密碼不符合');}"
-                               required ref="registerPassword">
+                               required v-model="registerPassword">
                         </div>
                         <div class="flex-column">
                             <label class="paragraph2" for="">確認密碼</label>
                             <input class="input gray-02 paragraph1" type="password" name="password" id="confirm-password"
                                    placeholder="請再次輸入密碼" oninput="setCustomValidity('');"
                                    onchange="if(document.getElementById('registerPassword').value != document.getElementById('confirm-password').value){setCustomValidity('密碼不符合');}"
-                               required ref="confirmPassword">
+                               required v-model="confirmPassword">
                         </div>
                     </input-container>
                     <div class="btn-container">

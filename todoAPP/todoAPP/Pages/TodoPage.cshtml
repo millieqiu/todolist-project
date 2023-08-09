@@ -7,32 +7,37 @@
 <!-- Main 區塊 -->
 <section class="section">
     {{message}}
+
     <div class="main flex-center">
         <h2 class="h2 brand-color-drak"><span id="user_name"></span>@User.Identity.Name，使用 To-do 規劃美好的一天。</h2>
         <div class="list-container">
             <form method="post" action="" v-on:submit.prevent="onClickCreateTodoItem()">
                 <div class="add-container">
-                    <input type="text" class="add-input paragraph1 gray-03" id="todoText" placeholder="添加你的待辦事項..." ref="todoText">
+                    <input type="text" class="add-input paragraph1 gray-03" id="todoText" placeholder="添加你的待辦事項..." v-model="todoText">
                     <button class="button-mid button-primary">新增</button>
                 </div>
             </form>
-            <ul class="list" id="todolist">
-                <!--
+            <ul class="list" id="todolist" v-for="todo in todos">
+                
                 <li class="task">
                     <label class="task-content">
-                        <input type="checkbox" name="" id="checkbox_item_${value.id}" class="checkbox" onclick="onChangeStatus(${value.id})" ${status}>
-                        <span class="gray-01 paragraph1" for=""></span>
+                        <input type="checkbox" name="" class="checkbox" v-on:click="onChangeStatus(todo.id)" v-bind:checked="todo.status">
+                        <span class="gray-01 paragraph1" for="">{{todo.text}}</span>
                     </label>
-                    <div class="icon" id="delete_item_${value.id}" onClick="onClickDeleteTodoItem(event,${value.id})">
+                    <div class="icon" id="delete_item_${value.id}" v-on:click.prevent="onClickDeleteTodoItem(todo.id)">
                         <i class="fa-solid fa-trash gray-04"></i>
                     </div>
                 </li>
-                -->
+                
             </ul>
         </div>
+
         <div id="pagination" class="pagenumbers">
-            @*<li>1</li>*@
+            <!--li標籤不用.prevent(不會觸發預設動作)-->
+            <!--v-for如果掛在div上面，會變成整個div重複三次-->
+            <li v-for="page in numOfPages" v-on:click="getTodoList(page)">{{page}}</li>
         </div>
+
     </div>
 
 </section>
