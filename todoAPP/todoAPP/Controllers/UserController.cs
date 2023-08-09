@@ -36,13 +36,7 @@ namespace todoAPP.Pages.Controllers
                 .SingleOrDefault();
             if (user == null)
             {
-                ErrorViewModel err = new ErrorViewModel()
-                {
-                    Service = "Login",
-                    Status = 1,
-                    ErrMsg = "User dosen't exists.",
-                };
-                return BadRequest(err);
+                return BadRequest("Invalid username or password");
             }
 
             byte[] salt = Convert.FromBase64String(user.Salt);
@@ -51,13 +45,7 @@ namespace todoAPP.Pages.Controllers
             bool equal = KeyDerivation.Equals(user.Password, derivedPassword);
             if(equal == false)
             {
-                ErrorViewModel err = new ErrorViewModel()
-                {
-                    Service = "Login",
-                    Status = 2,
-                    ErrMsg = "Validation error.",
-                };
-                return BadRequest(err);
+                return BadRequest("Invalid username or password");
             }
 
             var claims = new List<Claim>() {

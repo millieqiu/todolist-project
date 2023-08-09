@@ -70,9 +70,9 @@ namespace todoAPP.Pages.API
                 {
                     Service = "CreateTodoItem",
                     Status = 1,
-                    ErrMsg = "User dosen't exists.",
+                    ErrMsg = "Resource not found",
                 };
-                return BadRequest(err);
+                return NotFound();
             }
 
             Todo item = new Todo()
@@ -103,9 +103,9 @@ namespace todoAPP.Pages.API
                 {
                     Service = "EditTodoItem",
                     Status = 1,
-                    ErrMsg = $"Item id={request.ID} not found",
+                    ErrMsg = "Resource not found",
                 };
-                return BadRequest(err);
+                return NotFound(err);
             }
 
             if (entity.Status == 0)
@@ -137,9 +137,9 @@ namespace todoAPP.Pages.API
                 {
                     Service = "DeleteTodoItem",
                     Status = 1,
-                    ErrMsg = $"Item id={request.ID} not found",
+                    ErrMsg = "Resource not found",
                 };
-                return BadRequest(err);
+                return NotFound(err);
             }
 
             _db.TodoList.Remove(entity);
