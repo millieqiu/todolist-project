@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using todoAPP.Middlewares;
 using todoAPP.Models;
 
 namespace todoAPP;
@@ -38,8 +39,10 @@ public class Program
         {
             app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
+            app.UseHsts(); 
         }
+
+        app.UseExceptionHandleMiddleware();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();

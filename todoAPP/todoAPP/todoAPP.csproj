@@ -10,10 +10,12 @@
     <None Remove="Models\" />
     <None Remove="Pages\Users\" />
     <None Remove="RequestModel\" />
+    <None Remove="Middlewares\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="RequestModel\" />
+    <Folder Include="Middlewares\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />

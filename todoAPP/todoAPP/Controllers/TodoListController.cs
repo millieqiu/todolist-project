@@ -83,20 +83,7 @@ namespace todoAPP.Pages.API
 
             var t = _db.TodoList.Add(item);
 
-            try
-            {
-                var state = _db.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                ErrorViewModel err = new ErrorViewModel()
-                {
-                    Service = "CreateTodoItem",
-                    Status = 2,
-                    ErrMsg = "Update error",
-                };
-                return BadRequest(err);
-            }
+            _db.SaveChanges();
 
             ModifyTodoViewModel response = GetModifyResponse(t.Entity, request.Page);
 
@@ -130,20 +117,7 @@ namespace todoAPP.Pages.API
                 entity.Status = 0;
             }
 
-            try
-            {
-                var state = _db.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                ErrorViewModel err = new ErrorViewModel()
-                {
-                    Service = "EditTodoItem",
-                    Status = 2,
-                    ErrMsg = "Update error",
-                };
-                return BadRequest(err);
-            }
+            _db.SaveChanges();
 
             ModifyTodoViewModel response = GetModifyResponse(entity, request.Page);
 
@@ -170,20 +144,7 @@ namespace todoAPP.Pages.API
 
             _db.TodoList.Remove(entity);
 
-            try
-            {
-                var state = _db.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                ErrorViewModel err = new ErrorViewModel()
-                {
-                    Service = "DeleteTodoItem",
-                    Status = 2,
-                    ErrMsg = "Update error",
-                };
-                return BadRequest(err);
-            }
+            _db.SaveChanges();
 
             ModifyTodoViewModel response = GetModifyResponse(entity, request.Page);
 
