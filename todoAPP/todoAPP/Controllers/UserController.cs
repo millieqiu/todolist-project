@@ -31,19 +31,20 @@ namespace todoAPP.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequestModel loginForm)
         {
-            User? user = _db.Users
-                .Where(x => x.Username == loginForm.Username)
-                .SingleOrDefault();
+            User? user = HasUser(loginForm.Username);
+
             if (user == null)
             {
                 return BadRequest("Invalid username or password");
             }
 
-            byte[] salt = Convert.FromBase64String(user.Salt);
-            string derivedPassword = PasswordGenerator(loginForm.Password, salt);
+            string derivedPassword = PasswordGenerator(
+                loginForm.Password,
+                Convert.FromBase64String(user.Salt)
+            );
 
             bool equal = KeyDerivation.Equals(user.Password, derivedPassword);
-            if(equal == false)
+            if (equal == false)
             {
                 return BadRequest("Invalid username or password");
             }
@@ -54,11 +55,11 @@ namespace todoAPP.Controllers
                 new Claim(ClaimTypes.Name,user.Nickname)  //使用者名稱
             };
 
-            var identity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var userPrincipal = new ClaimsPrincipal(identity);
             Thread.CurrentPrincipal = userPrincipal;
             var props = new AuthenticationProperties();
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal, props);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, props);
 
             return Ok();
         }
@@ -74,10 +75,9 @@ namespace todoAPP.Controllers
         [HttpPost]
         public IActionResult Register(RegisterRequestModel registerForm)
         {
-            bool hasAccount = _db.Users
-                .Where(x => x.Username == registerForm.Username)
-                .Any();
-            if (hasAccount == true)
+            User? user = HasUser(registerForm.Username);
+
+            if (user != null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
@@ -88,19 +88,7 @@ namespace todoAPP.Controllers
                 return BadRequest(err);
             }
 
-            byte[] salt = CreateSalt();
-            string derivedPassword = PasswordGenerator(registerForm.Password, salt);
-
-            User user = new User
-            {
-                Username = registerForm.Username,
-                Password = derivedPassword,
-                Nickname = registerForm.Nickname,
-                Salt = Convert.ToBase64String(salt)
-            };
-
-            var result = _db.Users.Add(user);
-            _db.SaveChanges();
+            CreateUser(registerForm.Username, registerForm.Password, registerForm.Nickname);
 
             return Ok();
         }
@@ -123,6 +111,30 @@ namespace todoAPP.Controllers
             RandomNumberGenerator generator = RandomNumberGenerator.Create();
             generator.GetBytes(randomBytes);
             return randomBytes;
+        }
+
+        private User? HasUser(string username)
+        {
+            return _db.Users
+                .Where(x => x.Username == username)
+                .SingleOrDefault();
+        }
+
+        private void CreateUser(string username, string password, string nickname)
+        {
+            byte[] salt = CreateSalt();
+
+            User user = new User
+            {
+                Username = username,
+                Password = PasswordGenerator(password, salt),
+                Nickname = nickname,
+                Salt = Convert.ToBase64String(salt)
+            };
+
+            _db.Users.Add(user);
+            _db.SaveChanges();
+
         }
     }
 }
