@@ -11,7 +11,7 @@ using todoAPP.Models;
 using todoAPP.RequestModel;
 using todoAPP.ViewModel;
 
-namespace todoAPP.Pages.API
+namespace todoAPP.Controllers
 {
     [Authorize]
     [ApiController]
@@ -27,19 +27,27 @@ namespace todoAPP.Pages.API
         }
 
         [HttpGet]
-        public IActionResult ListAll()
+        public IActionResult ListUserPagination(int page, int userId)
         {
-            List<TodoViewModel> list = _db.TodoList
-                .Where(x => x.User.ID == GetUserId())
-                .Select(x => new TodoViewModel
-                {
-                    ID = x.ID,
-                    Status = x.Status,
-                    Text = x.Text
-                })
-                .ToList();
 
-            return Ok(list);
+            if (CheckUserRole(GetUserId(), "admin") != true)
+            {
+                return Unauthorized();
+            }
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            PaginationViewModel response = new PaginationViewModel()
+            {
+                NumOfPages = GetNumOfPages(),
+                CurrentPage = page,
+                List = GetPaginatedData(page, userId),
+            };
+
+            return Ok(response);
         }
 
         [HttpGet]
@@ -54,7 +62,7 @@ namespace todoAPP.Pages.API
             {
                 NumOfPages = GetNumOfPages(),
                 CurrentPage = page,
-                List = GetPaginatedData(page),
+                List = GetPaginatedData(page, GetUserId()),
             };
 
             return Ok(response);
@@ -75,29 +83,17 @@ namespace todoAPP.Pages.API
                 return NotFound();
             }
 
-            Todo item = new Todo()
-            {
-                Text = request.Text,
-                User = user,
-            };
+            int id = CreateItem(request.Text, user);
 
-            var t = _db.TodoList.Add(item);
-
-            _db.SaveChanges();
-
-            ModifyTodoViewModel response = GetModifyResponse(t.Entity, request.Page);
-
-            return Ok(response);
+            return Ok(new GeneralViewModel() { ID = id });
         }
 
         [HttpPut]
-        public IActionResult ChangeStatus(ModifyTodoRequestModel request)
+        public IActionResult ChangeStatus(GeneralRequestModel request)
         {
-            Todo? entity = _db.TodoList.Include(x => x.User)
-                .Where(x => x.User.ID == GetUserId() && x.ID == request.ID)
-                .SingleOrDefault();
+            Todo? item = HasItem(request.ID);
 
-            if (entity == null)
+            if (item == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
@@ -108,30 +104,17 @@ namespace todoAPP.Pages.API
                 return NotFound(err);
             }
 
-            if (entity.Status == 0)
-            {
-                entity.Status = 1;
-            }
-            else
-            {
-                entity.Status = 0;
-            }
+            ChangeItemStatus(item);
 
-            _db.SaveChanges();
-
-            ModifyTodoViewModel response = GetModifyResponse(entity, request.Page);
-
-            return Ok(response);
+            return Ok();
         }
 
         [HttpDelete]
-        public IActionResult Delete(ModifyTodoRequestModel request)
+        public IActionResult Delete(GeneralRequestModel request)
         {
-            Todo? entity = _db.TodoList.Include(x => x.User)
-                .Where(x => x.User.ID == GetUserId() && x.ID == request.ID)
-                .SingleOrDefault();
+            Todo? item = HasItem(request.ID);
 
-            if (entity == null)
+            if (item == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
@@ -142,13 +125,9 @@ namespace todoAPP.Pages.API
                 return NotFound(err);
             }
 
-            _db.TodoList.Remove(entity);
+            DeleteItem(item);
 
-            _db.SaveChanges();
-
-            ModifyTodoViewModel response = GetModifyResponse(entity, request.Page);
-
-            return Ok(response);
+            return Ok();
         }
 
         private int GetUserId()
@@ -164,10 +143,10 @@ namespace todoAPP.Pages.API
             return 0;
         }
 
-        private List<TodoViewModel> GetPaginatedData(int page)
+        private List<TodoViewModel> GetPaginatedData(int page, int userId)
         {
-            List<TodoViewModel> list = _db.TodoList
-                .Where(x => x.User.ID == GetUserId())
+            return _db.TodoList
+                .Where(x => x.User.ID == userId)
                 .Skip((page - 1) * 10)
                 .Take(10)
                 .Select(x => new TodoViewModel
@@ -176,8 +155,6 @@ namespace todoAPP.Pages.API
                     Status = x.Status,
                     Text = x.Text
                 }).ToList();
-
-            return list;
         }
 
         private double GetNumOfPages()
@@ -186,29 +163,52 @@ namespace todoAPP.Pages.API
             return Math.Ceiling(count / 10.0);
         }
 
-        private ModifyTodoViewModel GetModifyResponse(Todo item, int currentPage)
+        public bool CheckUserRole(int userID, string roleName)
         {
+            return _db.Users.Where(x => x.Role.Name == roleName && x.ID == userID).Any();
+        }
 
-            if (currentPage < 1)
+        private Todo? HasItem(int todoItemId)
+        {
+            return _db.TodoList
+                .Where(x => x.User.ID == GetUserId() && x.ID == todoItemId)
+                .SingleOrDefault();
+        }
+
+        private int CreateItem(string text, User user)
+        {
+            Todo item = new Todo()
             {
-                currentPage = 1;
+                Text = text,
+                User = user,
+            };
+
+            var t = _db.TodoList.Add(item);
+
+            _db.SaveChanges();
+
+            return t.Entity.ID;
+        }
+
+        private void ChangeItemStatus(Todo item)
+        {
+            if (item.Status == 0)
+            {
+                item.Status = 1;
+            }
+            else
+            {
+                item.Status = 0;
             }
 
-            return new ModifyTodoViewModel()
-            {
-                Item = new TodoViewModel()
-                {
-                    ID = item.ID,
-                    Status = item.Status,
-                    Text = item.Text,
-                },
-                Pagination = new PaginationViewModel()
-                {
-                    NumOfPages = GetNumOfPages(),
-                    CurrentPage = currentPage,
-                    List = GetPaginatedData(currentPage),
-                },
-            };
+            _db.SaveChanges();
+        }
+
+        private void DeleteItem(Todo item)
+        {
+            _db.TodoList.Remove(item);
+
+            _db.SaveChanges();
         }
     }
 }

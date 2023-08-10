@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using todoAPP.RequestModel;
 
-namespace todoAPP.Pages.Controllers
+namespace todoAPP.Controllers
 {
     [ApiController]
     [Route("/api/[controller]/[action]")]

@@ -1,12 +1,11 @@
 ﻿using System;
-
 namespace todoAPP.RequestModel
 {
-    public class ModifyTodoRequestModel
-    {
+	public class ModifyRoleRequestModel
+	{
         public int ID { get; set; }
 
-        public int Page { get; set; }
+        public string Name { get; set; }
     }
 }
 

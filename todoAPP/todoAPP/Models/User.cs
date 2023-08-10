@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace todoAPP.Models
 {
@@ -25,6 +27,9 @@ namespace todoAPP.Models
         public string Nickname { get; set; }
 
         public ICollection<Todo> TodoList { get; set; }
-	}
+
+        [JsonIgnore]
+        public Role? Role { get; set; }
+    }
 }
 
