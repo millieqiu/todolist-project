@@ -147,6 +147,7 @@ namespace todoAPP.Controllers
         {
             return _db.TodoList
                 .Where(x => x.User.ID == userId)
+                .OrderByDescending(item => item.CreatedAt)
                 .Skip((page - 1) * 10)
                 .Take(10)
                 .ToList();
