@@ -26,39 +26,53 @@ const app = new Vue({
     },
 
     //執行Vue實體後先載入getTodoList()函式讀取資料
+    //在登陸頁會有無法讀取api的錯誤訊息
+    //拆成兩支js
     mounted() {
+    //由於是設定頁數被點擊後才能觸發getTodoList函式，登入後尚未點擊頁數前須給定預設值為1
         this.getTodoList(1); //todo: 改將預設值寫在函式裡
     },
 
     methods: {
         //Login
         onClickLogin() {
+            var self = this;
+
             //refs - 用來控制Component(子項目)
-            let userInfo = JSON.stringify({
+            let userInfo = {
                 username: this.loginEmail,
                 password: this.loginPassword,
-            });
+            };
 
-            $.ajax({
-                url: "/api/User/Login",
+            //改用fetch
+            fetch('/api/User/Login', {
                 method: "post",
-                contentType: "application/json; charset=utf-8",
-                data: userInfo,
-                success: function (res) {
-                    window.location.assign("/TodoPage");
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                error: function (req, status) {
-                    if (req.responseJSON.service == "Login" && req.responseJSON.status == 1) {
+                body: JSON.stringify(userInfo),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log(response.json());  
+                    window.location.href = "/TodoPage";
+                    //self.getTodoList(1); //在logIn呼叫的函式不會被帶到下一頁
+                }
+                return Promise.reject(response);
+            }).catch((response, status) => {
+                response.json().then((json) => {
+                    if (json.service == "Login" && json.status == 1) {
                         alert("此帳號不存在");
                     }
-                    else if (req.responseJSON.service == "Login" && req.responseJSON.status == 2) {
+                    else if (json.service == "Login" && json.status == 2) {
                         alert("帳號或密碼錯誤");
                     }
                     else {
                         alert("無法登入，請聯絡系統管理員");
                     }
-                }
+                })
+                
             });
+
         },
         //Logout
         onClickLogout() {
@@ -112,7 +126,7 @@ const app = new Vue({
                 url: "/api/TodoList/ListPagination?page=" + page,
                 method: "get",
                 contentType: "application/json; charset=utf-8",
-                
+
                 success: function (res) {
                     //在這裡寫this的話會指向ajax
                     self.numOfPages = res.numOfPages;
@@ -120,7 +134,10 @@ const app = new Vue({
                     self.todos = res.list;
                 }
             })
+
+            
         },
+
         onClickCreateTodoItem() {
             var self = this;
 
