@@ -93,6 +93,33 @@ namespace todoAPP.Controllers
             return Ok();
         }
 
+        [HttpPatch]
+        public IActionResult Role(PatchRoleRequestModel form)
+        {
+            if(CheckUserRole(GetUserId(), "admin") == false)
+            {
+                return Unauthorized();
+            }
+
+            User? user = GetUser(form.UserID);
+            Role? role = HasRole(form.RoleName);
+
+            if (user == null || role == null)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "UserRole",
+                    Status = 1,
+                    ErrMsg = "Resource not found",
+                };
+                return NotFound(err);
+            }
+
+            EditUserRole(user, role);
+
+            return Ok();
+        }
+
         private static string PasswordGenerator(string password, byte[] salt)
         {
             byte[] key = KeyDerivation.Pbkdf2(
@@ -113,6 +140,13 @@ namespace todoAPP.Controllers
             return randomBytes;
         }
 
+        private User? GetUser(int id)
+        {
+            return _db.Users
+                .Where(x => x.ID == id)
+                .SingleOrDefault();
+        }
+
         private User? HasUser(string username)
         {
             return _db.Users
@@ -129,12 +163,44 @@ namespace todoAPP.Controllers
                 Username = username,
                 Password = PasswordGenerator(password, salt),
                 Nickname = nickname,
-                Salt = Convert.ToBase64String(salt)
+                Salt = Convert.ToBase64String(salt),
+                Role = HasRole("user")
             };
 
             _db.Users.Add(user);
             _db.SaveChanges();
+        }
 
+        private Role? HasRole(string roleName)
+        {
+
+            return _db.Roles
+                .Where(x => x.Name == roleName)
+                .SingleOrDefault();
+        }
+
+        private int GetUserId()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                string Sid = claims.First().Value;
+                Int32.TryParse(Sid, out int userId);
+                return userId;
+            }
+            return 0;
+        }
+
+        private bool CheckUserRole(int userID, string roleName)
+        {
+            return _db.Users.Where(x => x.Role.Name == roleName && x.ID == userID).Any();
+        }
+
+        private void EditUserRole(User user, Role role)
+        {
+            user.Role = role;
+            _db.SaveChanges();
         }
     }
 }

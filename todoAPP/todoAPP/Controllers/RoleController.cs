@@ -43,7 +43,7 @@ namespace todoAPP.Controllers
         [HttpPost]
         public IActionResult Create(CreateRoleRequestModel request)
         {
-            if (HasRole(request.Name) == true)
+            if (HasRole(request.Name) != null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
@@ -128,12 +128,12 @@ namespace todoAPP.Controllers
                 .SingleOrDefault();
         }
 
-        private bool HasRole(string roleName)
+        private Role? HasRole(string roleName)
         {
 
             return _db.Roles
                 .Where(x => x.Name == roleName)
-                .Any();
+                .SingleOrDefault();
         }
 
         private int CreateRole(string Name)
