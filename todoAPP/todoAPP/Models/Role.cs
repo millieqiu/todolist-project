@@ -2,10 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace todoAPP.Models
 {
-	public class Role
+    [Index(nameof(Name), IsUnique = true)]
+    public class Role
 	{
         [Key]
 		public int ID { get; set; }
