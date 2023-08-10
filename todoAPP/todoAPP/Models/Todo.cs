@@ -25,7 +25,7 @@ namespace todoAPP.Models
         public DateTime UpdatedAt { get; set; }
 
         [JsonIgnore]
-        public User? User { get; set; }
+        public User User { get; set; }
     }
 }
 

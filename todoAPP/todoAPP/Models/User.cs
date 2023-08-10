@@ -29,7 +29,7 @@ namespace todoAPP.Models
         public ICollection<Todo> TodoList { get; set; }
 
         [JsonIgnore]
-        public Role? Role { get; set; }
+        public Role Role { get; set; }
     }
 }
 
