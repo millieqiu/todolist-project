@@ -18,6 +18,12 @@ namespace todoAPP.Models
         [MaxLength(100)]
         public string Text { get; set; }
 
+        [Required]
+        public DateTime CreatedAt { get; set; }
+
+        [Required]
+        public DateTime UpdatedAt { get; set; }
+
         [JsonIgnore]
         public User? User { get; set; }
     }
