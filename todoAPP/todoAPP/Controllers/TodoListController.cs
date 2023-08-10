@@ -200,6 +200,7 @@ namespace todoAPP.Controllers
             {
                 item.Status = 0;
             }
+            item.UpdatedAt = DateTime.Now;
 
             _db.SaveChanges();
         }
