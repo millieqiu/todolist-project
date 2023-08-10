@@ -1,4 +1,5 @@
 ﻿using System;
+using todoAPP.Models;
 
 namespace todoAPP.ViewModel
 {
@@ -8,7 +9,7 @@ namespace todoAPP.ViewModel
 
         public int CurrentPage { get; set; }
 
-        public List<TodoViewModel> List { get; set; }
+        public List<Todo> List { get; set; }
     }
 }
 

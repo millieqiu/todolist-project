@@ -143,18 +143,13 @@ namespace todoAPP.Controllers
             return 0;
         }
 
-        private List<TodoViewModel> GetPaginatedData(int page, int userId)
+        private List<Todo> GetPaginatedData(int page, int userId)
         {
             return _db.TodoList
                 .Where(x => x.User.ID == userId)
                 .Skip((page - 1) * 10)
                 .Take(10)
-                .Select(x => new TodoViewModel
-                {
-                    ID = x.ID,
-                    Status = x.Status,
-                    Text = x.Text
-                }).ToList();
+                .ToList();
         }
 
         private double GetNumOfPages()
