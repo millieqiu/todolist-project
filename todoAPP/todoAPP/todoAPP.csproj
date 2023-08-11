@@ -7,13 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\header.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Models\" />
     <None Remove="Pages\Users\" />
     <None Remove="RequestModel\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\header.js" />
+  </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="RequestModel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\js\header.js" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />
