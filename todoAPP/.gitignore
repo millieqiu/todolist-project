@@ -406,3 +406,4 @@ ASALocalRun/
 
 # customize
 appsettings.Development.json
+nlog.config
