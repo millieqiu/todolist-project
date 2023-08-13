@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using NLog.Web;
 using todoAPP.Middlewares;
 using todoAPP.Models;
 using todoAPP.Services;
@@ -11,7 +12,15 @@ public class Program
 {
     public static void Main(string[] args)
     {
+
         var builder = WebApplication.CreateBuilder(args);
+
+        //logging
+        builder.Logging.ClearProviders();
+
+        builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
+
+        builder.Host.UseNLog();
 
         // Add services to the container.
         builder.Services.AddRazorPages();

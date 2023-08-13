@@ -8,13 +8,11 @@ namespace todoAPP.Services
     {
         private readonly DataContext _db;
         private readonly AuthService _auth;
-        private readonly RoleService _role;
 
-        public UserService(DataContext db, AuthService auth, RoleService role)
+        public UserService(DataContext db, AuthService auth)
         {
             _db = db;
             _auth = auth;
-            _role = role;
         }
 
         public User? HasUser(int id)

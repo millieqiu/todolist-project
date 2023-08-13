@@ -31,6 +31,7 @@ namespace todoAPP.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequestModel loginForm)
         {
+            throw new Exception("test");
             User? user = _user.HasUser(loginForm.Username);
 
             if (user == null)
