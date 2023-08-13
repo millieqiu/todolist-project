@@ -22,7 +22,6 @@ namespace todoAPP.Models
 
         public DbSet<User> Users { get; set; }
         public DbSet<Todo> TodoList { get; set; }
-        public DbSet<Role> Roles { get; set; }
     }
 }
 

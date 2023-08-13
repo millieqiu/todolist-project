@@ -41,7 +41,7 @@ namespace todoAPP.Services
                 Password = _auth.PasswordGenerator(password, salt),
                 Nickname = nickname,
                 Salt = Convert.ToBase64String(salt),
-                Role = _role.HasRole("user")
+                Role = Models.ERole.USER
             };
 
             _db.Users.Add(user);

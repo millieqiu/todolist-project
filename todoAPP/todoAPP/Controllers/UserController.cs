@@ -96,15 +96,14 @@ namespace todoAPP.Controllers
         [HttpPatch]
         public IActionResult Role(PatchRoleRequestModel form)
         {
-            if (_role.CheckUserRole(GetUserId(), "admin") == false)
+            if (_role.IsRole(GetUserId(), Models.ERole.ADMIN) == false)
             {
                 return Unauthorized();
             }
 
             User? user = _user.HasUser(form.UserID);
-            Role? role = _role.HasRole(form.RoleName);
 
-            if (user == null || role == null)
+            if (user == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
@@ -115,7 +114,7 @@ namespace todoAPP.Controllers
                 return NotFound(err);
             }
 
-            _role.EditUserRole(user, role);
+            _role.EditUserRole(user, form.RoleID);
 
             return Ok();
         }

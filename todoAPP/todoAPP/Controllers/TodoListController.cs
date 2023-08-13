@@ -29,7 +29,7 @@ namespace todoAPP.Controllers
         public IActionResult ListUserPagination(int page, int userId)
         {
 
-            if (_role.CheckUserRole(GetUserId(), "admin") != true)
+            if (_role.IsRole(GetUserId(), Models.ERole.ADMIN) != true)
             {
                 return Unauthorized();
                 //

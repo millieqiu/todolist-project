@@ -6,6 +6,7 @@ namespace todoAPP.Services
 
     public class RoleService
     {
+
         private readonly DataContext _db;
 
         public RoleService(DataContext db)
@@ -13,20 +14,14 @@ namespace todoAPP.Services
             _db = db;
         }
 
-        public Role? HasRole(string roleName)
+        public bool IsRole(int userId, ERole role)
         {
-
-            return _db.Roles
-                .Where(x => x.Name == roleName)
-                .SingleOrDefault();
+            return _db.Users
+                .Where(user => user.ID == userId && user.Role == role)
+                .Any();
         }
 
-        public bool CheckUserRole(int userID, string roleName)
-        {
-            return _db.Users.Where(x => x.Role.Name == roleName && x.ID == userID).Any();
-        }
-
-        public void EditUserRole(User user, Role role)
+        public void EditUserRole(User user, Models.ERole role)
         {
             user.Role = role;
             _db.SaveChanges();

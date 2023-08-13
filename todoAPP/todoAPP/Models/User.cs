@@ -6,11 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace todoAPP.Models
 {
+
     [Index(nameof(Username), IsUnique = true)]
     public class User
     {
         [Key]
-		public int ID { get; set; }
+        public int ID { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -28,10 +29,11 @@ namespace todoAPP.Models
         [MaxLength(50)]
         public string Nickname { get; set; }
 
+        [EnumDataType(typeof(ERole))]
+        public ERole Role { get; set; }
+
         public ICollection<Todo> TodoList { get; set; }
 
-        [JsonIgnore]
-        public Role Role { get; set; }
     }
 }
 
