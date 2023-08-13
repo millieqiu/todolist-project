@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using todoAPP.Middlewares;
 using todoAPP.Models;
+using todoAPP.Services;
 
 namespace todoAPP;
 
@@ -31,6 +32,11 @@ public class Program
                 options.SlidingExpiration = true;
             }
             );
+
+        builder.Services.AddTransient<TodoListService>();
+        builder.Services.AddTransient<AuthService>();
+        builder.Services.AddTransient<UserService>();
+        builder.Services.AddTransient<RoleService>();
 
         var app = builder.Build();
 

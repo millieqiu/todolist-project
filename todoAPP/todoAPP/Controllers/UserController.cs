@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using todoAPP.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System.Security.Cryptography;
 using todoAPP.ViewModel;
-using System.Text;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using todoAPP.RequestModel;
+using todoAPP.Services;
 
 namespace todoAPP.Controllers
 {
@@ -20,25 +15,30 @@ namespace todoAPP.Controllers
     [Route("/api/[controller]/[action]")]
     public class UserController : Controller
     {
-        private readonly DataContext _db;
+        private readonly AuthService _auth;
+        private readonly UserService _user;
+        private readonly RoleService _role;
 
 
-        public UserController(DataContext db)
+
+        public UserController(AuthService auth, UserService user, RoleService role)
         {
-            _db = db;
+            _auth = auth;
+            _user = user;
+            _role = role;
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequestModel loginForm)
         {
-            User? user = HasUser(loginForm.Username);
+            User? user = _user.HasUser(loginForm.Username);
 
             if (user == null)
             {
                 return BadRequest("Invalid username or password");
             }
 
-            string derivedPassword = PasswordGenerator(
+            string derivedPassword = _auth.PasswordGenerator(
                 loginForm.Password,
                 Convert.FromBase64String(user.Salt)
             );
@@ -75,7 +75,7 @@ namespace todoAPP.Controllers
         [HttpPost]
         public IActionResult Register(RegisterRequestModel registerForm)
         {
-            User? user = HasUser(registerForm.Username);
+            User? user = _user.HasUser(registerForm.Username);
 
             if (user != null)
             {
@@ -88,7 +88,7 @@ namespace todoAPP.Controllers
                 return BadRequest(err);
             }
 
-            CreateUser(registerForm.Username, registerForm.Password, registerForm.Nickname);
+            _user.CreateUser(registerForm.Username, registerForm.Password, registerForm.Nickname);
 
             return Ok();
         }
@@ -96,13 +96,13 @@ namespace todoAPP.Controllers
         [HttpPatch]
         public IActionResult Role(PatchRoleRequestModel form)
         {
-            if(CheckUserRole(GetUserId(), "admin") == false)
+            if (_role.CheckUserRole(GetUserId(), "admin") == false)
             {
                 return Unauthorized();
             }
 
-            User? user = GetUser(form.UserID);
-            Role? role = HasRole(form.RoleName);
+            User? user = _user.HasUser(form.UserID);
+            Role? role = _role.HasRole(form.RoleName);
 
             if (user == null || role == null)
             {
@@ -115,68 +115,9 @@ namespace todoAPP.Controllers
                 return NotFound(err);
             }
 
-            EditUserRole(user, role);
+            _role.EditUserRole(user, role);
 
             return Ok();
-        }
-
-        private static string PasswordGenerator(string password, byte[] salt)
-        {
-            byte[] key = KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,//鹽
-                prf: KeyDerivationPrf.HMACSHA512,//偽隨機函數
-                iterationCount: 1000,//雜湊執行次數
-                numBytesRequested: 256 / 8
-                );
-            return Convert.ToBase64String(key);
-        }
-
-        private static byte[] CreateSalt()
-        {
-            byte[] randomBytes = new byte[128 / 8];
-            RandomNumberGenerator generator = RandomNumberGenerator.Create();
-            generator.GetBytes(randomBytes);
-            return randomBytes;
-        }
-
-        private User? GetUser(int id)
-        {
-            return _db.Users
-                .Where(x => x.ID == id)
-                .SingleOrDefault();
-        }
-
-        private User? HasUser(string username)
-        {
-            return _db.Users
-                .Where(x => x.Username == username)
-                .SingleOrDefault();
-        }
-
-        private void CreateUser(string username, string password, string nickname)
-        {
-            byte[] salt = CreateSalt();
-
-            User user = new User
-            {
-                Username = username,
-                Password = PasswordGenerator(password, salt),
-                Nickname = nickname,
-                Salt = Convert.ToBase64String(salt),
-                Role = HasRole("user")
-            };
-
-            _db.Users.Add(user);
-            _db.SaveChanges();
-        }
-
-        private Role? HasRole(string roleName)
-        {
-
-            return _db.Roles
-                .Where(x => x.Name == roleName)
-                .SingleOrDefault();
         }
 
         private int GetUserId()
@@ -190,17 +131,6 @@ namespace todoAPP.Controllers
                 return userId;
             }
             return 0;
-        }
-
-        private bool CheckUserRole(int userID, string roleName)
-        {
-            return _db.Users.Where(x => x.Role.Name == roleName && x.ID == userID).Any();
-        }
-
-        private void EditUserRole(User user, Role role)
-        {
-            user.Role = role;
-            _db.SaveChanges();
         }
     }
 }
