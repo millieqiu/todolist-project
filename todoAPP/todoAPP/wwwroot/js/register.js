@@ -1,48 +1,32 @@
-const app2 = new Vue({
-    el: '#app2',
-    data() {
-        //Todo: ­n´è¬Vªº¸ê®Æ·|©ñ¦bdata¸Ì­± (¤£­n¥Îrefs)
-        return {
-            //Register info
-            registerEmail: '',
-            registerPassword: '',
-            confirmPassword: '',
-            registerName: '',
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
 
-        }
-    },
-    methods: {
-        onClickRegister() {
-            let userInfo = JSON.stringify({
-                username: this.registerEmail,
-                password: this.registerPassword,
-                confirmPassword: this.confirmPassword,
-                nickname: this.registerName,
-            });
-            $.ajax({
-                url: "/api/User/Register",
-                method: "post",
-                contentType: "application/json; charset=utf-8",
-                data: userInfo,
-                success: function (res) {
-                    alert("µù¥U¦¨¥\¡I");
-                    window.location.assign("/Index");
-                },
-                error: function (req, status) {
-                    if (req.responseJSON.service && req.responseJSON.service == "Register" && req.responseJSON.status == 1) {
-                        alert("±b¸¹¤w¦s¦b");
-                    }
-                    else if (req.responseJSON.errors.Username && req.responseJSON.errors.Username.includes("The Username field is not a valid e-mail address.")) {
-                        alert("Email®æ¦¡¿ù»~");
-                    }
-                    else if (req.responseJSON.errors.ConfirmPassword) {
-                        alert("±K½X»P½T»{±K½X¤£²Å¦X");
-                    }
-                    else {
-                        alert("µLªkµù¥U±b¸¹¡A½ÐÁpµ¸¨t²ÎºÞ²z­û");
-                    }
-                }
-            })
-        },
-    }
-})
+/***/ "./src/register.js":
+/*!*************************!*\
+  !*** ./src/register.js ***!
+  \*************************/
+/***/ (() => {
+
+eval("const app2 = new Vue({\r\n    el: '#app2',\r\n    data() {\r\n        //Todo: ï¿½nï¿½ï¿½Vï¿½ï¿½ï¿½ï¿½Æ·|ï¿½ï¿½bdataï¿½Ì­ï¿½ (ï¿½ï¿½ï¿½nï¿½ï¿½refs)\r\n        return {\r\n            //Register info\r\n            registerEmail: '',\r\n            registerPassword: '',\r\n            confirmPassword: '',\r\n            registerName: '',\r\n\r\n        }\r\n    },\r\n    methods: {\r\n        onClickRegister() {\r\n            let userInfo = JSON.stringify({\r\n                username: this.registerEmail,\r\n                password: this.registerPassword,\r\n                confirmPassword: this.confirmPassword,\r\n                nickname: this.registerName,\r\n            });\r\n            $.ajax({\r\n                url: \"/api/User/Register\",\r\n                method: \"post\",\r\n                contentType: \"application/json; charset=utf-8\",\r\n                data: userInfo,\r\n                success: function (res) {\r\n                    alert(\"ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½\\ï¿½I\");\r\n                    window.location.assign(\"/Index\");\r\n                },\r\n                error: function (req, status) {\r\n                    if (req.responseJSON.service && req.responseJSON.service == \"Register\" && req.responseJSON.status == 1) {\r\n                        alert(\"ï¿½bï¿½ï¿½ï¿½wï¿½sï¿½b\");\r\n                    }\r\n                    else if (req.responseJSON.errors.Username && req.responseJSON.errors.Username.includes(\"The Username field is not a valid e-mail address.\")) {\r\n                        alert(\"Emailï¿½æ¦¡ï¿½ï¿½ï¿½~\");\r\n                    }\r\n                    else if (req.responseJSON.errors.ConfirmPassword) {\r\n                        alert(\"ï¿½Kï¿½Xï¿½Pï¿½Tï¿½{ï¿½Kï¿½Xï¿½ï¿½ï¿½Å¦X\");\r\n                    }\r\n                    else {\r\n                        alert(\"ï¿½Lï¿½kï¿½ï¿½ï¿½Uï¿½bï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½pï¿½ï¿½ï¿½tï¿½ÎºÞ²zï¿½ï¿½\");\r\n                    }\r\n                }\r\n            })\r\n        },\r\n    }\r\n})\n\n//# sourceURL=webpack://todoapp/./src/register.js?");
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = {};
+/******/ 	__webpack_modules__["./src/register.js"]();
+/******/ 	
+/******/ })()
+;

@@ -1,4 +1,8 @@
-﻿// 建立 Vue
+﻿//嘗試過的解法
+//import Vue from 'vue';
+//import Vue from 'vue/dist/vue.js'
+
+// 建立 Vue
 const app = new Vue({
     el: '#app',
     data() {
