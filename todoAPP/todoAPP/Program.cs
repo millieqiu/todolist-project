@@ -18,8 +18,6 @@ public class Program
         //logging
         builder.Logging.ClearProviders();
 
-        builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
-
         builder.Host.UseNLog();
 
         // Add services to the container.
