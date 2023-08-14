@@ -403,7 +403,3 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
-
-# customize
-appsettings.Development.json
-nlog.config
