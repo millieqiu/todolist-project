@@ -98,7 +98,7 @@ namespace todoAPP.Controllers
         {
             if (_role.IsRole(GetUserId(), Models.ERole.ADMIN) == false)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             User? user = _user.HasUser(form.UserID);

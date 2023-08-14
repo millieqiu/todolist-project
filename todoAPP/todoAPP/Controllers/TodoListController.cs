@@ -31,8 +31,7 @@ namespace todoAPP.Controllers
 
             if (_role.IsRole(GetUserId(), Models.ERole.ADMIN) != true)
             {
-                return Unauthorized();
-                //
+                return Forbid();
             }
 
             if (page < 1)
