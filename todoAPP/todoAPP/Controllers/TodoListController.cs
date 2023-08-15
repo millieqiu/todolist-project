@@ -26,13 +26,9 @@ namespace todoAPP.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult ListUserPagination(int page, int userId)
         {
-
-            if (_role.IsRole(GetUserId(), Models.ERole.ADMIN) != true)
-            {
-                return Forbid();
-            }
 
             if (page < 1)
             {

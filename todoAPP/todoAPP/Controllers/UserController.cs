@@ -51,9 +51,18 @@ namespace todoAPP.Controllers
 
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.Sid,user.ID.ToString()), //使用者ID
-                new Claim(ClaimTypes.NameIdentifier,user.Username),  //使用者名稱
+                new Claim(ClaimTypes.NameIdentifier,user.Username),  //使用者帳號
                 new Claim(ClaimTypes.Name,user.Nickname)  //使用者名稱
             };
+
+            if (user.Role == ERole.ADMIN)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+            }
+            else
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "User"));
+            }
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var userPrincipal = new ClaimsPrincipal(identity);
@@ -94,13 +103,9 @@ namespace todoAPP.Controllers
         }
 
         [HttpPatch]
+        [Authorize(Roles = "Admin")]
         public IActionResult Role(PatchRoleRequestModel form)
         {
-            if (_role.IsRole(GetUserId(), Models.ERole.ADMIN) == false)
-            {
-                return Forbid();
-            }
-
             User? user = _user.HasUser(form.UserID);
 
             if (user == null)
