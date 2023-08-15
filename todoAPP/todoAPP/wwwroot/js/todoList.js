@@ -9,14 +9,14 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/register.js":
+/***/ "./src/todoList.js":
 /*!*************************!*\
-  !*** ./src/register.js ***!
+  !*** ./src/todoList.js ***!
   \*************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _css_style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./css/style.scss */ \"./src/css/style.scss\");\n\n\n\nvar app2 = new (vue__WEBPACK_IMPORTED_MODULE_2___default())({\n  el: '#app2',\n  data: function data() {\n    //Todo: �n��V����Ʒ|��bdata�̭� (���n��refs)\n    return {\n      //Register info\n      registerEmail: '',\n      registerPassword: '',\n      confirmPassword: '',\n      registerName: ''\n    };\n  },\n  methods: {\n    onClickRegister: function onClickRegister() {\n      var userInfo = JSON.stringify({\n        username: this.registerEmail,\n        password: this.registerPassword,\n        confirmPassword: this.confirmPassword,\n        nickname: this.registerName\n      });\n      jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({\n        url: \"/api/User/Register\",\n        method: \"post\",\n        contentType: \"application/json; charset=utf-8\",\n        data: userInfo,\n        success: function success(res) {\n          alert(\"���U���\\�I\");\n          window.location.assign(\"/Index\");\n        },\n        error: function error(req, status) {\n          if (req.responseJSON.service && req.responseJSON.service == \"Register\" && req.responseJSON.status == 1) {\n            alert(\"�b���w�s�b\");\n          } else if (req.responseJSON.errors.Username && req.responseJSON.errors.Username.includes(\"The Username field is not a valid e-mail address.\")) {\n            alert(\"Email�榡���~\");\n          } else if (req.responseJSON.errors.ConfirmPassword) {\n            alert(\"�K�X�P�T�{�K�X���ŦX\");\n          } else {\n            alert(\"�L�k���U�b���A���p���t�κ޲z��\");\n          }\n        }\n      });\n    }\n  }\n});\n\n//# sourceURL=webpack://todoapp/./src/register.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _css_style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./css/style.scss */ \"./src/css/style.scss\");\n\n\n\nvar appTodo = new (vue__WEBPACK_IMPORTED_MODULE_2___default())({\n  el: '#appTodo',\n  data: function data() {\n    //Todo: 要渲染的資料會放在data裡面 (不要用refs)\n    return {\n      todoText: '',\n      message: 'Hello World',\n      //測試用資料\n\n      todos: [],\n      //傳遞API讀取的資料\n      numOfPages: 0,\n      //資料型態為數字，給定預設值0 (因為沒有任何items前不應該有頁碼)\n      currentPage: 0\n    };\n  },\n  mounted: function mounted() {\n    //由於是設定頁數被點擊後才能觸發getTodoList函式，登入後尚未點擊頁數前須給定預設值為1\n    this.getTodoList(1); //todo: 改將預設值寫在函式裡\n  },\n\n  methods: {\n    getTodoList: function getTodoList(page) {\n      var self = this; //在這邊給定範圍內的this都是self\n\n      jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({\n        url: \"/api/TodoList/ListPagination?page=\" + page,\n        method: \"get\",\n        contentType: \"application/json; charset=utf-8\",\n        success: function success(res) {\n          //在這裡寫this的話會指向ajax\n          self.numOfPages = res.numOfPages;\n          self.currentPage = res.currentPage;\n          self.todos = res.list;\n        }\n      });\n    },\n    onClickCreateTodoItem: function onClickCreateTodoItem() {\n      var self = this;\n      var todoItem = JSON.stringify({\n        Text: this.todoText,\n        page: this.currentPage\n      });\n      jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({\n        url: \"/api/TodoList/Create\",\n        method: \"post\",\n        contentType: \"application/json; charset=utf-8\",\n        data: todoItem,\n        success: function success(res) {\n          self.getTodoList(self.currentPage);\n        }\n      });\n    },\n    onClickDeleteTodoItem: function onClickDeleteTodoItem(id) {\n      //todo: delete功能\n      var self = this;\n      var todoItem = JSON.stringify({\n        id: id,\n        page: this.currentPage\n      });\n      jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({\n        url: \"/api/TodoList/Delete\",\n        method: \"delete\",\n        contentType: \"application/json; charset=utf-8\",\n        data: todoItem,\n        success: function success(res) {\n          self.getTodoList(self.currentPage);\n        }\n      });\n    },\n    onChangeStatus: function onChangeStatus(id) {\n      //todo: check功能\n      var todoItem = JSON.stringify({\n        id: id,\n        page: this.currentPage\n      });\n      jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({\n        url: \"/api/TodoList/ChangeStatus\",\n        method: \"put\",\n        contentType: \"application/json; charset=utf-8\",\n        data: todoItem,\n        success: function success(res) {\n          getTodoList(page);\n        }\n      });\n    }\n  }\n});\n\n//# sourceURL=webpack://todoapp/./src/todoList.js?");
 
 /***/ }),
 
@@ -460,7 +460,7 @@ eval("module.exports = \"data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/20
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"register": 0
+/******/ 			"todoList": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -488,7 +488,7 @@ eval("module.exports = \"data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/20
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/register.js");
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/todoList.js");
 /******/ 	
 /******/ })()
 ;

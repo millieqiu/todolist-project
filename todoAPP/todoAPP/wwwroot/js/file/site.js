@@ -1,7 +1,4 @@
-﻿//嘗試過的解法
-import Vue from 'vue';
-import './css/style.scss'; // 這裡
-//import Vue from 'vue/dist/vue.js'
+﻿import Vue from 'vue';
 
 // 建立 Vue
 const app = new Vue({
@@ -13,7 +10,7 @@ const app = new Vue({
             loginEmail: '',
             loginPassword: '',
 
-            message: 'Testttttttttttttt', //測試用資料
+            message: 'Hello World', //測試用資料
 
         }
     },

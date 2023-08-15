@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\custom.scss" />
     <Content Remove="wwwroot\js\header.js" />
   </ItemGroup>
 
@@ -24,6 +25,7 @@
     <Folder Include="RequestModel\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="wwwroot\css\custom.scss" />
     <None Include="wwwroot\js\header.js" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import $ from "jquery";
-import './css/style.scss';
 
 const header = new Vue({
     el: '#header',
