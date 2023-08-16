@@ -4,28 +4,43 @@
     ViewData["Title"] = "My To-do List";
 }
 
+
 <!-- Main 區塊 -->
-<section class="section">
+<section class="section" id="appTodo">
+    {{message}}
+    
     <div class="main flex-center">
-        <h2 class="h2 brand-color-drak"><span id="user_name"></span>@User.Identity.Name，使用 To-do 規劃美好的一天。</h2>
-        <div class="list-container">
-            <form method="post" action="" onsubmit="onClickCreateTodoItem(event)">
+        <h2 class="heading2 h2-font-size"><span id="user_name"></span>@User.Identity.Name，使用 To-do 規劃美好的一天。</h2>
+        <div class="list-container bg-light">
+            <form method="post" action="" v-on:submit.prevent="onClickCreateTodoItem()">
                 <div class="add-container">
-                    <input type="text" class="add-input paragraph1 gray-03" id="todoText" placeholder="添加你的待辦事項...">
-                    <button class="button-mid button-primary">新增</button>
+                    <input type="text" class="add-input paragraph1 text-gray-300 bg-white border border-1 border-primary" id="todoText" placeholder="添加你的待辦事項..." v-model="todoText">
+                    <button class="btn btn-primary text-white button-mid">新增</button>
                 </div>
             </form>
-            <div class="list" id="todolist">
-
-
-
-            </div>
+            <ul class="list" id="todolist" v-for="todo in todos">
+                
+                <li class="task bg-white">
+                    <label class="task-content">
+                        <input type="checkbox" name="" class="form-check-input checkbox" v-on:click="onChangeStatus(todo.id)" v-bind:checked="todo.status">
+                        <span class="text-gray-500 paragraph1" for="">{{todo.text}}</span>
+                    </label>
+                    <div class="icon" id="delete_item_${value.id}" v-on:click.prevent="onClickDeleteTodoItem(todo.id)">
+                        <i class="fa-solid fa-trash icon-color"></i>
+                    </div>
+                </li>
+                
+            </ul>
         </div>
-        <div id="pagination" class="pagenumbers">
-            @*<li>1</li>*@
+
+        <div id="pagination" class="pagination pagenumbers">
+            <!--li標籤不用.prevent(不會觸發預設動作)-->
+            <!--v-for如果掛在div上面，會變成整個div重複三次-->
+            <li class="page-item" v-for="page in numOfPages" v-on:click="getTodoList(page)">{{page}}</li>
         </div>
+
     </div>
 
 </section>
 
-<script src="~/js/todoList.js" asp-append-version="true"></script>
+<script type="module" src="~/dist/todoList.js" asp-append-version="true"></script>

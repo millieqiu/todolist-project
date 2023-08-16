@@ -4,30 +4,39 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - todoAPP</title>
-    <link rel="stylesheet" href="~/css/normalize.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/todoAPP.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@700&family=Tilt+Prism&display=swap" rel="stylesheet">
+    @*<link rel="stylesheet" href="~/css/normalize.css" asp-append-version="true" />*@
+    @*<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />*@
+    <link rel="stylesheet" href="~/js/css/all.min.css" asp-append-version="true" />
+ 
+
+    <!--試過的解法-->
+    <!--<script src="../node_modules/vue/dist/vue.js"></script>-->
+
+    <!--載入Vue-->
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.14/vue.min.js" integrity="sha512-BAMfk70VjqBkBIyo9UTRLl3TBJ3M0c6uyy2VMUrq370bWs7kchLNN9j1WiJQus9JAJVqcriIUX859JOm12LWtw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>*@
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
 </head>
-<body>
+<body class="body-bg">
+
 
     <!-- Header 樣式 -->
-    <header class="header">
+    <header class="header bg-white" id="header">
         <a href="">
-            <h1 class="h1 brand-color-main">TO DO LIST</h1>
+            <h1 class="heading1 text-primary font-weight-bold">TO DO LIST</h1>
         </a>
         @if (User.Identity.IsAuthenticated == true)
         {
-            <button class="button-sm button-outlined" onclick="onClickLogout()">登出</button>
+                <button class="button-sm button-outlined btn-outline-secondary " v-on:click="onClickLogout">登出</button>
         }
     </header>
 
     @RenderBody()
-    
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <script type="module" src="~/dist/header.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

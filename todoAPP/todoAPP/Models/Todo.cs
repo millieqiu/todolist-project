@@ -19,7 +19,7 @@ namespace todoAPP.Models
         public string Text { get; set; }
 
         [Required]
-        [MaxLength(18)]
+        [MaxLength(6)]
         public string Weather { get; set; }
 
         [Required]

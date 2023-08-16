@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\custom.scss" />
+    <Content Remove="wwwroot\js\header.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Models\" />
     <None Remove="Pages\Users\" />
     <None Remove="RequestModel\" />
@@ -14,12 +19,20 @@
     <None Remove="Logging\" />
     <None Remove="Services\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\header.js" />
+  </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="RequestModel\" />
     <Folder Include="Middlewares\" />
     <Folder Include="Logging\" />
     <Folder Include="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\css\custom.scss" />
+    <None Include="wwwroot\js\header.js" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />
