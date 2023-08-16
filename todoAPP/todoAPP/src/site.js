@@ -13,7 +13,7 @@ const app = new Vue({
             loginEmail: '',
             loginPassword: '',
 
-            message: 'Testttttttttttttt', //測試用資料
+            message: 'Testtttttt', //測試用資料
 
         }
     },

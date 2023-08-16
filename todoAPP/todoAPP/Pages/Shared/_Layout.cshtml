@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] - todoAPP</title>
     @*<link rel="stylesheet" href="~/css/normalize.css" asp-append-version="true" />*@
     @*<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />*@
-    <link rel="stylesheet" href="~/js/all.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/js/css/all.min.css" asp-append-version="true" />
  
 
     <!--試過的解法-->
@@ -32,9 +32,8 @@
 
     @RenderBody()
 
-
-    <script type="module" src="~/js/header.js" asp-append-version="true"></script>
-
+    <script type="module" src="~/dist/header.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </bod>
 </html>
