@@ -21,7 +21,7 @@ function onClickDeleteTodoItem(event,todoID) {
         contentType: "application/json; charset=utf-8",
         data: todoItem,
         success: function (res) {
-            setTodoList(res.pagination);
+            getTodoList(1);
         } 
     })
 }
@@ -51,7 +51,7 @@ function createTodoItem(text) {
         contentType: "application/json; charset=utf-8",
         data: todoItem,
         success: function (res) {
-            setTodoList(res.pagination);
+            getTodoList(1);
         }
     })
 }
@@ -67,7 +67,7 @@ function onChangeStatus(todoID) {
         contentType: "application/json; charset=utf-8",
         data: todoItem,
         success: function (res) {
-            setTodoList(res.pagination);
+            getTodoList(1);
         }
     })
 }
