@@ -8,10 +8,12 @@ namespace todoAPP.Services
     {
 
         private readonly DataContext _db;
+        private readonly WeatherService _weather;
 
-        public TodoListService(DataContext db)
+        public TodoListService(DataContext db, WeatherService weather)
         {
             _db = db;
+            _weather = weather;
         }
 
         public List<Todo> GetPaginatedData(int page, int userId)
@@ -38,12 +40,13 @@ namespace todoAPP.Services
                 .SingleOrDefault();
         }
 
-        public int CreateItem(string text, User user)
+        async public Task<int> CreateItem(string text, User user)
         {
             Todo item = new Todo()
             {
                 Text = text,
                 User = user,
+                Weather = await _weather.GetWeather(),
             };
 
             var t = _db.TodoList.Add(item);

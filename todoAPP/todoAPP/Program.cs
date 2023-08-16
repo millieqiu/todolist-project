@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Configuration;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
@@ -40,10 +41,13 @@ public class Program
             }
             );
 
+        builder.Services.AddHttpClient();
+
         builder.Services.AddTransient<TodoListService>();
         builder.Services.AddTransient<AuthService>();
         builder.Services.AddTransient<UserService>();
         builder.Services.AddTransient<RoleService>();
+        builder.Services.AddTransient<WeatherService>();
 
         var app = builder.Build();
 

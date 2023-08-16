@@ -91,6 +91,7 @@ function setTodoList(res) {
                                             <div class="icon" id="delete_item_${value.id}" onClick="onClickDeleteTodoItem(event,${value.id})">
                                                 <i class="fa-solid fa-trash gray-04"></i>
                                             </div>
+                                            <div class="tag"><span>${value.weather}</span></div>
                                         </div>`).html();
     });
 }

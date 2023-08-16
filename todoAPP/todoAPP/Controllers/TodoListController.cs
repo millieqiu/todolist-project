@@ -15,14 +15,12 @@ namespace todoAPP.Controllers
     {
         private readonly TodoListService _todo;
         private readonly UserService _user;
-        private readonly RoleService _role;
 
 
-        public TodoListController(TodoListService todo, UserService user, RoleService role)
+        public TodoListController(TodoListService todo, UserService user, WeatherService weather)
         {
             _todo = todo;
             _user = user;
-            _role = role;
         }
 
         [HttpGet]
@@ -64,7 +62,7 @@ namespace todoAPP.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateTodoRequestModel request)
+        async public Task<IActionResult> Create(CreateTodoRequestModel request)
         {
             User? user = _user.HasUser(GetUserId());
             if (user == null)
@@ -78,7 +76,7 @@ namespace todoAPP.Controllers
                 return NotFound();
             }
 
-            int id = _todo.CreateItem(request.Text, user);
+            int id = await _todo.CreateItem(request.Text, user);
 
             return Ok(new GeneralViewModel() { ID = id });
         }

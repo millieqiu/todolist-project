@@ -19,6 +19,10 @@ namespace todoAPP.Models
         public string Text { get; set; }
 
         [Required]
+        [MaxLength(18)]
+        public string Weather { get; set; }
+
+        [Required]
         public DateTime CreatedAt { get; set; }
 
         [Required]
