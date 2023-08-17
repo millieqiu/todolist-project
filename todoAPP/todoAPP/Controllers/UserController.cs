@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using todoAPP.RequestModel;
 using todoAPP.Services;
-using System.IO;
-using System.Net.Mime;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace todoAPP.Controllers
 {
@@ -156,7 +155,13 @@ namespace todoAPP.Controllers
                 return NotFound(err);
             }
 
-            return File(bytes, "image/png");
+            var provider = new FileExtensionContentTypeProvider();
+            if(provider.TryGetContentType(user.Avatar, out string contentType) == false)
+            {
+                return File(bytes, "application/octet-stream");
+            }
+
+            return File(bytes, contentType);
         }
 
         [HttpPatch]
