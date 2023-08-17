@@ -7,6 +7,10 @@ const setting = new Vue({
     data() {
         return {
             message: 'Testtttttt', //測試用資料
+            previewImage: null,
         }
+    },
+    methods: {
+        
     },
 })
