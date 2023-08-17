@@ -150,20 +150,11 @@ namespace todoAPP.Controllers
                 ErrorViewModel err = new ErrorViewModel()
                 {
                     Service = "Avatar",
-                    Status = 1,
+                    Status = 2,
                     ErrMsg = "Resource not found",
                 };
                 return NotFound(err);
             }
-
-            var cd = new ContentDisposition
-            {
-                FileName = user.Avatar,
-                Inline = false
-            };
-
-            Response.Headers.Add("Content-Disposition", cd.ToString());
-            Response.Headers.Add("X-Content-Type-Options", "nosniff");
 
             return File(bytes, "image/png");
         }
