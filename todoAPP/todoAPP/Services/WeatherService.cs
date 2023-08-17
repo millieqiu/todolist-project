@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Web;
 using Azure;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
 using todoAPP.ViewModel;
@@ -10,9 +13,9 @@ namespace todoAPP.Services
 {
     public class WeatherService
     {
-        private string BaseURL = "https://opendata.cwb.gov.tw/api";
+        private Uri BaseURI;
         private string API;
-        private Dictionary<string, string> Params;
+        private IEnumerable<KeyValuePair<string, string>> Params;
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
@@ -21,30 +24,25 @@ namespace todoAPP.Services
         {
             _clientFactory = clientFactory;
             _configuration = configuration;
+
+            BaseURI = new Uri("https://opendata.cwb.gov.tw");
         }
 
         async public Task<WeatherViewModel?> GetWeather()
         {
-            API = "/v1/rest/datastore/O-A0001-001";
-
-            Params = new Dictionary<string, string>() { };
-            Params.Add("Authorization", _configuration.GetSection("CWB:Key").Value);
-            Params.Add("stationId", "C0AC70");
-            Params.Add("elementName", "Weather");
-
-            var httpClient = _clientFactory.CreateClient();
-            string paramString = "";
-            int counter = 0;
-            foreach (KeyValuePair<string, string> pair in Params)
+            Uri apiUri = new Uri(BaseURI, "/api/v1/rest/datastore/O-A0001-001");
+            QueryBuilder qBuilder = new QueryBuilder
             {
-                paramString += pair.Key + "=" + pair.Value;
-                if (++counter < Params.Count)
-                {
-                    paramString += "&";
-                }
-            }
+                { "Authorization", _configuration.GetSection("CWB:Key").Value },
+                { "stationId", "C0AC70" },
+                { "elementName", "Weather" }
+            };
+            string queryParamStr = qBuilder.ToQueryString().ToUriComponent();
 
-            var response = await httpClient.GetStringAsync(BaseURL + API + "?" + paramString);
+            Uri queryUri = new Uri(apiUri, queryParamStr);
+            var httpClient = _clientFactory.CreateClient();
+            var response = await httpClient.GetStringAsync(queryUri);
+
             WeatherViewModel? weather = JsonSerializer.Deserialize<WeatherViewModel>(response);
 
             return weather;

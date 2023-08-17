@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\css\custom.scss" />
-    <Content Remove="wwwroot\js\header.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,9 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\js\header.js" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="RequestModel\" />
     <Folder Include="Middlewares\" />
@@ -32,7 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\css\custom.scss" />
-    <None Include="wwwroot\js\header.js" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />

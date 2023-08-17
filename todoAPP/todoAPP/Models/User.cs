@@ -29,6 +29,10 @@ namespace todoAPP.Models
         [MaxLength(50)]
         public string Nickname { get; set; }
 
+        [Required]
+        [MaxLength(1024)]
+        public string Avatar { get; set; }
+
         [EnumDataType(typeof(ERole))]
         public ERole Role { get; set; }
 
