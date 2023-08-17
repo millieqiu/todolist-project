@@ -128,9 +128,23 @@ namespace todoAPP.Controllers
         }
 
         [HttpGet]
-        public IActionResult Avatar(string FileName)
+        [Authorize]
+        public IActionResult Avatar()
         {
-            byte[]? bytes = _user.GetAvatar(FileName);
+            User? user = _user.HasUser(GetUserId());
+
+            if (user == null)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "Avatar",
+                    Status = 1,
+                    ErrMsg = "Resource not found",
+                };
+                return NotFound(err);
+            }
+
+            byte[]? bytes = _user.GetAvatar(user.Avatar);
             if(bytes == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
@@ -144,7 +158,7 @@ namespace todoAPP.Controllers
 
             var cd = new ContentDisposition
             {
-                FileName = FileName,
+                FileName = user.Avatar,
                 Inline = false
             };
 
@@ -155,9 +169,10 @@ namespace todoAPP.Controllers
         }
 
         [HttpPatch]
-        async public Task<IActionResult> Avatar([FromForm] PatchAvatarRequestModel form)
+        [Authorize]
+        async public Task<IActionResult> Avatar([FromForm] IFormFile avatar)
         {
-            User? user = _user.HasUser(form.UserID);
+            User? user = _user.HasUser(GetUserId());
 
             if (user == null)
             {
@@ -170,9 +185,22 @@ namespace todoAPP.Controllers
                 return NotFound(err);
             }
 
-            await _user.EditAvatar(user, form.Avatar);
+            await _user.EditAvatar(user, avatar);
 
             return Ok();
+        }
+
+        private int GetUserId()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                string Sid = claims.First().Value;
+                Int32.TryParse(Sid, out int userId);
+                return userId;
+            }
+            return 0;
         }
     }
 }
