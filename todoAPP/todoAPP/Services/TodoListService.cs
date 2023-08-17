@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using todoAPP.Models;
+using todoAPP.ViewModel;
 
 namespace todoAPP.Services
 {
@@ -42,11 +43,17 @@ namespace todoAPP.Services
 
         async public Task<int> CreateItem(string text, User user)
         {
+            WeatherViewModel? weather = await _weather.GetWeather();
+            if (weather == null)
+            {
+                throw new Exception("Weather API error");
+            }
+
             Todo item = new Todo()
             {
                 Text = text,
                 User = user,
-                Weather = await _weather.GetWeather(),
+                Weather = weather.records.location.First().weatherElement.First().elementValue,
             };
 
             var t = _db.TodoList.Add(item);
