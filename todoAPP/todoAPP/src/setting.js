@@ -7,10 +7,14 @@ const setting = new Vue({
     data() {
         return {
             message: 'Testtttttt', //測試用資料
-            previewImage: null,
+            default: '~/lib/default.jpg',
+            url: null,
         }
     },
     methods: {
-        
+        onFileChange(e) {
+            const file = e.target.files[0];
+            this.url = URL.createObjectURL(file);
+        }
     },
 })
