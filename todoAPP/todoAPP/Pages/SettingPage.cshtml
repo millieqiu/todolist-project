@@ -14,7 +14,7 @@
             <div class="avatar-button flex-align-center">
                 <input id="image-input" type="file" accept="image/*" v-on:change="onFileChange"/>
                 <label for="image-input" class="button-sm btn btn-primary text-white">選擇檔案</label>
-                <button class="button-sm btn btn-primary text-white" v-on:click.prevent="" disabled>確認上傳</button>
+                <button class="button-sm btn btn-primary text-white" v-on:click.prevent="" :disabled="!url">確認上傳</button>
             </div>
         </form>
     </div>
