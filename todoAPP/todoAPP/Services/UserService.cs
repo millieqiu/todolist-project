@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using todoAPP.Migrations;
 using todoAPP.Models;
 
@@ -8,11 +10,13 @@ namespace todoAPP.Services
     {
         private readonly DataContext _db;
         private readonly AuthService _auth;
+        private readonly FileService _file;
 
-        public UserService(DataContext db, AuthService auth)
+        public UserService(DataContext db, AuthService auth, FileService file)
         {
             _db = db;
             _auth = auth;
+            _file = file;
         }
 
         public User? HasUser(int id)
@@ -39,10 +43,27 @@ namespace todoAPP.Services
                 Password = _auth.PasswordGenerator(password, salt),
                 Nickname = nickname,
                 Salt = Convert.ToBase64String(salt),
-                Role = Models.ERole.USER
+                Role = Models.ERole.USER,
+                Avatar = "default.jpeg"
             };
 
             _db.Users.Add(user);
+            _db.SaveChanges();
+        }
+
+        public byte[]? GetAvatar(string fileName)
+        {
+            return _file.ReadFile(fileName);
+        }
+
+        async public Task EditAvatar(User user, IFormFile avatar)
+        {
+            if(string.IsNullOrEmpty(user.Avatar) == false && user.Avatar != "default.jpeg")
+            {
+                _file.RemoveFile(user.Avatar);
+            }
+            string fileName = await _file.WriteFile(avatar);
+            user.Avatar = fileName;
             _db.SaveChanges();
         }
     }

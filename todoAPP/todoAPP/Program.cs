@@ -48,6 +48,7 @@ public class Program
         builder.Services.AddTransient<UserService>();
         builder.Services.AddTransient<RoleService>();
         builder.Services.AddTransient<WeatherService>();
+        builder.Services.AddTransient<FileService>();
 
         var app = builder.Build();
 

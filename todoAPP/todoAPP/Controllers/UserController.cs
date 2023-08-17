@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using todoAPP.RequestModel;
 using todoAPP.Services;
+using System.IO;
+using System.Net.Mime;
 
 namespace todoAPP.Controllers
 {
@@ -52,7 +54,8 @@ namespace todoAPP.Controllers
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.Sid,user.ID.ToString()), //使用者ID
                 new Claim(ClaimTypes.NameIdentifier,user.Username),  //使用者帳號
-                new Claim(ClaimTypes.Name,user.Nickname)  //使用者名稱
+                new Claim(ClaimTypes.Name,user.Nickname),  //使用者名稱
+                new Claim("Avatar",user.Avatar)  //使用者圖像
             };
 
             if (user.Role == ERole.ADMIN)
@@ -124,17 +127,52 @@ namespace todoAPP.Controllers
             return Ok();
         }
 
-        private int GetUserId()
+        [HttpGet]
+        public IActionResult Avatar(string FileName)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            byte[]? bytes = _user.GetAvatar(FileName);
+            if(bytes == null)
             {
-                IEnumerable<Claim> claims = identity.Claims;
-                string Sid = claims.First().Value;
-                Int32.TryParse(Sid, out int userId);
-                return userId;
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "Avatar",
+                    Status = 1,
+                    ErrMsg = "Resource not found",
+                };
+                return NotFound(err);
             }
-            return 0;
+
+            var cd = new ContentDisposition
+            {
+                FileName = FileName,
+                Inline = false
+            };
+
+            Response.Headers.Add("Content-Disposition", cd.ToString());
+            Response.Headers.Add("X-Content-Type-Options", "nosniff");
+
+            return File(bytes, "image/png");
+        }
+
+        [HttpPatch]
+        async public Task<IActionResult> Avatar([FromForm] PatchAvatarRequestModel form)
+        {
+            User? user = _user.HasUser(form.UserID);
+
+            if (user == null)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "Avatar",
+                    Status = 1,
+                    ErrMsg = "Resource not found",
+                };
+                return NotFound(err);
+            }
+
+            await _user.EditAvatar(user, form.Avatar);
+
+            return Ok();
         }
     }
 }
