@@ -29,7 +29,10 @@
         </a>
         @if (User.Identity.IsAuthenticated == true)
         {
+            <div class="header-button">
+                <a class="button-sm button-outlined btn-outline-secondary text-secondary" href="/SettingPage">設定</a>
                 <button class="button-sm button-outlined btn-outline-secondary " v-on:click="onClickLogout">登出</button>
+            </div>
         }
     </header>
 

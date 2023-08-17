@@ -5,7 +5,8 @@ module.exports = {
     site: './src/site.js',
     register: './src/register.js',
     header: './src/header.js',
-    todoList: './src/todoList.js'
+    todoList: './src/todoList.js',
+    setting: './src/setting.js'
   },
   module: {
     rules: [

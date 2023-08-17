@@ -6,7 +6,7 @@ module.exports = merge(common, {
   mode: 'development',
   watch: true,
   watchOptions: {
-    aggregateTimeout: 500
+    aggregateTimeout: 300
 },
 output: {
   path: path.resolve(__dirname, './wwwroot/dist'),

@@ -9,9 +9,9 @@ $gray-400: #676767;
 $gray-500: #2A2A2A;
 $black: #000;
 
-$primary: #FF385C;
-$secondary: #222222;
-$light: #F2F2F2;
+$primary: #3397CF;
+$secondary: #00324E;
+$light: #EDF1F5;
 
 $h1-font-size: 42px; 
 $h2-font-size: 32px;
@@ -49,9 +49,15 @@ body {
     margin-bottom: 120px;
 }
 
-    .header a {
-        text-decoration: none;
-    }
+.header a {
+    text-decoration: none;
+}
+
+.header-button {
+    display: flex;
+    gap: 16px;
+}
+
 
 /* Main */
 .main {
@@ -201,6 +207,27 @@ body {
         color: #A0A0A0;
 }
 
+/* Setting 頁 */
+#imageInput {
+    display: none;
+}
+
+.avatar-container, .avatar-form {
+    gap: 48px;
+}
+
+.avatar-button {
+   gap: 12px;
+}
+
+
+.avatar {
+    display: block;
+    width: 150px;
+    height: 150px;
+    background-color: #000;
+    border-radius: 100%;
+}
 
 /* input 樣式 */
 .input {
@@ -291,6 +318,19 @@ body {
 .flex-column {
     display: flex;
     flex-direction: column;
+}
+
+.flex-colum-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-align-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .title-mb {
