@@ -51,7 +51,7 @@ namespace todoAPP.Services
             _db.SaveChanges();
         }
 
-        public byte[]? GetAvatar(string fileName)
+        public Stream? GetAvatar(string fileName)
         {
             return _file.ReadFile(fileName);
         }

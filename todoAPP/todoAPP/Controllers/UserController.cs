@@ -145,8 +145,8 @@ namespace todoAPP.Controllers
                 return NotFound(err);
             }
 
-            byte[]? bytes = _user.GetAvatar(user.Avatar);
-            if(bytes == null)
+            Stream? stream = _user.GetAvatar(user.Avatar);
+            if(stream == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
@@ -160,16 +160,27 @@ namespace todoAPP.Controllers
             var provider = new FileExtensionContentTypeProvider();
             if(provider.TryGetContentType(user.Avatar, out string contentType) == false)
             {
-                return File(bytes, "application/octet-stream");
+                return File(stream, "application/octet-stream");
             }
 
-            return File(bytes, contentType);
+            return File(stream, contentType);
         }
 
         [HttpPatch]
         [Authorize]
         async public Task<IActionResult> Avatar([FromForm] IFormFile avatar)
         {
+            if(avatar.ContentType.Contains("image/") == false)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "Avatar",
+                    Status = 1,
+                    ErrMsg = "Invalid input",
+                };
+                return BadRequest(err);
+            }
+
             User? user = _user.HasUser(GetUserId());
 
             if (user == null)
@@ -177,7 +188,7 @@ namespace todoAPP.Controllers
                 ErrorViewModel err = new ErrorViewModel()
                 {
                     Service = "Avatar",
-                    Status = 1,
+                    Status = 2,
                     ErrMsg = "Resource not found",
                 };
                 return NotFound(err);
