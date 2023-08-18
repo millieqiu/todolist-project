@@ -5,14 +5,13 @@
 }
 
 <section class="section" id="setting">
-    {{message}}
     <div class="avatar-container flex-colum-center">
         <h2 class="heading2 text-secondary h2-font-size">更換大頭照</h2>
         <form class="avatar-form flex-colum-center" v-on:submit.prevent="onClickUploadImage" enctype="multipart/form-data">
             <img class="avatar border border-3 border-secondary" v-if="url" :src="url" />
             <img class="avatar border border-3 border-secondary" src="~/lib/default.jpg" v-else />
             <div class="avatar-button flex-align-center">
-                <input id="image-input" type="file" accept="image/*" v-on:change="onFileChange"/>
+                <input id="image-input" type="file" accept="image/*" v-on:change="onFileChange" />
                 <label for="image-input" class="button-sm btn btn-primary text-white">選擇檔案</label>
                 <button class="button-sm btn btn-primary text-white" v-on:click.prevent="onClickUploadImage" :disabled="!url">確認上傳</button>
             </div>
@@ -20,4 +19,7 @@
     </div>
 </section>
 
-<script type="module" src="~/dist/setting.js" asp-append-version="true"></script>
+@section Scripts {
+    <script type="module" src="~/dist/setting.js" asp-append-version="true"></script>
+}
+

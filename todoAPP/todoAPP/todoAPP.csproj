@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\css\custom.scss" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Models\" />
     <None Remove="Pages\Users\" />
     <None Remove="RequestModel\" />
@@ -25,9 +21,6 @@
     <Folder Include="Middlewares\" />
     <Folder Include="Logging\" />
     <Folder Include="Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="wwwroot\css\custom.scss" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />

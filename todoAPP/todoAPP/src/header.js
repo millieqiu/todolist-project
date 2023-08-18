@@ -14,7 +14,7 @@ const header = new Vue({
                     window.location.assign("/Index");
                 },
                 error: function (req, status) {
-                    alert("µn¥X¥¢±Ñ¡A½Ğ­«·s¹Á¸Õµn¥X");
+                    alert("ç™»å‡ºå¤±æ•—ï¼Œè«‹é‡æ–°å˜—è©¦ç™»å‡º");
                 }
             })
         },

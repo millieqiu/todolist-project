@@ -6,7 +6,6 @@ const setting = new Vue({
     el: '#setting',
     data() {
         return {
-            message: 'Testtttttt', //´ú¸Õ¥Î¸ê®Æ
             url: null,
             file: {},
         }
@@ -15,7 +14,7 @@ const setting = new Vue({
         this.getAvatar();
     },
     methods: {
-        //Åª¨ú¤jÀY·Ó
+        //Åªï¿½ï¿½ï¿½jï¿½Yï¿½ï¿½
         getAvatar() {
             //fetch('/api/User/Avatar', {
             //    method: 'get',
@@ -28,7 +27,7 @@ const setting = new Vue({
             this.url = '/api/User/Avatar'
         },
 
-        //¹wÄý¤jÀY·Ó
+        //ï¿½wï¿½ï¿½ï¿½jï¿½Yï¿½ï¿½
         onFileChange(e) {
             this.file = e.target.files[0];
             this.url = URL.createObjectURL(this.file);
@@ -36,11 +35,11 @@ const setting = new Vue({
             console.log(this.url);
         },
 
-        //§ó´«¤jÀY·Ó
+        //ï¿½ó´«¤jï¿½Yï¿½ï¿½
         onClickUploadImage() {
             let avatar = this.file;
             var formData = new FormData();
-            formData.append('avatar', avatar); // ³]©w¤W¶ÇªºÀÉ®×
+            formData.append('avatar', avatar); // ï¿½]ï¿½wï¿½Wï¿½Çªï¿½ï¿½É®ï¿½
 
             fetch('/api/User/Avatar', {
                 method: 'patch',

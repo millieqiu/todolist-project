@@ -29,21 +29,21 @@ const app2 = new Vue({
                 contentType: "application/json; charset=utf-8",
                 data: userInfo,
                 success: function (res) {
-                    alert("���U���\�I");
+                    alert("註冊成功！");
                     window.location.assign("/Index");
                 },
                 error: function (req, status) {
                     if (req.responseJSON.service && req.responseJSON.service == "Register" && req.responseJSON.status == 1) {
-                        alert("�b���w�s�b");
+                        alert("帳號已存在");
                     }
                     else if (req.responseJSON.errors.Username && req.responseJSON.errors.Username.includes("The Username field is not a valid e-mail address.")) {
-                        alert("Email�榡���~");
+                        alert("Email格式錯誤");
                     }
                     else if (req.responseJSON.errors.ConfirmPassword) {
-                        alert("�K�X�P�T�{�K�X���ŦX");
+                        alert("密碼與確認密碼不符合");
                     }
                     else {
-                        alert("�L�k���U�b���A���p���t�κ޲z��");
+                        alert("無法註冊帳號，請聯絡系統管理員");
                     }
                 }
             })

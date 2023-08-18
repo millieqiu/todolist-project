@@ -10,8 +10,6 @@ const appTodo = new Vue({
 
             todoText: '',
 
-            message: 'Hello World', //測試用資料
-
             todos: [], //傳遞API讀取的資料
             numOfPages: 0, //資料型態為數字，給定預設值0 (因為沒有任何items前不應該有頁碼)
             currentPage: 0,
