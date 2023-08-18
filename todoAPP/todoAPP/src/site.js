@@ -1,7 +1,6 @@
 ﻿//嘗試過的解法
 import Vue from 'vue';
-import './css/style.scss'; // 這裡
-//import Vue from 'vue/dist/vue.js'
+import './css/style.scss';
 
 // 建立 Vue
 const app = new Vue({
@@ -13,12 +12,14 @@ const app = new Vue({
             loginEmail: '',
             loginPassword: '',
 
+            isLoading: false,
         }
     },
 
     methods: {
         //Login
         onClickLogin() {
+            this.isLoading =  true;
             var self = this;
 
             //refs - 用來控制Component(子項目)
@@ -36,7 +37,8 @@ const app = new Vue({
                 body: JSON.stringify(userInfo),
             }).then((response) => {
                 if (response.ok) {
-                    console.log(response.json());  
+                    console.log(response.json()); 
+                    this.isLoading = false;
                     window.location.href = "/TodoPage";
                     //self.getTodoList(1); //在logIn呼叫的函式不會被帶到下一頁
                 }
@@ -60,7 +62,3 @@ const app = new Vue({
  
     },
 });
-
-
-
-//todoList.js

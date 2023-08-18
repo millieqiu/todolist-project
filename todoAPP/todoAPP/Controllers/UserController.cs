@@ -32,6 +32,8 @@ namespace todoAPP.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequestModel loginForm)
         {
+            //TODO: api傳送時間
+            Thread.Sleep(2000);
             User? user = _user.HasUser(loginForm.Username);
 
             if (user == null)

@@ -8,13 +8,14 @@ const setting = new Vue({
         return {
             url: null,
             file: {},
+            percent: 0,
         }
     },
     mounted() {
         this.getAvatar();
     },
     methods: {
-        //Åªï¿½ï¿½ï¿½jï¿½Yï¿½ï¿½
+        //¨ú±o¤jÀY·Ó
         getAvatar() {
             //fetch('/api/User/Avatar', {
             //    method: 'get',
@@ -27,7 +28,7 @@ const setting = new Vue({
             this.url = '/api/User/Avatar'
         },
 
-        //ï¿½wï¿½ï¿½ï¿½jï¿½Yï¿½ï¿½
+        //§ó·s¤jÀY·Ó
         onFileChange(e) {
             var self = this;
 
@@ -37,22 +38,20 @@ const setting = new Vue({
 
             //¶i«×±ø
             reader.addEventListener("progress", (event) => {
-                console.log('progress');
+                this.percent = parseInt(Math.round((event.loaded / event.total) * 100));
             });
 
             reader.addEventListener("load", (event) => {
-                this.url = event.target.result;
+                self.url = event.target.result;
+                console.log(self.url);
             });
-
-            console.log(this.file);
-            console.log(this.url);
         },
 
         //ï¿½ó´«¤jï¿½Yï¿½ï¿½
         onClickUploadImage() {
             let avatar = this.file;
             var formData = new FormData();
-            formData.append('avatar', avatar); // ï¿½]ï¿½wï¿½Wï¿½Çªï¿½ï¿½É®ï¿½
+            formData.append('avatar', avatar);
 
             fetch('/api/User/Avatar', {
                 method: 'patch',
