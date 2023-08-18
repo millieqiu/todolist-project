@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 using todoAPP.Middlewares;
@@ -47,7 +45,7 @@ public class Program
         builder.Services.AddTransient<AuthService>();
         builder.Services.AddTransient<UserService>();
         builder.Services.AddTransient<RoleService>();
-        builder.Services.AddTransient<WeatherService>();
+        builder.Services.AddSingleton<WeatherService>();
         builder.Services.AddTransient<FileService>();
 
         var app = builder.Build();
@@ -57,7 +55,7 @@ public class Program
         {
             app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts(); 
+            app.UseHsts();
         }
 
         app.UseExceptionHandleMiddleware();
