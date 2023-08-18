@@ -3,20 +3,26 @@ using Microsoft.Extensions.FileProviders;
 
 namespace todoAPP.Services
 {
-	public class FileService
-	{
+    public class FileService
+    {
         public byte[]? ReadFile(string fileName)
         {
-            if(File.Exists("./Avatar/" + fileName) == false)
+            if (File.Exists("./Avatar/" + fileName) == false)
             {
                 return null;
             }
 
-            return File.ReadAllBytes("./Avatar/"+ fileName);
+            byte[] buffer;
+            using (FileStream stream = new FileStream("./Avatar/" + fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 4096, FileOptions.SequentialScan))
+            {
+                buffer = new byte[stream.Length];
+                stream.Read(buffer, 0, (int)stream.Length);
+            }
+            return buffer;
         }
 
         async public Task<string> WriteFile(IFormFile file)
-		{
+        {
             var fileOriginName = Path.GetFileName(file.FileName);
             var fileExt = Path.GetExtension(fileOriginName);
             var fileNewName = Path.GetRandomFileName();
@@ -40,6 +46,6 @@ namespace todoAPP.Services
                 File.Delete(filePath);
             }
         }
-	}
+    }
 }
 
