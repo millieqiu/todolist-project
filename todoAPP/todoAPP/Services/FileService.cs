@@ -1,24 +1,16 @@
-﻿using System;
-using Microsoft.Extensions.FileProviders;
-
+﻿
 namespace todoAPP.Services
 {
     public class FileService
     {
-        public byte[]? ReadFile(string fileName)
+        public Stream? ReadFile(string fileName)
         {
             if (File.Exists("./Avatar/" + fileName) == false)
             {
                 return null;
             }
 
-            byte[] buffer;
-            using (FileStream stream = new FileStream("./Avatar/" + fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 4096, FileOptions.SequentialScan))
-            {
-                buffer = new byte[stream.Length];
-                stream.Read(buffer, 0, (int)stream.Length);
-            }
-            return buffer;
+            return new FileStream("./Avatar/" + fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 4096, FileOptions.SequentialScan);
         }
 
         async public Task<string> WriteFile(IFormFile file)

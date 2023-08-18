@@ -145,8 +145,8 @@ namespace todoAPP.Controllers
                 return NotFound(err);
             }
 
-            byte[]? bytes = _user.GetAvatar(user.Avatar);
-            if(bytes == null)
+            Stream? stream = _user.GetAvatar(user.Avatar);
+            if(stream == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
@@ -160,10 +160,10 @@ namespace todoAPP.Controllers
             var provider = new FileExtensionContentTypeProvider();
             if(provider.TryGetContentType(user.Avatar, out string contentType) == false)
             {
-                return File(bytes, "application/octet-stream");
+                return File(stream, "application/octet-stream");
             }
 
-            return File(bytes, contentType);
+            return File(stream, contentType);
         }
 
         [HttpPatch]
