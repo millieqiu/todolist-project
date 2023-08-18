@@ -170,6 +170,17 @@ namespace todoAPP.Controllers
         [Authorize]
         async public Task<IActionResult> Avatar([FromForm] IFormFile avatar)
         {
+            if(avatar.ContentType.Contains("image/") == false)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "Avatar",
+                    Status = 1,
+                    ErrMsg = "Invalid input",
+                };
+                return BadRequest(err);
+            }
+
             User? user = _user.HasUser(GetUserId());
 
             if (user == null)
@@ -177,7 +188,7 @@ namespace todoAPP.Controllers
                 ErrorViewModel err = new ErrorViewModel()
                 {
                     Service = "Avatar",
-                    Status = 1,
+                    Status = 2,
                     ErrMsg = "Resource not found",
                 };
                 return NotFound(err);
