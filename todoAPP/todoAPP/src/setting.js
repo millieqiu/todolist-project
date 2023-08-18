@@ -39,6 +39,7 @@ const setting = new Vue({
             //¶i«×±ø
             reader.addEventListener("progress", (event) => {
                 this.percent = parseInt(Math.round((event.loaded / event.total) * 100));
+                console.log([this.percent, event.lengthComputable, event.loaded, event.total]);
             });
 
             reader.addEventListener("load", (event) => {

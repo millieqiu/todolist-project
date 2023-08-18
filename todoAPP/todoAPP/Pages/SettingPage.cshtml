@@ -10,7 +10,7 @@
         <form class="avatar-form flex-colum-center" v-on:submit.prevent="onClickUploadImage" enctype="multipart/form-data">
             <img class="avatar border border-3 border-secondary" v-if="url" :src="url" />
             <img class="avatar border border-3 border-secondary" src="../src/image/default.jpg" v-else />
-            <progress max="100" v-bind:value.prop="percent"></progress>
+            <progress min="0" max="100" v-bind:value.prop="percent"></progress>
             <div class="avatar-button flex-align-center">
                 <input id="image-input" type="file" accept="image/*" v-on:change="onFileChange" />
                 <label for="image-input" class="button-sm btn btn-primary text-white">選擇檔案</label>
