@@ -29,8 +29,21 @@ const setting = new Vue({
 
         //ï¿½wï¿½ï¿½ï¿½jï¿½Yï¿½ï¿½
         onFileChange(e) {
+            var self = this;
+
             this.file = e.target.files[0];
-            this.url = URL.createObjectURL(this.file);
+            let reader = new FileReader();
+            reader.readAsDataURL(self.file);
+
+            //¶i«×±ø
+            reader.addEventListener("progress", (event) => {
+                console.log('progress');
+            });
+
+            reader.addEventListener("load", (event) => {
+                this.url = event.target.result;
+            });
+
             console.log(this.file);
             console.log(this.url);
         },
