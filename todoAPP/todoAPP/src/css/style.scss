@@ -9,6 +9,8 @@ $gray-400: #676767;
 $gray-500: #2A2A2A;
 $black: #000;
 
+$red: #F14040;
+
 $primary: #3397CF;
 $secondary: #00324E;
 $light: #EDF1F5;
@@ -163,7 +165,7 @@ body {
 }
 
 .icon-color {
-    color: $gray-200;
+    fill: $gray-200;
 }
 
 .task-content {
@@ -190,8 +192,8 @@ body {
         background-color: #FFE4E4;
     }
 
-        .icon:hover .fa-trash {
-            color: #F14040;
+        .icon:hover svg {
+            fill: $red;
         }
 
 .tag {
@@ -379,7 +381,7 @@ body {
 }
 
 /* RWD　設定*/
-@media(max-width: 920px) {
+@media(max-width: 970px) {
     .section {
         padding: 0 120px;
     }

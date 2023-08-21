@@ -2,6 +2,7 @@
 import $ from "jquery";
 import './css/style.scss';
 
+
 const appTodo = new Vue({
     el: '#appTodo',
     data() {
