@@ -17,14 +17,27 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['@babel/preset-env']
-                    }
-                }
+                    },
+                },
+
             },
+            {
+                test: /\.(png|jpg|gif|jpe?g|svg)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: 'img/[name].[ext]',
+                        }
+                    }
+                ]
+            }
         ],
     },
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.js'
+            vue: 'vue/dist/vue.js',
+            '@': path.resolve(__dirname, 'src/image'),
         }
     },
 };

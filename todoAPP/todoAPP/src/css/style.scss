@@ -42,7 +42,7 @@ body {
 /* Loading Overlay*/
 
 .loading {
-    position: absolute;
+    position: fixed;
     z-index: 9999;
     top: 0;
     bottom: 0;
@@ -50,6 +50,7 @@ body {
     right: 0;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 .loading .mask {
@@ -58,6 +59,7 @@ body {
     height: 100%;
     background-color: #444;
     opacity: 0.5;
+    overflow: hidden;
 }
 
 .loading .animation {
@@ -334,10 +336,11 @@ body {
 }
 
 .button-icon {
+    display: inline-block;
+    margin-right: 4px;
     height: 18px;
     width: 18px;
 }
-
 
 
 .text-button {

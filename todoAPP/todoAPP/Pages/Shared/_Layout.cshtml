@@ -20,7 +20,7 @@
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
 </head>
 
-<body class="body-bg">
+<body class="body-bg" v-bind:class="{scroll: isLoading}">
 
     <!-- Header 樣式 -->
     <header class="header bg-white" id="header">
