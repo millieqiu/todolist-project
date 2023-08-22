@@ -70,10 +70,9 @@ const app = new Vue({
                     const checkPopup = setInterval(() => {
                         if (!popup || !popup.closed) return;
                         clearInterval(checkPopup);
-                        window.location.reload();
+                        window.location.href = "/TodoPage";
                     }, 100);
                 });
-                console.log(response);
             }).catch((response, status) => {
 
             });
