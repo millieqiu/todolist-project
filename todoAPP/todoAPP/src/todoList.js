@@ -24,81 +24,94 @@ const appTodo = new Vue({
         this.getTodoList(1); //todo: 改將預設值寫在函式裡
     },
     methods: {
+        // get todoList
         getTodoList(page) {
             this.isLoading = true;
             var self = this; //在這邊給定範圍內的this都是self
 
-            $.ajax({
-                url: "/api/TodoList/ListPagination?page=" + page,
-                method: "get",
-                contentType: "application/json; charset=utf-8",
-
-                success: function (res) {
-                    //在這裡寫this的話會指向ajax
-                    self.numOfPages = res.numOfPages;
-                    self.currentPage = res.currentPage;
-                    self.todos = res.list;
-                    self.isLoading = false;
+            fetch(('/api/TodoList/ListPagination?page=' + page), {
+                method: 'get',
+                headers: {
+                    'Content-Type': "application/json; charset=utf-8",
                 }
             })
-
+                .then(res => {
+                    return res.json();
+                })
+                .then(json => {
+                    self.numOfPages = json.numOfPages;
+                    self.currentPage = json.currentPage;
+                    self.todos = json.list;
+                    self.isLoading = false;
+                    console.log(json);
+                })
 
         },
 
+        // Create
         onClickCreateTodoItem() {
             var self = this;
 
 
-            let todoItem = JSON.stringify({
+            let todoItem = {
                 Text: this.todoText,
                 page: this.currentPage,
-            });
+            };
 
-            $.ajax({
-                url: "/api/TodoList/Create",
-                method: "post",
-                contentType: "application/json; charset=utf-8",
-                data: todoItem,
-                success: function (res) {
-                    self.getTodoList(self.currentPage);
-                }
+
+            fetch('/api/TodoList/Create', {
+                method: 'post',
+                headers: {
+                    'Content-Type': "application/json; charset=utf-8",
+                },
+                body: JSON.stringify(todoItem)
             })
+                .then(res => {
+                    self.getTodoList(self.currentPage);
+                })
+
         },
+
+
+        // Delete todoItem
         onClickDeleteTodoItem(id) {
-            //todo: delete功能
             var self = this;
 
-            let todoItem = JSON.stringify({
+            let todoItem = {
                 id: id,
                 page: this.currentPage,
-            });
+            };
 
-            $.ajax({
-                url: "/api/TodoList/Delete",
-                method: "delete",
-                contentType: "application/json; charset=utf-8",
-                data: todoItem,
-                success: function (res) {
+            fetch('/api/TodoList/Delete', {
+                method: 'delete',
+                headers: {
+                    'Content-Type': "application/json; charset=utf-8",
+                },
+                body: JSON.stringify(todoItem)
+            })
+                .then(res => {
                     self.getTodoList(self.currentPage);
-                }
-            })
-        },
-        onChangeStatus(id) {
-            //todo: check功能
-            let todoItem = JSON.stringify({
-                id: id,
-                page: this.currentPage,
-            });
+                })
 
-            $.ajax({
-                url: "/api/TodoList/ChangeStatus",
-                method: "put",
-                contentType: "application/json; charset=utf-8",
-                data: todoItem,
-                success: function (res) {
-                    getTodoList(page);
-                }
+        },
+
+        // Change status
+        onChangeStatus(id) {
+            let todoItem = {
+                id: id,
+                body: this.currentPage,
+            };
+
+            fetch('/api/TodoList/ChangeStatus', {
+                method: 'put',
+                headers: {
+                    'Content-Type': "application/json; charset=utf-8",
+                },
+                data: JSON.stringify(todoItem)
             })
+                .then(res => {
+                    self.getTodoList(self.currentPage);
+                })
         },
     }
 })

@@ -45,8 +45,8 @@ const app = new Vue({
                 }
                 return Promise.reject(response);
             }).catch((response, status) => {
+                this.isLoading = false;
                 response.json().then((json) => {
-                    this.isLoading = false;
                     if (json.service == "Login" && json.status == 1) {
                         alert("此帳號不存在");
                     }
