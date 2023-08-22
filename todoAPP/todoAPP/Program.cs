@@ -47,6 +47,7 @@ public class Program
         builder.Services.AddTransient<RoleService>();
         builder.Services.AddSingleton<WeatherService>();
         builder.Services.AddTransient<FileService>();
+        builder.Services.AddTransient<OAuthService>();
 
         var app = builder.Build();
 

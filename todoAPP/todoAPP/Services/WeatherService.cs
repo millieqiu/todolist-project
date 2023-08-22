@@ -1,5 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.Security.AccessControl;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Caching.Memory;
 using todoAPP.ViewModel;
 
 namespace todoAPP.Services
@@ -7,20 +9,21 @@ namespace todoAPP.Services
     public class WeatherService
     {
         private Uri BaseURI;
-        private WeatherViewModel? weather;
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
+        private readonly IMemoryCache _memoryCache;
 
-        public WeatherService(IHttpClientFactory clientFactory, IConfiguration configuration)
+        public WeatherService(IHttpClientFactory clientFactory, IConfiguration configuration, IMemoryCache memoryCache)
         {
             _clientFactory = clientFactory;
             _configuration = configuration;
+            _memoryCache = memoryCache;
 
             BaseURI = new Uri("https://opendata.cwb.gov.tw");
         }
 
-        async private Task GetWeather()
+        async private Task<WeatherViewModel?> GetWeather()
         {
             Uri apiUri = new Uri(BaseURI, "/api/v1/rest/datastore/O-A0001-001");
             QueryBuilder qBuilder = new QueryBuilder
@@ -35,30 +38,25 @@ namespace todoAPP.Services
             var httpClient = _clientFactory.CreateClient();
             var response = await httpClient.GetStringAsync(queryUri);
 
-            weather = JsonSerializer.Deserialize<WeatherViewModel>(response);
+            return JsonSerializer.Deserialize<WeatherViewModel>(response);
         }
 
-        async private Task RenewWeather()
+        async private Task<WeatherViewModel?> RenewWeather()
         {
-            if (weather != null)
+            WeatherViewModel? weather;
+            if (_memoryCache.TryGetValue("weather",out weather) ==  false)
             {
-                if (DateTime.TryParse(weather.records.location.First().time.obsTime,
-                    out DateTime lastUpdate))
-                {
-                    DateTime now = DateTime.Now;
-                    TimeSpan t = now.Subtract(lastUpdate);
-                    if (t < new TimeSpan(1, 0, 0))
-                    {
-                        return;
-                    }
-                }
+                weather = await GetWeather();
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromHours(1));
+                _memoryCache.Set("weather", weather, cacheEntryOptions);
             }
-            await GetWeather();
+            return weather;
         }
 
         async public Task<string> GetWeatherText()
         {
-            await RenewWeather();
+            WeatherViewModel? weather = await RenewWeather();
             if (weather == null)
             {
                 return "";

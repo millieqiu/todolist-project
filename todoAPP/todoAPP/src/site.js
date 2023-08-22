@@ -61,6 +61,22 @@ const app = new Vue({
             });
 
         },
+        onClickLoginGoogle() {
+            fetch('/api/OAuth/RedirectToServiceProvider', {
+                method: "get",
+            }).then((response) => {
+                response.text().then(function (text) {
+                    const popup = window.open(text, "popup", "popup=true");
+                    const checkPopup = setInterval(() => {
+                        if (!popup || !popup.closed) return;
+                        clearInterval(checkPopup);
+                        window.location.href = "/TodoPage";
+                    }, 100);
+                });
+            }).catch((response, status) => {
+
+            });
+        },
  
     },
 });

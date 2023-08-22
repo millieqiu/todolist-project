@@ -52,27 +52,7 @@ namespace todoAPP.Controllers
                 return BadRequest("Invalid username or password");
             }
 
-            var claims = new List<Claim>() {
-                new Claim(ClaimTypes.Sid,user.ID.ToString()), //使用者ID
-                new Claim(ClaimTypes.NameIdentifier,user.Username),  //使用者帳號
-                new Claim(ClaimTypes.Name,user.Nickname),  //使用者名稱
-                new Claim("Avatar",user.Avatar)  //使用者圖像
-            };
-
-            if (user.Role == ERole.ADMIN)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
-            }
-            else
-            {
-                claims.Add(new Claim(ClaimTypes.Role, "User"));
-            }
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var userPrincipal = new ClaimsPrincipal(identity);
-            Thread.CurrentPrincipal = userPrincipal;
-            var props = new AuthenticationProperties();
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, props);
+            await _user.SignInUser(HttpContext,user);
 
             return Ok();
         }
