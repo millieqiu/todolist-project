@@ -11,7 +11,7 @@
     "todoAPP": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7236;http://localhost:5165",
+      "applicationUrl": "https://localhost:44334;http://localhost:5165",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

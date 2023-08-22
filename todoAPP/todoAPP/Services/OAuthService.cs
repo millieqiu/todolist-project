@@ -25,7 +25,7 @@ namespace todoAPP.Services
                 { "client_id", _configuration["Authentication:Google:ClientId"] },
                 { "response_type", "code" },
                 { "scope", "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email" },
-                { "redirect_uri", "https://localhost:7236/api/OAuth/Callback" }
+                { "redirect_uri", "https://localhost:44334/api/OAuth/Callback" }
             };
             string queryParamStr = qBuilder.ToQueryString().ToUriComponent();
             Uri queryUri = new Uri(authUri, queryParamStr);
@@ -41,7 +41,7 @@ namespace todoAPP.Services
                 { "code", code },
                 { "client_id", _configuration["Authentication:Google:ClientId"] },
                 { "client_secret", _configuration["Authentication:Google:ClientSecret"] },
-                { "redirect_uri", "https://localhost:7236/api/OAuth/Callback" }
+                { "redirect_uri", "https://localhost:44334/api/OAuth/Callback" }
             };
 
             var httpClient = _clientFactory.CreateClient();
