@@ -53,11 +53,13 @@ namespace todoAPP.Controllers
             if(user == null)
             {
                 _user.CreateUser(userInfo.email, "", userInfo.name);
+                user = _user.HasUser(userInfo.email);
+                if(user == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
             }
-            else
-            {
-                await _user.SignInUser(HttpContext,user);
-            }
+            await _user.SignInUser(HttpContext,user);
 
             return Ok(userInfo);
         }
