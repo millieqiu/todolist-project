@@ -22,7 +22,7 @@ namespace todoAPP.Services
             Uri authUri = new Uri("https://accounts.google.com/o/oauth2/v2/auth");
             QueryBuilder qBuilder = new QueryBuilder
             {
-                { "client_id", _configuration["Authentication:Google:ClientId"] },
+                { "client_id", _configuration.GetSection("Authentication:Google:ClientId").Value },
                 { "response_type", "code" },
                 { "scope", "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email" },
                 { "redirect_uri", "https://localhost:44334/api/OAuth/Callback" }
@@ -39,8 +39,8 @@ namespace todoAPP.Services
             {
                 { "grant_type", "authorization_code" },
                 { "code", code },
-                { "client_id", _configuration["Authentication:Google:ClientId"] },
-                { "client_secret", _configuration["Authentication:Google:ClientSecret"] },
+                { "client_id", _configuration.GetSection("Authentication:Google:ClientId").Value },
+                { "client_secret", _configuration.GetSection("Authentication:Google:ClientSecret").Value },
                 { "redirect_uri", "https://localhost:44334/api/OAuth/Callback" }
             };
 
