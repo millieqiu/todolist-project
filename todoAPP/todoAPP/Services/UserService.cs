@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 using todoAPP.Migrations;
 using todoAPP.Models;
 
@@ -65,6 +68,31 @@ namespace todoAPP.Services
             string fileName = await _file.WriteFile(avatar);
             user.Avatar = fileName;
             _db.SaveChanges();
+        }
+
+        async public Task SignInUser(HttpContext context, User user)
+        {
+            var claims = new List<Claim>() {
+                new Claim(ClaimTypes.Sid,user.ID.ToString()), //使用者ID
+                new Claim(ClaimTypes.NameIdentifier,user.Username),  //使用者帳號
+                new Claim(ClaimTypes.Name,user.Nickname),  //使用者名稱
+                new Claim("Avatar",user.Avatar)  //使用者圖像
+            };
+
+            if (user.Role == ERole.ADMIN)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+            }
+            else
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "User"));
+            }
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var userPrincipal = new ClaimsPrincipal(identity);
+            Thread.CurrentPrincipal = userPrincipal;
+            var props = new AuthenticationProperties();
+            await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, props);
         }
     }
 }

@@ -61,6 +61,23 @@ const app = new Vue({
             });
 
         },
+        onClickLoginGoogle() {
+            fetch('/api/OAuth/RedirectToServiceProvider', {
+                method: "get",
+            }).then((response) => {
+                response.text().then(function (text) {
+                    const popup = window.open(text, "popup", "popup=true");
+                    const checkPopup = setInterval(() => {
+                        if (!popup || !popup.closed) return;
+                        clearInterval(checkPopup);
+                        window.location.reload();
+                    }, 100);
+                });
+                console.log(response);
+            }).catch((response, status) => {
+
+            });
+        },
  
     },
 });
