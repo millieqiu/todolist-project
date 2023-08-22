@@ -36,16 +36,13 @@ const app = new Vue({
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(userInfo),
-            }).then((response) => {
-                if (response.ok) {
+            })
+                .then((response) => {
                     this.isLoading = false;
                     window.location.href = "/TodoPage";
-                    //self.getTodoList(1); //在logIn呼叫的函式不會被帶到下一頁
-                }
-                if (!response.ok) {
-                    throw new Error('Network error');
-                }
-                return Promise.reject(response);
+                    console.log(response);
+                    console.log(response.json());
+                })
 
 
             //}).catch((response, status) => {
@@ -64,7 +61,7 @@ const app = new Vue({
             //        }
             //    })
                 
-            });
+            
 
         },
         onClickLoginGoogle() {

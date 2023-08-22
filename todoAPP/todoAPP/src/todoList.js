@@ -109,9 +109,6 @@ const appTodo = new Vue({
                 },
                 body: JSON.stringify(todoItem)
             })
-                .then(res => {
-                    self.getTodoList(self.currentPage);
-                })
         },
     }
 })
