@@ -38,25 +38,31 @@ const app = new Vue({
                 body: JSON.stringify(userInfo),
             }).then((response) => {
                 if (response.ok) {
-                    console.log(response.json()); 
                     this.isLoading = false;
                     window.location.href = "/TodoPage";
                     //self.getTodoList(1); //在logIn呼叫的函式不會被帶到下一頁
                 }
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
                 return Promise.reject(response);
-            }).catch((response, status) => {
-                this.isLoading = false;
-                response.json().then((json) => {
-                    if (json.service == "Login" && json.status == 1) {
-                        alert("此帳號不存在");
-                    }
-                    else if (json.service == "Login" && json.status == 2) {
-                        alert("帳號或密碼錯誤");
-                    }
-                    else {
-                        alert("無法登入，請聯絡系統管理員");
-                    }
-                })
+
+
+            //}).catch((response, status) => {
+            //    console.log(response);
+            //    console.log(response.json());
+            //    this.isLoading = false;
+            //    response.json().then((json) => {
+            //        if (json.service == "Login" && json.status == 1) {
+            //            alert("此帳號不存在");
+            //        }
+            //        else if (json.service == "Login" && json.status == 2) {
+            //            alert("帳號或密碼錯誤");
+            //        }
+            //        else {
+            //            alert("無法登入，請聯絡系統管理員");
+            //        }
+            //    })
                 
             });
 

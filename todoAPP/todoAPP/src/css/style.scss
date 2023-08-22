@@ -1,4 +1,4 @@
-﻿//Default variables override
+﻿// Default variables override
 $body-bg: #FAFAFA;
 
 $white: #fff;
@@ -69,7 +69,8 @@ body {
     height: 64px;
     margin: auto;
     margin-top: 40px;
-    background: url('https://i.imgur.com/6pCtQAW.gif');
+    background: url('https://i.imgur.com/EuvsGx5.gif'); /* 更換gif圖 */
+    background-size: cover;
 }
 
 
@@ -393,6 +394,9 @@ body {
     .button-lg {
         padding: 12px 120px;
     }
+    .list {
+        margin-top: 36px;
+    }
 }
 
 @media(max-width: 670px) {
@@ -406,5 +410,20 @@ body {
 
     .button-lg {
         padding: 12px 72px;
+    }
+
+    .list-container {
+        padding: 48px 24px;
+    }
+
+    .task {
+        padding: 18px;
+    }
+}
+
+@media(max-width: 472px) {
+    .add-container {
+        display: flex;
+        flex-direction: column;
     }
 }
