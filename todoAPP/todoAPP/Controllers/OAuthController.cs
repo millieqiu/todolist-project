@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using todoAPP.Models;
 using todoAPP.Services;
 using todoAPP.ViewModel;
@@ -38,28 +29,28 @@ namespace todoAPP.Controllers
         {
 
             GoogleTokenViewModel? gtvm = await _oauth.GetToken(code);
-            if(gtvm == null)
+            if (gtvm == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                throw new Exception("GoogleTokenViewModel object is null");
             }
 
             GoogleUserinfoViewModel? userInfo = await _oauth.GetUserInfo(gtvm.access_token);
             if (userInfo == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                throw new Exception("GoogleUserinfoViewModel object is null");
             }
 
             User? user = _user.HasUser(userInfo.email);
-            if(user == null)
+            if (user == null)
             {
                 _user.CreateUser(userInfo.email, "", userInfo.name);
                 user = _user.HasUser(userInfo.email);
-                if(user == null)
+                if (user == null)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError);
+                    throw new Exception("User object is null");
                 }
             }
-            await _user.SignInUser(HttpContext,user);
+            await _user.SignInUser(HttpContext, user);
 
             return new RedirectToPageResult("/TodoPage");
         }

@@ -40,13 +40,14 @@ public class Program
             );
 
         builder.Services.AddHttpClient();
+        builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddTransient<TodoListService>();
         builder.Services.AddTransient<AuthService>();
         builder.Services.AddTransient<UserService>();
         builder.Services.AddTransient<RoleService>();
         builder.Services.AddSingleton<WeatherService>();
-        builder.Services.AddTransient<FileService>();
+        builder.Services.AddTransient<AvatarService>();
         builder.Services.AddTransient<OAuthService>();
 
         var app = builder.Build();

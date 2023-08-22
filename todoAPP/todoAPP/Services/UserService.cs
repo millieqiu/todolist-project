@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
-using todoAPP.Migrations;
 using todoAPP.Models;
 
 namespace todoAPP.Services
@@ -13,13 +9,15 @@ namespace todoAPP.Services
     {
         private readonly DataContext _db;
         private readonly AuthService _auth;
-        private readonly FileService _file;
+        private readonly AvatarService _avartar;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(DataContext db, AuthService auth, FileService file)
+        public UserService(DataContext db, AuthService auth, AvatarService avatar, IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
             _auth = auth;
-            _file = file;
+            _avartar = avatar;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public User? HasUser(int id)
@@ -56,16 +54,16 @@ namespace todoAPP.Services
 
         public Stream? GetAvatar(string fileName)
         {
-            return _file.ReadFile(fileName);
+            return _avartar.ReadFile(fileName);
         }
 
         async public Task EditAvatar(User user, IFormFile avatar)
         {
             if(string.IsNullOrEmpty(user.Avatar) == false && user.Avatar != "default.jpeg")
             {
-                _file.RemoveFile(user.Avatar);
+                _avartar.RemoveFile(user.Avatar);
             }
-            string fileName = await _file.WriteFile(avatar);
+            string fileName = await _avartar.WriteFile(avatar);
             user.Avatar = fileName;
             _db.SaveChanges();
         }
@@ -93,6 +91,19 @@ namespace todoAPP.Services
             Thread.CurrentPrincipal = userPrincipal;
             var props = new AuthenticationProperties();
             await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, props);
+        }
+
+        public int GetUserId()
+        {
+            var identity = _httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                string Sid = claims.First().Value;
+                Int32.TryParse(Sid, out int userId);
+                return userId;
+            }
+            return 0;
         }
     }
 }

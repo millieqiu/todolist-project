@@ -2,9 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using todoAPP.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using todoAPP.ViewModel;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using todoAPP.RequestModel;
 using todoAPP.Services;
@@ -20,8 +18,6 @@ namespace todoAPP.Controllers
         private readonly UserService _user;
         private readonly RoleService _role;
 
-
-
         public UserController(AuthService auth, UserService user, RoleService role)
         {
             _auth = auth;
@@ -32,13 +28,18 @@ namespace todoAPP.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequestModel loginForm)
         {
-            //TODO: api傳送時間
-            Thread.Sleep(2000);
+            Thread.Sleep(2000);//顯示loading延遲
             User? user = _user.HasUser(loginForm.Username);
 
             if (user == null)
             {
-                return BadRequest("Invalid username or password");
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "Login",
+                    Status = 1,
+                    ErrMsg = "Invalid username or password",
+                };
+                return BadRequest(err);
             }
 
             string derivedPassword = _auth.PasswordGenerator(
@@ -46,13 +47,18 @@ namespace todoAPP.Controllers
                 Convert.FromBase64String(user.Salt)
             );
 
-            bool equal = KeyDerivation.Equals(user.Password, derivedPassword);
-            if (equal == false)
+            if (KeyDerivation.Equals(user.Password, derivedPassword) == false)
             {
-                return BadRequest("Invalid username or password");
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "Login",
+                    Status = 1,
+                    ErrMsg = "Invalid username or password",
+                };
+                return BadRequest(err);
             }
 
-            await _user.SignInUser(HttpContext,user);
+            await _user.SignInUser(HttpContext, user);
 
             return Ok();
         }
@@ -76,7 +82,7 @@ namespace todoAPP.Controllers
                 {
                     Service = "Register",
                     Status = 1,
-                    ErrMsg = "Username is already exists",
+                    ErrMsg = "Username already exists",
                 };
                 return BadRequest(err);
             }
@@ -112,7 +118,7 @@ namespace todoAPP.Controllers
         [Authorize]
         public IActionResult Avatar()
         {
-            User? user = _user.HasUser(GetUserId());
+            User? user = _user.HasUser(_user.GetUserId());
 
             if (user == null)
             {
@@ -126,7 +132,7 @@ namespace todoAPP.Controllers
             }
 
             Stream? stream = _user.GetAvatar(user.Avatar);
-            if(stream == null)
+            if (stream == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
@@ -138,7 +144,7 @@ namespace todoAPP.Controllers
             }
 
             var provider = new FileExtensionContentTypeProvider();
-            if(provider.TryGetContentType(user.Avatar, out string contentType) == false)
+            if (provider.TryGetContentType(user.Avatar, out string contentType) == false)
             {
                 return File(stream, "application/octet-stream");
             }
@@ -150,7 +156,7 @@ namespace todoAPP.Controllers
         [Authorize]
         async public Task<IActionResult> Avatar([FromForm] IFormFile avatar)
         {
-            if(avatar.ContentType.Contains("image/") == false)
+            if (avatar.ContentType.Contains("image/") == false)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
@@ -161,7 +167,7 @@ namespace todoAPP.Controllers
                 return BadRequest(err);
             }
 
-            User? user = _user.HasUser(GetUserId());
+            User? user = _user.HasUser(_user.GetUserId());
 
             if (user == null)
             {
@@ -177,19 +183,6 @@ namespace todoAPP.Controllers
             await _user.EditAvatar(user, avatar);
 
             return Ok();
-        }
-
-        private int GetUserId()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                IEnumerable<Claim> claims = identity.Claims;
-                string Sid = claims.First().Value;
-                Int32.TryParse(Sid, out int userId);
-                return userId;
-            }
-            return 0;
         }
     }
 }

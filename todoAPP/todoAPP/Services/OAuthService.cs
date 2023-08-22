@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Http.Extensions;
 using todoAPP.ViewModel;
 
@@ -27,15 +25,17 @@ namespace todoAPP.Services
                 { "scope", "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email" },
                 { "redirect_uri", "https://localhost:44334/api/OAuth/Callback" }
             };
+
             string queryParamStr = qBuilder.ToQueryString().ToUriComponent();
             Uri queryUri = new Uri(authUri, queryParamStr);
+
             return queryUri.ToString();
         }
 
         async public Task<GoogleTokenViewModel?> GetToken(string code)
         {
-            string oauthUri = "https://oauth2.googleapis.com/token";
-            var param = new Dictionary<string, string>
+            string tokenUri = "https://oauth2.googleapis.com/token";
+            Dictionary<string, string> param = new Dictionary<string, string>
             {
                 { "grant_type", "authorization_code" },
                 { "code", code },
@@ -44,8 +44,8 @@ namespace todoAPP.Services
                 { "redirect_uri", "https://localhost:44334/api/OAuth/Callback" }
             };
 
-            var httpClient = _clientFactory.CreateClient();
-            var response = await httpClient.PostAsync(oauthUri, new FormUrlEncodedContent(param));
+            HttpClient httpClient = _clientFactory.CreateClient();
+            var response = await httpClient.PostAsync(tokenUri, new FormUrlEncodedContent(param));
             var contents = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<GoogleTokenViewModel>(contents);
         }
@@ -54,9 +54,9 @@ namespace todoAPP.Services
         {
             Uri userInfoUri = new Uri("https://www.googleapis.com/oauth2/v1/userinfo");
             QueryBuilder qBuilder = new QueryBuilder
-                {
-                    { "access_token", accessToken }
-                };
+            {
+                { "access_token", accessToken }
+            };
             string queryParamStr = qBuilder.ToQueryString().ToUriComponent();
             Uri queryUri = new Uri(userInfoUri, queryParamStr);
 

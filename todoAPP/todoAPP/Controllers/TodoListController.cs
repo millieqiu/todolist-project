@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using todoAPP.Models;
 using todoAPP.RequestModel;
@@ -35,7 +34,7 @@ namespace todoAPP.Controllers
 
             PaginationViewModel response = new PaginationViewModel()
             {
-                NumOfPages = _todo.GetNumOfPages(GetUserId()),
+                NumOfPages = _todo.GetNumOfPages(_user.GetUserId()),
                 CurrentPage = page,
                 List = _todo.GetPaginatedData(page, userId),
             };
@@ -53,9 +52,9 @@ namespace todoAPP.Controllers
 
             PaginationViewModel response = new PaginationViewModel()
             {
-                NumOfPages = _todo.GetNumOfPages(GetUserId()),
+                NumOfPages = _todo.GetNumOfPages(_user.GetUserId()),
                 CurrentPage = page,
-                List = _todo.GetPaginatedData(page, GetUserId()),
+                List = _todo.GetPaginatedData(page, _user.GetUserId()),
             };
 
             return Ok(response);
@@ -64,7 +63,7 @@ namespace todoAPP.Controllers
         [HttpPost]
         async public Task<IActionResult> Create(CreateTodoRequestModel request)
         {
-            User? user = _user.HasUser(GetUserId());
+            User? user = _user.HasUser(_user.GetUserId());
             if (user == null)
             {
                 ErrorViewModel err = new ErrorViewModel()
@@ -73,7 +72,7 @@ namespace todoAPP.Controllers
                     Status = 1,
                     ErrMsg = "Resource not found",
                 };
-                return NotFound();
+                return NotFound(err);
             }
 
             int id = await _todo.CreateItem(request.Text, user);
@@ -84,7 +83,7 @@ namespace todoAPP.Controllers
         [HttpPut]
         public IActionResult ChangeStatus(GeneralRequestModel request)
         {
-            Todo? item = _todo.HasItem(GetUserId(),request.ID);
+            Todo? item = _todo.HasItem(_user.GetUserId(), request.ID);
 
             if (item == null)
             {
@@ -105,7 +104,7 @@ namespace todoAPP.Controllers
         [HttpDelete]
         public IActionResult Delete(GeneralRequestModel request)
         {
-            Todo? item = _todo.HasItem(GetUserId(),request.ID);
+            Todo? item = _todo.HasItem(_user.GetUserId(), request.ID);
 
             if (item == null)
             {
@@ -121,19 +120,6 @@ namespace todoAPP.Controllers
             _todo.DeleteItem(item);
 
             return Ok();
-        }
-
-        private int GetUserId()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                IEnumerable<Claim> claims = identity.Claims;
-                string Sid = claims.First().Value;
-                Int32.TryParse(Sid, out int userId);
-                return userId;
-            }
-            return 0;
         }
     }
 }

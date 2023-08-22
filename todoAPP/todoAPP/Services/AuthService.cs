@@ -1,15 +1,10 @@
-﻿using System;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 
 namespace todoAPP.Services
 {
     public class AuthService
     {
-        public AuthService()
-        {
-        }
-
         public byte[] CreateSalt()
         {
             byte[] randomBytes = new byte[128 / 8];
