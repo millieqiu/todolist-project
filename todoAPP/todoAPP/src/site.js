@@ -69,12 +69,7 @@ const app = new Vue({
                 method: "get",
             }).then((response) => {
                 response.text().then(function (text) {
-                    const popup = window.open(text, "popup", "popup=true");
-                    const checkPopup = setInterval(() => {
-                        if (!popup || !popup.closed) return;
-                        clearInterval(checkPopup);
-                        window.location.href = "/TodoPage";
-                    }, 100);
+                    window.location.href = text;
                 });
             }).catch((response, status) => {
 

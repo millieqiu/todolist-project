@@ -61,7 +61,7 @@ namespace todoAPP.Controllers
             }
             await _user.SignInUser(HttpContext,user);
 
-            return Ok(userInfo);
+            return new RedirectToPageResult("/TodoPage");
         }
     }
 }
