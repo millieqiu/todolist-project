@@ -99,7 +99,7 @@ const appTodo = new Vue({
         onChangeStatus(id) {
             let todoItem = {
                 id: id,
-                body: this.currentPage,
+                page: this.currentPage,
             };
 
             fetch('/api/TodoList/ChangeStatus', {
@@ -107,7 +107,7 @@ const appTodo = new Vue({
                 headers: {
                     'Content-Type': "application/json; charset=utf-8",
                 },
-                data: JSON.stringify(todoItem)
+                body: JSON.stringify(todoItem)
             })
                 .then(res => {
                     self.getTodoList(self.currentPage);
