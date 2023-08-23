@@ -38,31 +38,25 @@ const app = new Vue({
                 body: JSON.stringify(userInfo),
             })
                 .then((response) => {
-                    this.isLoading = false;
-                    window.location.href = "/TodoPage";
-                    console.log(response);
-                    console.log(response.json());
+                    if (response.ok) {
+                        this.isLoading = false;
+                        window.location.href = "/TodoPage";
+                    }
+                    return Promise.reject(response);
                 })
-
-
-            //}).catch((response, status) => {
-            //    console.log(response);
-            //    console.log(response.json());
-            //    this.isLoading = false;
-            //    response.json().then((json) => {
-            //        if (json.service == "Login" && json.status == 1) {
-            //            alert("此帳號不存在");
-            //        }
-            //        else if (json.service == "Login" && json.status == 2) {
-            //            alert("帳號或密碼錯誤");
-            //        }
-            //        else {
-            //            alert("無法登入，請聯絡系統管理員");
-            //        }
-            //    })
-                
-            
-
+                .catch((response, status) => {
+                    this.isLoading = false;
+                    response.json().then((json) => {
+                        console.log(response);
+                        console.log(response.json());
+                        if (json.service == "Login" && json.status == 1) {
+                            alert("帳號或密碼錯誤");
+                        }
+                        else {
+                            alert("無法登入，請聯絡系統管理員");
+                        }
+                    })
+                })
         },
         onClickLoginGoogle() {
             fetch('/api/OAuth/RedirectToServiceProvider', {
