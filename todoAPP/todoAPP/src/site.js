@@ -1,7 +1,7 @@
 ﻿//嘗試過的解法
 import Vue from 'vue';
-import './css/style.scss';
 import './image/Google.svg';
+import './css/style.scss';
 
 // 建立 Vue
 const app = new Vue({

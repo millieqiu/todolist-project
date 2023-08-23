@@ -1,0 +1,23 @@
+﻿@import './style.scss';
+
+/* Setting 頁 */
+#image-input {
+    display: none;
+}
+
+.avatar-container, .avatar-form {
+    gap: 48px;
+}
+
+.avatar-button {
+    gap: 12px;
+}
+
+
+.avatar {
+    display: block;
+    width: 150px;
+    height: 150px;
+    background-color: #D8D8D8;
+    border-radius: 100%;
+}
