@@ -32,7 +32,7 @@ namespace todoAPP.Services
             return queryUri.ToString();
         }
 
-        async public Task<GoogleTokenViewModel?> GetToken(string code)
+        async public Task<OAuthTokenViewModel?> GetToken(string code)
         {
             string tokenUri = "https://oauth2.googleapis.com/token";
             Dictionary<string, string> param = new Dictionary<string, string>
@@ -47,10 +47,10 @@ namespace todoAPP.Services
             HttpClient httpClient = _clientFactory.CreateClient();
             var response = await httpClient.PostAsync(tokenUri, new FormUrlEncodedContent(param));
             var contents = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<GoogleTokenViewModel>(contents);
+            return JsonSerializer.Deserialize<OAuthTokenViewModel>(contents);
         }
 
-        async public Task<GoogleUserinfoViewModel?> GetUserInfo(string accessToken)
+        async public Task<OAuthUserinfoViewModel?> GetUserInfo(string accessToken)
         {
             Uri userInfoUri = new Uri("https://www.googleapis.com/oauth2/v1/userinfo");
             QueryBuilder qBuilder = new QueryBuilder
@@ -62,7 +62,7 @@ namespace todoAPP.Services
 
             var httpClient = _clientFactory.CreateClient();
             var response = await httpClient.GetStringAsync(queryUri);
-            return JsonSerializer.Deserialize<GoogleUserinfoViewModel>(response);
+            return JsonSerializer.Deserialize<OAuthUserinfoViewModel>(response);
         }
     }
 }
