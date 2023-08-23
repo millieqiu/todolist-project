@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import $ from "jquery";
-import './css/style.scss';
 
 const app2 = new Vue({
     el: '#app2',

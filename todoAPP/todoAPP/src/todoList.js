@@ -1,7 +1,6 @@
 ﻿import Vue from 'vue';
 import $ from "jquery";
-import './css/style.scss';
-
+import './css/todoList.scss';
 
 const appTodo = new Vue({
     el: '#appTodo',

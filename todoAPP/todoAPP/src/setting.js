@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import $ from "jquery";
-import './css/style.scss';
+import './css/setting.scss';
 
 const setting = new Vue({
     el: '#setting',
@@ -15,7 +15,7 @@ const setting = new Vue({
         this.getAvatar();
     },
     methods: {
-        //¨ú±o¤jÀY·Ó
+        //ï¿½ï¿½ï¿½oï¿½jï¿½Yï¿½ï¿½
         getAvatar() {
             //fetch('/api/User/Avatar', {
             //    method: 'get',
@@ -28,7 +28,7 @@ const setting = new Vue({
             this.url = '/api/User/Avatar'
         },
 
-        //§ó·s¤jÀY·Ó
+        //ï¿½ï¿½sï¿½jï¿½Yï¿½ï¿½
         onFileChange(e) {
             var self = this;
 
@@ -36,7 +36,7 @@ const setting = new Vue({
             let reader = new FileReader();
             reader.readAsDataURL(self.file);
 
-            //¶i«×±ø
+            //ï¿½iï¿½×±ï¿½
             reader.addEventListener("progress", (event) => {
                 this.percent = parseInt(Math.round((event.loaded / event.total) * 100));
                 console.log([this.percent, event.lengthComputable, event.loaded, event.total]);

@@ -1,0 +1,19 @@
+﻿@import './style.scss';
+
+.header {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px 312px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 120px;
+}
+
+.header a {
+    text-decoration: none;
+}
+
+.header-button {
+    display: flex;
+    gap: 16px;
+}
