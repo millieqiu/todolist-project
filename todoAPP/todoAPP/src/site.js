@@ -30,7 +30,7 @@ const app = new Vue({
             };
 
             //改用fetch
-            fetch('/api/User/Login', {
+            fetch('/api/Login', {
                 method: "post",
                 headers: {
                     'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ const app = new Vue({
                     window.location.href = text;
                 });
             }).catch((response, status) => {
-
+                console.log(response);
             });
         },
  

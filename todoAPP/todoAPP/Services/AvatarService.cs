@@ -22,7 +22,7 @@ namespace todoAPP.Services
             var fileOriginName = Path.GetFileName(file.FileName);
             var fileExt = Path.GetExtension(fileOriginName);
             var fileNewName = Path.GetRandomFileName();
-            var filePath = Path.Combine(basePath, fileNewName, fileExt);
+            var filePath = Path.Combine(basePath, fileNewName+fileExt);
             if (Directory.Exists(basePath) == false)
             {
                 Directory.CreateDirectory(basePath);
@@ -30,7 +30,7 @@ namespace todoAPP.Services
             Stream stream = File.Create(filePath);
             await file.CopyToAsync(stream);
             stream.Close();
-            return Path.Combine(fileNewName, fileExt);
+            return fileNewName + fileExt;
 
         }
 

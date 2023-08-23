@@ -23,7 +23,7 @@ const app2 = new Vue({
                 nickname: this.registerName,
             };
 
-            fetch('/api/User/Register', {
+            fetch('/api/Register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': "application/json; charset=utf-8",

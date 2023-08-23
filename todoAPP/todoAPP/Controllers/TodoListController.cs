@@ -9,7 +9,7 @@ namespace todoAPP.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("/api/[controller]/[action]")]
+    [Route("/api/[controller]")]
     public class TodoListController : Controller
     {
         private readonly TodoListService _todo;
@@ -24,6 +24,7 @@ namespace todoAPP.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
+        [Route("/api/admin/[controller]")]
         public IActionResult ListUserPagination(int page, int userId)
         {
 
@@ -80,7 +81,8 @@ namespace todoAPP.Controllers
             return Ok(new GeneralViewModel() { ID = id });
         }
 
-        [HttpPut]
+        [HttpPatch]
+        [Route("Status")]
         public IActionResult ChangeStatus(GeneralRequestModel request)
         {
             Todo? item = _todo.HasItem(_user.GetUserId(), request.ID);
