@@ -8,7 +8,7 @@ const header = new Vue({
         //Logout
         onClickLogout() {
 
-            fetch('/api/User/Logout', {
+            fetch('/api/Logout', {
                 method: 'POST',
             })
                 .then(res => {

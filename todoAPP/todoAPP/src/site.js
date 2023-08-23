@@ -30,7 +30,7 @@ const app = new Vue({
             };
 
             //改用fetch
-            fetch('/api/User/Login', {
+            fetch('/api/Login', {
                 method: "post",
                 headers: {
                     'Content-Type': 'application/json'
@@ -47,8 +47,6 @@ const app = new Vue({
                 .catch((response, status) => {
                     this.isLoading = false;
                     response.json().then((json) => {
-                        console.log(response);
-                        console.log(response.json());
                         if (json.service == "Login" && json.status == 1) {
                             alert("帳號或密碼錯誤");
                         }
@@ -66,7 +64,7 @@ const app = new Vue({
                     window.location.href = text;
                 });
             }).catch((response, status) => {
-
+                console.log(response);
             });
         },
  

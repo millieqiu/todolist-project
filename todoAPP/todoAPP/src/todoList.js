@@ -29,7 +29,7 @@ const appTodo = new Vue({
             this.isLoading = true;
             var self = this; //在這邊給定範圍內的this都是self
 
-            fetch(('/api/TodoList/ListPagination?page=' + page), {
+            fetch(('/api/TodoList?page=' + page), {
                 method: 'get',
                 headers: {
                     'Content-Type': "application/json; charset=utf-8",
@@ -59,7 +59,7 @@ const appTodo = new Vue({
             };
 
 
-            fetch('/api/TodoList/Create', {
+            fetch('/api/TodoList', {
                 method: 'post',
                 headers: {
                     'Content-Type': "application/json; charset=utf-8",
@@ -82,7 +82,7 @@ const appTodo = new Vue({
                 page: this.currentPage,
             };
 
-            fetch('/api/TodoList/Delete', {
+            fetch('/api/TodoList', {
                 method: 'delete',
                 headers: {
                     'Content-Type': "application/json; charset=utf-8",
@@ -102,8 +102,8 @@ const appTodo = new Vue({
                 page: this.currentPage,
             };
 
-            fetch('/api/TodoList/ChangeStatus', {
-                method: 'put',
+            fetch('/api/TodoList/Status', {
+                method: 'patch',
                 headers: {
                     'Content-Type': "application/json; charset=utf-8",
                 },

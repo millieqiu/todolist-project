@@ -49,6 +49,7 @@ public class Program
         builder.Services.AddSingleton<WeatherService>();
         builder.Services.AddTransient<AvatarService>();
         builder.Services.AddTransient<OAuthService>();
+        //builder.Services.AddTransient<IOAuthService, OAuthService>();
 
         var app = builder.Build();
 

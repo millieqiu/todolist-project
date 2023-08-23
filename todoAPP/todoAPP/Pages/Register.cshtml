@@ -19,19 +19,19 @@
                         <label class="paragraph2" for="">常用信箱</label>
                         <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="email" name="email" id="registerEmail"
                                placeholder="輸入 Email" v-model="registerEmail"
-                               pattern="[a-z0-9._%+\-]+@@[a-z0-9.\-]+\.[a-z]{2,4}$"
+                               pattern="^\w+((-\w+)|(\.\w+))*\@@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$"
                                oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')"
                                required>
-                        <span class="error-message">{{ registerEmailErrMsg }}</span>
+                        <span class="error-message">{{ msg.registerEmail }}</span>
                     </div>
                     <div class="flex-column">
                         <label class="paragraph2" for="">設定密碼</label>
                         <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="password" name="password" id="registerPassword"
-                               placeholder="請設定輸入密碼" pattern="^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$" oninput="setCustomValidity('');"
+                               placeholder="請設定輸入密碼" pattern="\w{8,}" oninput="setCustomValidity('');"
                                oninvalid="setCustomValidity('請使用英數且至少八個字元')"
                                onchange="if(document.getElementById('confirm-password').value != document.getElementById('password').value){setCustomValidity('密碼不符合');}"
                                required v-model="registerPassword">
-                        <span class="error-message">{{ registerPasswordErrMsg }}</span>
+                        <span class="error-message">{{ msg.registerPassword }}</span>
                     </div>
                     <div class="flex-column">
                         <label class="paragraph2" for="">確認密碼</label>
@@ -39,6 +39,7 @@
                                placeholder="請再次輸入密碼" oninput="setCustomValidity('');"
                                onchange="if(document.getElementById('registerPassword').value != document.getElementById('confirm-password').value){setCustomValidity('密碼不符合');}"
                                required v-model="confirmPassword">
+                        <span class="error-message">{{ msg.confirmPassword }}</span>
                     </div>
                 </div>
                 <div class="btn-container">
