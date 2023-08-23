@@ -25,8 +25,7 @@
                     <div class="flex-column">
                         <label class="paragraph2" for="loginEmail">常用信箱</label>
                         <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="email" name="email" id="loginEmail"
-                               pattern="[a-z0-9._%+\-]+@@[a-z0-9.\-]+\.[a-z]{2,4}$" placeholder="輸入 Email"
-                               oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')" required v-model="loginEmail">
+                               required v-model="loginEmail">
                     </div>
                     <div class="flex-column">
                         <label class="paragraph2" for="loginPassword">密碼</label>

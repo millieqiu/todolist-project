@@ -12,7 +12,54 @@ const app2 = new Vue({
             confirmPassword: '',
             registerName: '',
 
+            // Error
+            registerEmailErr: false,
+            registerEmailErrMsg: '',
+            registerPasswordErr: false,
+            registerPasswordErrMsg: '',
+            confirmPasswordErr: false,
+            confirmPasswordErrMsg: '',
+
         }
+    },
+    watch: {
+        registerEmail: function () {
+            let isPattern = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+            if (!isPattern.test(this.registerEmail)) {
+                this.registerEmailErr = true;
+                this.registerEmailErrMsg = '請輸入正確 Email 格式'
+            }
+            if (isPattern.test(this.registerEmail) || this.registerEmail == '') {
+                this.registerEmailErr = false;
+                this.registerEmailErrMsg = ''
+            }
+        },
+        registerPassword: function () {
+            let isPattern = /[a-zA-Z0-9]/;
+            if (!isPattern.test(this.registerPassword)) {
+                this.registerPasswordErr = true;
+                this.registerPasswordErrMsg = '請使用英數字'
+            }
+            //if (this.registerPassword.length < 8) {
+            //    this.registerPasswordErr = true;
+            //    this.registerPasswordErrMsg = '請勿少於八個字'
+            //}
+            if (isPattern.test(this.registerPassword) || this.registerPassword == '') {
+                this.registerPassword = false;
+                this.registerPasswordErrMsg = ''
+            }
+        },
+        confirmPassword: function () {
+            if (this.confirmPassword !== this.registerPassword) {
+                this.confirmPasswordErr = true;
+                this.confirmPasswordErrMsg = '密碼不一致'
+            }
+            if (this.confirmPassword == '' || this.registerPassword == '') {
+                this.confirmPasswordErr = false;
+                this.confirmPasswordErrMsg = ''
+            } 
+        }
+
     },
     methods: {
         onClickRegister() {
