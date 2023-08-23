@@ -4,7 +4,7 @@ using todoAPP.ViewModel;
 
 namespace todoAPP.Services
 {
-    public class OAuthService
+    public class OAuthService : IOAuthService
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
