@@ -27,11 +27,11 @@
                     <span class="text-gray-400 caption">{{computedText}} / 30</span>
                 </div>
             </form>
-            <ul class="list" id="todolist" v-for="todo in todos">
+            <ul class="list" id="todolist" v-for="(todo,index) in todos">
 
                 <li class="task bg-white">
                     <label class="task-content">
-                        <input type="checkbox" name="" class="form-check-input checkbox" v-on:click="onChangeStatus(todo.id)" v-bind:checked="todo.status">
+                        <input type="checkbox" name="" class="form-check-input checkbox" v-on:click="onChangeStatus(todo,index)" v-bind:checked="todo.status">
                         <span class="text-gray-500 paragraph1" for="">{{todo.text}}</span>
                     </label>
                     <div class="icon" id="delete_item_${value.id}" v-on:click.prevent="onClickDeleteTodoItem(todo.id)">

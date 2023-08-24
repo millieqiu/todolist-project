@@ -47,7 +47,6 @@ const appTodo = new Vue({
                     self.currentPage = json.currentPage;
                     self.todos = json.list;
                     self.isLoading = false;
-                    console.log(json);
                 })
 
         },
@@ -59,7 +58,6 @@ const appTodo = new Vue({
 
             let todoItem = {
                 Text: this.todoText,
-                page: this.currentPage,
             };
 
 
@@ -83,7 +81,6 @@ const appTodo = new Vue({
 
             let todoItem = {
                 id: id,
-                page: this.currentPage,
             };
 
             fetch('/api/TodoList', {
@@ -101,9 +98,10 @@ const appTodo = new Vue({
 
         // Change status
         onChangeStatus(id) {
+            var self = this;
+
             let todoItem = {
                 id: id,
-                page: this.currentPage,
             };
 
             fetch('/api/TodoList/Status', {
@@ -113,6 +111,9 @@ const appTodo = new Vue({
                 },
                 body: JSON.stringify(todoItem)
             })
+                .then(res => {
+                    self.getTodoList(self.currentPage);
+                })
         },
     }
 })
