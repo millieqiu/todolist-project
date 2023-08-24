@@ -13,6 +13,7 @@
     <None Remove="RequestModel\" />
     <None Remove="Middlewares\" />
     <None Remove="Services\" />
+    <None Remove="BuilderServices\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +21,7 @@
     <Folder Include="RequestModel\" />
     <Folder Include="Middlewares\" />
     <Folder Include="Services\" />
+    <Folder Include="BuilderServices\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
+using todoAPP.BuilderServices;
 using todoAPP.Middlewares;
 using todoAPP.Models;
 using todoAPP.Services;
@@ -50,7 +51,7 @@ public class Program
         builder.Services.AddTransient<AvatarService>();
         builder.Services.AddTransient<IOAuthService, OAuthService>();
 
-        builder.Services.AddOpenApiDocument();
+        builder.Services.AddDocumentService();
 
         var app = builder.Build();
 
