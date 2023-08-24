@@ -405,5 +405,5 @@ ASALocalRun/
 .localhistory/
 
 #custom
-Log
-wwwroot
+log
+todoAPP/wwwroot/

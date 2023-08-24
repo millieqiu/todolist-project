@@ -1,8 +1,8 @@
 ﻿using System;
 namespace todoAPP.ViewModel
 {
-	public class GoogleUserinfoViewModel
-	{
+	public class OAuthUserinfoViewModel
+    {
         public string id { get; set; }
         public string email { get; set; }
         public bool verified_email { get; set; }

@@ -6,9 +6,9 @@ namespace todoAPP.Services
     {
         public string GetProviderURL();
 
-        public Task<GoogleTokenViewModel?> GetToken(string code);
+        public Task<OAuthTokenViewModel?> GetToken(string code);
 
-        public Task<GoogleUserinfoViewModel?> GetUserInfo(string accessToken);
+        public Task<OAuthUserinfoViewModel?> GetUserInfo(string accessToken);
     }
 }
 
