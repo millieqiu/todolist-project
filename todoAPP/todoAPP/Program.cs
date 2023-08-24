@@ -50,6 +50,8 @@ public class Program
         builder.Services.AddTransient<AvatarService>();
         builder.Services.AddTransient<IOAuthService, OAuthService>();
 
+        builder.Services.AddOpenApiDocument();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -77,6 +79,9 @@ public class Program
             endpoints.MapRazorPages();
             endpoints.MapControllers();
         });
+
+        app.UseOpenApi();
+        app.UseSwaggerUi3();
 
         app.Run();
     }
