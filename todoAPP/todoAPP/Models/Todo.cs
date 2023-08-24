@@ -15,7 +15,7 @@ namespace todoAPP.Models
         public byte Status { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(30)]
         public string Text { get; set; }
 
         [Required]
