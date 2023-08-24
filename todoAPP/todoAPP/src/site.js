@@ -1,5 +1,4 @@
-﻿//嘗試過的解法
-import Vue from 'vue';
+﻿import Vue from 'vue';
 import './image/Google.svg';
 import './css/style.scss';
 

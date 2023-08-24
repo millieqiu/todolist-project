@@ -22,7 +22,7 @@
                                pattern="^\w+((-\w+)|(\.\w+))*\@@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$"
                                oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的 Email 位址')"
                                required>
-                        <span class="error-message">{{ validateEmail }}</span>
+                        <span class="caption text-danger">{{ validateEmail }}</span>
                     </div>
                     <div class="flex-column">
                         <label class="paragraph2" for="">設定密碼</label>
@@ -31,7 +31,7 @@
                                oninvalid="setCustomValidity('請使用英數且至少八個字元')"
                                onchange="if(document.getElementById('confirm-password').value != document.getElementById('password').value){setCustomValidity('密碼不符合');}"
                                required v-model="registerPassword">
-                        <span class="error-message">{{ validatePassword }}</span>
+                        <span class="caption text-danger">{{ validatePassword }}</span>
                     </div>
                     <div class="flex-column">
                         <label class="paragraph2" for="">確認密碼</label>
@@ -39,7 +39,7 @@
                                placeholder="請再次輸入密碼" oninput="setCustomValidity('');"
                                onchange="if(document.getElementById('registerPassword').value != document.getElementById('confirm-password').value){setCustomValidity('密碼不符合');}"
                                required v-model="confirmPassword">
-                        <span class="error-message">{{ validateConfirmPassword }}</span>
+                        <span class="caption text-danger">{{ validateConfirmPassword }}</span>
                     </div>
                 </div>
                 <div class="btn-container">

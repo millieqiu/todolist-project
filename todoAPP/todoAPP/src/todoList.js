@@ -18,6 +18,11 @@ const appTodo = new Vue({
 
         }
     },
+    computed: {
+        computedText() {
+            return this.todoText.length;
+        }
+    },
     mounted() {
         //由於是設定頁數被點擊後才能觸發getTodoList函式，登入後尚未點擊頁數前須給定預設值為1
         this.getTodoList(1); //todo: 改將預設值寫在函式裡

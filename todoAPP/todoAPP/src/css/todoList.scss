@@ -38,17 +38,24 @@
 }
 
 .task-content {
-    width: 100%;
+    width: 80%;
     display: flex;
     align-items: center;
-    gap: 12px;
+}
+
+.task-content > span {
+    max-width: 80%;
+    margin-left: 6px;
+    flex: 1 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .task {
     padding: 24px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
 }
 
 .icon {
@@ -112,4 +119,36 @@
 .checkbox:checked + span {
     text-decoration: line-through;
     color: #A0A0A0;
+}
+
+/* RWD　設定*/
+@media(max-width: 970px) {
+    .section {
+        padding: 0 120px;
+    }
+
+    .list {
+        margin-top: 36px;
+    }
+}
+
+@media(max-width: 670px) {
+    .section {
+        padding: 0 64px;
+    }
+
+    .list-container {
+        padding: 48px 24px;
+    }
+
+    .task {
+        padding: 18px;
+    }
+}
+
+@media(max-width: 472px) {
+    .add-container {
+        display: flex;
+        flex-direction: column;
+    }
 }

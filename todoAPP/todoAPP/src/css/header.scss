@@ -17,3 +17,16 @@
     display: flex;
     gap: 16px;
 }
+
+/* RWD　設定*/
+@media(max-width: 970px) {
+    .header {
+        padding: 12px 120px;
+    }
+}
+
+@media(max-width: 670px) {
+    .header {
+        padding: 12px 64px;
+    }
+}

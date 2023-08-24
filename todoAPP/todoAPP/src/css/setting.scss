@@ -21,3 +21,16 @@
     background-color: #D8D8D8;
     border-radius: 100%;
 }
+
+/* RWD　設定*/
+@media(max-width: 970px) {
+    .section {
+        padding: 0 120px;
+    }
+}
+
+@media(max-width: 670px) {
+    .section {
+        padding: 0 64px;
+    }
+}

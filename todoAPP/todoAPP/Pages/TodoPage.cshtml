@@ -19,9 +19,12 @@
         <h2 class="heading2 h2-font-size"><span id="user_name"></span>@User.Identity.Name，使用 To-do 規劃美好的一天。</h2>
         <div class="list-container bg-light">
             <form method="post" action="" v-on:submit.prevent="onClickCreateTodoItem()">
-                <div class="add-container">
-                    <input type="text" class="add-input paragraph1 text-gray-300 bg-white border border-1 border-primary" id="todoText" placeholder="添加你的待辦事項..." v-model="todoText">
-                    <button class="btn btn-primary text-white button-mid">新增</button>
+                <div class="flex-column">
+                    <div class="add-container">
+                        <input type="text" class="add-input paragraph1 text-gray-300 bg-white border border-1 border-primary" id="todoText" placeholder="添加你的待辦事項..." v-model="todoText" maxlength="30">
+                        <button class="btn btn-primary text-white button-mid">新增</button>
+                    </div>
+                    <span class="text-gray-400 caption">{{computedText}} / 30</span>
                 </div>
             </form>
             <ul class="list" id="todolist" v-for="todo in todos">

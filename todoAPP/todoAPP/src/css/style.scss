@@ -106,7 +106,6 @@ body {
     gap: 12px;
 }
 
-
 /* Main */
 .main {
     width: 100%;
@@ -158,14 +157,11 @@ body {
     line-height: 150%;
 }
 
-.error-message {
+.caption {
     font-family: 'Noto Sans TC';
     font-size: 12px;
-    color: $red;
     font-weight: 400;
 }
-
-/* 色彩樣式 */
 
 
 /* 按鈕樣式 */
@@ -238,16 +234,10 @@ body {
         padding: 0 120px;
     }
 
-    .header {
-        padding: 12px 120px;
-    }
-
     .button-lg {
         padding: 12px 120px;
     }
-    .list {
-        margin-top: 36px;
-    }
+
 }
 
 @media(max-width: 670px) {
@@ -255,26 +245,8 @@ body {
         padding: 0 64px;
     }
 
-    .header {
-        padding: 12px 64px;
-    }
-
     .button-lg {
         padding: 12px 72px;
     }
 
-    .list-container {
-        padding: 48px 24px;
-    }
-
-    .task {
-        padding: 18px;
-    }
-}
-
-@media(max-width: 472px) {
-    .add-container {
-        display: flex;
-        flex-direction: column;
-    }
 }
