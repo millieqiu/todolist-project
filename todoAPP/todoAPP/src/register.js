@@ -13,23 +13,42 @@ const app2 = new Vue({
             msg:[],
         }
     },
-    watch: {
+    //watch: {
 
-        registerEmail(value) {
-            this.registerEmail = value;
-            this.validateEmail(value);
+    //    registerEmail(value) {
+    //        this.registerEmail = value;
+    //        this.validateEmail(value);
+    //    },
+
+    //    registerPassword(value) {
+    //        this.registerPassword = value;
+    //        this.validatePassword(value);
+    //    },
+
+    //    confirmPassword(value) {
+    //        this.confirmPassword = value;
+    //        this.validateConfirmPassword(value);
+    //    }
+
+    //},
+    computed: {
+        validateEmail() {
+            return (/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.test(this.registerEmail) || this.registerEmail == '') ? '' : '請輸入正確 Email 格式';
         },
-
-        registerPassword(value) {
-            this.registerPassword = value;
-            this.validatePassword(value);
+        validatePassword() {
+            if (/[A-Za-z0-9]/.test(this.registerPassword) && this.registerPassword.length >= 8) {
+                return  '';
+            }
+            else if (this.registerPassword == '') {
+                return  '';
+            }
+            else {
+                return '請使用英數且需達八字以上';
+            }
         },
-
-        confirmPassword(value) {
-            this.confirmPassword = value;
-            this.validateConfirmPassword(value);
+        validateConfirmPassword() {
+            return this.registerPassword == this.confirmPassword ? '' : '密碼不一致';
         }
-
     },
     methods: {
         onClickRegister() {
@@ -66,33 +85,33 @@ const app2 = new Vue({
                 })
         },
 
-        validateEmail(value) {
-            if (/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.test(value) || value == '') {
-                this.msg['registerEmail'] = '';
-            } else {
-                this.msg['registerEmail'] = '請輸入正確 Email 格式';
-            }
-        },
+        //validateEmail(value) {
+        //    if (/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.test(value) || value == '') {
+        //        this.msg['registerEmail'] = '';
+        //    } else {
+        //        this.msg['registerEmail'] = '請輸入正確 Email 格式';
+        //    }
+        //},
 
-        validatePassword(value) {
-            if (/[A-Za-z0-9]/.test(value) && value.length >= 8) {
-                this.msg['registerPassword'] = '';
-            }
-            else if (value == '') {
-                this.msg['registerPassword'] = '';
-            }
-            else {
-                this.msg['registerPassword'] = '請使用英數且需達八字以上';
-            }
-        },
+        //validatePassword(value) {
+        //    if (/[A-Za-z0-9]/.test(value) && value.length >= 8) {
+        //        this.msg['registerPassword'] = '';
+        //    }
+        //    else if (value == '') {
+        //        this.msg['registerPassword'] = '';
+        //    }
+        //    else {
+        //        this.msg['registerPassword'] = '請使用英數且需達八字以上';
+        //    }
+        //},
 
-        validateConfirmPassword(value) {
-            if (value == this.registerPassword || value == '') {
-                this.msg['confirmPassword'] = '';
-            }
-            else {
-                this.msg['confirmPassword'] = '密碼不一致';
-            }
-        }
+        //validateConfirmPassword(value) {
+        //    if (value == this.registerPassword || value == '') {
+        //        this.msg['confirmPassword'] = '';
+        //    }
+        //    else {
+        //        this.msg['confirmPassword'] = '密碼不一致';
+        //    }
+        //}
     }
 })
