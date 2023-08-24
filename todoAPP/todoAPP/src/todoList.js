@@ -14,8 +14,6 @@ const appTodo = new Vue({
             numOfPages: 0, //資料型態為數字，給定預設值0 (因為沒有任何items前不應該有頁碼)
             currentPage: 0,
 
-            isLoading: false,
-
         }
     },
     computed: {
@@ -30,7 +28,6 @@ const appTodo = new Vue({
     methods: {
         // get todoList
         getTodoList(page) {
-            this.isLoading = true;
             var self = this; //在這邊給定範圍內的this都是self
 
             fetch(('/api/TodoList?page=' + page), {
@@ -46,7 +43,6 @@ const appTodo = new Vue({
                     self.numOfPages = json.numOfPages;
                     self.currentPage = json.currentPage;
                     self.todos = json.list;
-                    self.isLoading = false;
                 })
 
         },
