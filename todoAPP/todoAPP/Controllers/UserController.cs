@@ -22,6 +22,27 @@ namespace todoAPP.Controllers
         }
 
         [HttpPatch]
+        public IActionResult Nickname(EditNicknameRequestModel form)
+        {
+            User? user = _user.HasUser(_user.GetUserId());
+
+            if (user == null)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "User",
+                    Status = 1,
+                    ErrMsg = "Resource not found",
+                };
+                return NotFound(err);
+            }
+
+            _user.EditNickname(user, form.Nickname);
+            return Ok();
+        }
+
+
+        [HttpPatch]
         [Authorize(Roles = "Admin")]
         [Route("/api/admin/[controller]/[action]")]
         public IActionResult Role(PatchRoleRequestModel form)

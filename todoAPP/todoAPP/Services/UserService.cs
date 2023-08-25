@@ -52,6 +52,12 @@ namespace todoAPP.Services
             _db.SaveChanges();
         }
 
+        public void EditNickname(User user, string nickname)
+        {
+            user.Nickname = nickname;
+            _db.SaveChanges();
+        }
+
         public Stream? GetAvatar(string fileName)
         {
             return _avartar.ReadFile(fileName);
