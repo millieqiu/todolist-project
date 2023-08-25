@@ -25,6 +25,38 @@ namespace todoAPP.Controllers
 
         [HttpPatch]
         [Authorize]
+        public IActionResult Username(PatchUsernameRequestModel form)
+        {
+            User? user = _user.HasUser(_user.GetUserId());
+
+            if (user == null)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "User",
+                    Status = 1,
+                    ErrMsg = "Resource not found",
+                };
+                return NotFound(err);
+            }
+
+            bool result = _user.EditUsername(user, form.Username);
+            if (result == false)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "User",
+                    Status = 2,
+                    ErrMsg = "Invalid username",
+                };
+                return BadRequest(err);
+            }
+
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Authorize]
         public IActionResult Nickname(EditNicknameRequestModel form)
         {
             User? user = _user.HasUser(_user.GetUserId());

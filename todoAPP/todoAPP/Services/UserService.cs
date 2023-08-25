@@ -52,6 +52,18 @@ namespace todoAPP.Services
             _db.SaveChanges();
         }
 
+        public bool EditUsername(User user, string username)
+        {
+            if(_db.Users.Any(user => user.Username == username))
+            {
+                return false;
+            }
+
+            user.Username = username;
+            _db.SaveChanges();
+            return true;
+        }
+
         public void EditNickname(User user, string nickname)
         {
             user.Nickname = nickname;
