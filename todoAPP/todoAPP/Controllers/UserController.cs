@@ -23,6 +23,34 @@ namespace todoAPP.Controllers
             _auth = auth;
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("/api/[controller]")]
+        public IActionResult UserInfo()
+        {
+            User? user = _user.HasUser(_user.GetUserId());
+
+            if (user == null)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "User",
+                    Status = 1,
+                    ErrMsg = "Resource not found",
+                };
+                return NotFound(err);
+            }
+
+            UserInfoViewModel userinfo = new UserInfoViewModel()
+            {
+                Id = user.ID,
+                Username = user.Username,
+                Nickname = user.Nickname
+            };
+
+            return Ok(userinfo);
+        }
+
         [HttpPatch]
         [Authorize]
         public IActionResult Username(PatchUsernameRequestModel form)
