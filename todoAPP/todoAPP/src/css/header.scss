@@ -6,7 +6,7 @@
     padding: 12px 312px;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 120px;
+    margin-bottom: 80px;
 }
 
 .header a {
@@ -44,6 +44,7 @@
 @media(max-width: 670px) {
     .header {
         padding: 12px 64px;
+        margin-bottom: 48px;
     }
 
     .logo {

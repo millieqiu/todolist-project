@@ -17,6 +17,7 @@ $light: #EDF1F5;
 
 $h1-font-size: 42px; 
 $h2-font-size: 32px;
+$h4-font-size: 18px;
 
 
 @import "~bootstrap/scss/bootstrap";
@@ -180,6 +181,11 @@ body {
     border-radius: 8px;
 }
 
+.button-setting {
+    padding: 6px 14px;
+    border-radius: 4px;
+    color: $gray-500;
+}
 
 .button-outlined {
     background-color: transparent;

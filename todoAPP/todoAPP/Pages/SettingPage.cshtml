@@ -6,17 +6,45 @@
 
 <section class="section" id="setting">
     <div class="avatar-container flex-colum-center">
-        <h2 class="heading2 text-secondary h2-font-size">更換大頭照</h2>
         <form class="avatar-form flex-colum-center" v-on:submit.prevent="onClickUploadImage" enctype="multipart/form-data">
-            <img class="avatar border border-3 border-secondary" v-if="url" :src="url" />
-            <img class="avatar border border-3 border-secondary" src="../src/image/default.jpg" v-else />
-            <progress min="0" max="100" v-bind:value.prop="percent"></progress>
+            <div class="flex-colum-center">
+                <img class="avatar border border-3 border-secondary" v-if="url" :src="url" />
+                <img class="avatar border border-3 border-secondary" src="../src/image/default.jpg" v-else />
+                <progress min="0" max="100" v-bind:value.prop="percent"></progress>
+            </div>
             <div class="avatar-button flex-align-center">
                 <input id="image-input" type="file" accept="image/*" v-on:change="onFileChange" />
                 <label for="image-input" class="button-sm btn btn-primary text-white">選擇檔案</label>
                 <button class="button-sm btn btn-primary text-white" v-on:click.prevent="onClickUploadImage" :disabled="!url">確認上傳</button>
             </div>
         </form>
+    </div>
+    <div class="setting flex-column bg-white">
+        <h2 class="heading2 text-secondary h2-font-size">設定</h2>
+        <div class="setting-frame flex-column">
+            <div class="setting-item">
+                <div class="setting-content flex-column">
+                    <h4 class="heading2 text-gray-500 h4-font-size">常用信箱</h4>
+                    <p class="paragraph2">qq@gmail.com</p>
+                </div>
+                <button class="button-setting btn btn-light">更改</button>
+            </div>
+            <div class="divider"></div>
+            <div class="setting-item">
+                <div class="setting-content flex-column">
+                    <h4 class="heading2 text-gray-500 h4-font-size">密碼</h4>
+                </div>
+                <button class="button-setting btn btn-light">更改</button>
+            </div>
+            <div class="divider"></div>
+            <div class="setting-item">
+                <div class="setting-content flex-column">
+                    <h4 class="heading2 text-gray-500 h4-font-size">修改暱稱</h4>
+                    <p class="paragraph2">Peggy</p>
+                </div>
+                <button class="button-setting btn btn-light">更改</button>
+            </div>
+        </div>
     </div>
 </section>
 

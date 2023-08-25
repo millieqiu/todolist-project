@@ -6,13 +6,12 @@
 }
 
 .avatar-container, .avatar-form {
-    gap: 48px;
+    gap: 36px;
 }
 
 .avatar-button {
     gap: 12px;
 }
-
 
 .avatar {
     display: block;
@@ -20,6 +19,40 @@
     height: 150px;
     background-color: #D8D8D8;
     border-radius: 100%;
+    margin-bottom: 12px;
+}
+
+.setting {
+    padding: 48px;
+    gap: 36px;
+    border-radius: 16px;
+    box-shadow: 1px 1px 12px 0px rgba(42, 42, 42, 0.08);
+    margin: 48px 0;
+}
+
+.setting-frame {
+    gap: 8px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+}
+
+.setting-content {
+    gap: 8px;
+}
+
+.setting-content > p {
+    margin: 0;
+}
+
+.divider {
+    height: 1px;
+    width: 100%;
+    background-color: $gray-200;
 }
 
 /* RWD　設定*/
