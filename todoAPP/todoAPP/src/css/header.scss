@@ -13,10 +13,26 @@
     text-decoration: none;
 }
 
-.header-button {
-    display: flex;
-    gap: 16px;
+.header-menu {
+    gap: 24px;
+    margin: 0;
 }
+
+.header-menu-option {
+    height: 100%;
+    list-style: none;
+    cursor: pointer;
+}
+
+.header-menu-link {
+    display: block;
+    height: 100%;
+}
+
+.header-menu-link > svg:hover {
+    fill: $gray-400;
+}
+
 
 /* RWD　設定*/
 @media(max-width: 970px) {
@@ -28,5 +44,24 @@
 @media(max-width: 670px) {
     .header {
         padding: 12px 64px;
+    }
+
+    .logo {
+        width: 150px;
+    }
+}
+
+@media(max-width: 490px) {
+    .logo {
+        width: 100px;
+    }
+
+    .header-menu {
+        padding-left: 12px;
+        gap: 12px;
+    }
+
+    .header-menu-link {
+        font-size: 14px;
     }
 }
