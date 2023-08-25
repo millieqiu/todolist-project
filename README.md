@@ -9,6 +9,21 @@
 繪製介面設計精稿，製作可重複使用的元件，便於後續切版及主視覺維護與更新。<br>
 [Figma 連結](https://www.figma.com/file/J5xkKXjdKPLVt1cU9PSth1/TO-DO-LIST-(Practice)?type=design&node-id=0%3A1&mode=design&t=UYA6aB8FdkrGe6Jn-1)
 
+![login page](https://github.com/millieqiu/todolist-project/blob/main/Image/Frame.png) <br>
+**登入頁面** 👆
+
+![register page](https://github.com/millieqiu/todolist-project/blob/main/Image/Frame-1.png) <br>
+**註冊頁面** - 可即時給予使用者回饋，判斷輸入格式是否正確 👆
+
+![loading](https://github.com/millieqiu/todolist-project/blob/main/Image/Frame-2.png) <br>
+**Loading** - 呼叫登入 api 等待過程，展開 loading 動畫 👆
+
+![todo page](https://github.com/millieqiu/todolist-project/blob/main/Image/Frame-3.png) <br>
+**待辦事項頁** - checked 及刪除按鈕 hover 狀態，並可即時提示當前輸入字數 👆
+
+![setting page](https://github.com/millieqiu/todolist-project/blob/main/Image/Frame-4.png) <br>
+**更換照片** - 設定大頭照及載入檔案時的進度條 👆
+
 ## 資料夾說明
 - BuilderServices - 存放 IServiceCollection 的擴充方法
 - Controllers - API 及流程控制
@@ -118,7 +133,7 @@
     - 使用 NSwag 自動產生 API 文件
 
 ## 開發紀錄
-- [功能異動文件]()
+- [功能異動文件](https://hackmd.io/TQG4ae0gRaSp_DoKvHtScw)
 
 ## 待開發
 - [ ] 編輯已存在的 Todo task
