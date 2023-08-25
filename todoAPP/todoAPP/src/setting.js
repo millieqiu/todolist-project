@@ -9,26 +9,18 @@ const setting = new Vue({
             url: null,
             file: {},
             percent: 0,
+
+            isNicknameModal: false,
         }
     },
     mounted() {
         this.getAvatar();
     },
     methods: {
-        //���o�j�Y��
         getAvatar() {
-            //fetch('/api/User/Avatar', {
-            //    method: 'get',
-            //})
-            //    .then(res => {
-            //        this.file = res.avatar;
-            //        this.url = URL.createObjectURL(this.file);
-            //        console.log(res);
-            //    })
             this.url = '/api/User/Avatar'
         },
 
-        //��s�j�Y��
         onFileChange(e) {
             var self = this;
 
@@ -36,7 +28,6 @@ const setting = new Vue({
             let reader = new FileReader();
             reader.readAsDataURL(self.file);
 
-            //�i�ױ�
             reader.addEventListener("progress", (event) => {
                 this.percent = parseInt(Math.round((event.loaded / event.total) * 100));
                 console.log([this.percent, event.lengthComputable, event.loaded, event.total]);
@@ -48,7 +39,6 @@ const setting = new Vue({
             });
         },
 
-        //�󴫤j�Y��
         onClickUploadImage() {
             let avatar = this.file;
             var formData = new FormData();
@@ -63,6 +53,10 @@ const setting = new Vue({
                     alert('Upload Successful!')
                 }
             )
+        },
+
+        showNicknameModal() {
+            this.isNicknameModal = true;
         },
     },
 })

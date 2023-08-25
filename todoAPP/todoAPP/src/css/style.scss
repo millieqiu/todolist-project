@@ -177,7 +177,7 @@ body {
 }
 
 .button-sm {
-    padding: 16px 24px;
+    padding: 12px 20px;
     border-radius: 8px;
 }
 
@@ -199,8 +199,20 @@ body {
 }
 
 
-.text-button {
+.button-link {
     font-size: 12px;
+}
+
+.text-button {
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    color: $gray-300;
+}
+
+.text-button:hover {
+    color: $gray-200;
 }
 
 
