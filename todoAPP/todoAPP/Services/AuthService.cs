@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
+using todoAPP.Models;
+using todoAPP.ViewModel;
 
 namespace todoAPP.Services
 {
@@ -23,6 +25,16 @@ namespace todoAPP.Services
                 numBytesRequested: 256 / 8
                 );
             return Convert.ToBase64String(key);
+        }
+
+        public bool PasswordValidator(string targetPassword, string targetSalt, string inputPassword)
+        {
+            string derivedPassword = PasswordGenerator(
+                inputPassword,
+                Convert.FromBase64String(targetSalt)
+            );
+
+            return KeyDerivation.Equals(targetPassword, derivedPassword);
         }
     }
 }

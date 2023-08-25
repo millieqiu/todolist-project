@@ -58,6 +58,14 @@ namespace todoAPP.Services
             _db.SaveChanges();
         }
 
+        public void ChangePassword(User user, string newPassword)
+        {
+            byte[] salt = _auth.CreateSalt();
+            user.Password = _auth.PasswordGenerator(newPassword, salt);
+            user.Salt = Convert.ToBase64String(salt);
+            _db.SaveChanges();
+        }
+
         public Stream? GetAvatar(string fileName)
         {
             return _avartar.ReadFile(fileName);

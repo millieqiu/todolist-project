@@ -14,14 +14,17 @@ namespace todoAPP.Controllers
     {
         private readonly UserService _user;
         private readonly RoleService _role;
+        private readonly AuthService _auth;
 
-        public UserController(UserService user, RoleService role)
+        public UserController(UserService user, RoleService role, AuthService auth)
         {
             _user = user;
             _role = role;
+            _auth = auth;
         }
 
         [HttpPatch]
+        [Authorize]
         public IActionResult Nickname(EditNicknameRequestModel form)
         {
             User? user = _user.HasUser(_user.GetUserId());
@@ -38,6 +41,40 @@ namespace todoAPP.Controllers
             }
 
             _user.EditNickname(user, form.Nickname);
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Authorize]
+        public IActionResult Password(PatchPasswordRequestModel form)
+        {
+            User? user = _user.HasUser(_user.GetUserId());
+
+            if (user == null)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "User",
+                    Status = 1,
+                    ErrMsg = "Resource not found",
+                };
+                return NotFound(err);
+            }
+
+
+            if (_auth.PasswordValidator(user.Password, user.Salt, form.OldPassword) == false)
+            {
+                ErrorViewModel err = new ErrorViewModel()
+                {
+                    Service = "User",
+                    Status = 2,
+                    ErrMsg = "Invalid password",
+                };
+                return BadRequest(err);
+            }
+
+            _user.ChangePassword(user, form.NewPassword);
+
             return Ok();
         }
 

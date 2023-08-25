@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using todoAPP.Models;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using todoAPP.ViewModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -28,23 +27,8 @@ namespace todoAPP.Controllers
             Thread.Sleep(2000);//顯示loading延遲
             User? user = _user.HasUser(loginForm.Username);
 
-            if (user == null)
-            {
-                ErrorViewModel err = new ErrorViewModel()
-                {
-                    Service = "Login",
-                    Status = 1,
-                    ErrMsg = "Invalid username or password",
-                };
-                return BadRequest(err);
-            }
-
-            string derivedPassword = _auth.PasswordGenerator(
-                loginForm.Password,
-                Convert.FromBase64String(user.Salt)
-            );
-
-            if (KeyDerivation.Equals(user.Password, derivedPassword) == false)
+            if(user == null ||
+                _auth.PasswordValidator(user.Password, user.Salt, loginForm.Password) == false)
             {
                 ErrorViewModel err = new ErrorViewModel()
                 {
