@@ -20,6 +20,7 @@
                     <span class="text-gray-400 caption">{{computedText}} / 30</span>
                 </div>
             </form>
+            <button v-for="option in sortOptions" v-on:click="sortList(option.value,option.order)">{{option.label}}</button>
             <ul class="list" id="todolist" v-for="todo in todos">
 
                 <li class="task bg-white">

@@ -14,6 +14,12 @@ const appTodo = new Vue({
             numOfPages: 0, //資料型態為數字，給定預設值0 (因為沒有任何items前不應該有頁碼)
             currentPage: 0,
 
+            sortBy: 0,
+            sortOptions: [
+                { value: "createAt",order: 'ASC', label: "依照建立時間（由遠到近）" },
+                { value: "createAt", order: 'DESC', label: "依照建立時間（由近到遠）" },
+            ],
+
         }
     },
     computed: {
@@ -21,9 +27,9 @@ const appTodo = new Vue({
             return this.todoText.length;
         }
     },
-    mounted() {
+    async mounted() {
         //由於是設定頁數被點擊後才能觸發getTodoList函式，登入後尚未點擊頁數前須給定預設值為1
-        this.getTodoList(1); //todo: 改將預設值寫在函式裡
+        await this.getTodoList(1); //todo: 改將預設值寫在函式裡
     },
     methods: {
         // get todoList
@@ -110,6 +116,16 @@ const appTodo = new Vue({
                 .then(res => {
                     self.getTodoList(self.currentPage);
                 })
+        },
+        sortList(columnName, order) {
+            this.todos = this.todos.sort(function (a, b) {
+                if (order == "ASC") {
+                    return a[columnName] < b[columnName] ? 1 : -1;
+                }
+                else {
+                    return a[columnName] > b[columnName] ? 1 : -1;
+                }
+            });
         },
     }
 })
