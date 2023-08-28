@@ -9,12 +9,20 @@ const setting = new Vue({
             url: null,
             file: {},
             percent: 0,
+            email: '',
 
             isNicknameModal: false,
+            isEmailModal: false,
+            userInfo: {
+                id: 0,
+                nickname: "",
+                username: "",
+            },
         }
     },
     mounted() {
         this.getAvatar();
+        this.getUserInfo();
     },
     methods: {
         getAvatar() {
@@ -58,9 +66,56 @@ const setting = new Vue({
         showNicknameModal() {
             this.isNicknameModal = true;
         },
-
         hideNicknameModal() {
             this.isNicknameModal = false;
+        },
+        showEmailModal() {
+            this.isEmailModal = true;
+        },
+        hideEmailModal() {
+            this.isEmailModal = false;
+        },
+        getUserInfo() {
+            let self = this;
+            fetch('/api/User', {
+                method: 'get',
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    self.userInfo = json;
+                })
+        },
+        patchEmailAddress() {
+            var self = this;
+
+            let userInfo = {
+                Username: this.email,
+            };
+
+            fetch('/api/User/Username', {
+                method: 'patch',
+                headers: {
+                    'Content-Type': "application/json; charset=utf-8",
+                },
+                body: JSON.stringify(userInfo)
+            })
+                .then(success => {
+                    if (success.ok) {
+                        alert('Upload Successful!');
+                        self.getUserInfo();
+                        self.hideEmailModal();
+                        return Promise.resolve(success);
+                    }
+                    return Promise.reject(success);
+                })
+                .catch(error => {
+                    alert('Upload failed!');
+                    //error.json().then(errorInfo => {
+                    //    console.log(errorInfo);
+                    //})
+                })
         },
     },
 })

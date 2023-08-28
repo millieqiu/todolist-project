@@ -14,13 +14,29 @@
             <div class="modal-body">
                 <div class="flex-column">
                     <label class="paragraph2" for="">姓名 / 暱稱</label>
-                    <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="text" name="" id="" placeholder="輸入姓名或暱稱"
-                           >
+                    <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="text" name="" id="" placeholder="輸入姓名或暱稱">
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="text-button bg-white text-gray-300" v-on:click.prevent="hideNicknameModal">取消</button>
                 <button class="button-sm btn btn-primary text-white">送出</button>
+            </div>
+        </form>
+    </div>
+
+    <!--Modal 彈窗-->
+    <div v-if="isEmailModal" class="modal-mask">
+        <form class="modal-container flex-column">
+            <h2 class="heading2 text-secondary h2-font-size">修改常用信箱</h2>
+            <div class="modal-body">
+                <div class="flex-column">
+                    <label class="paragraph2" for="">常用信箱</label>
+                    <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="text" v-model="email" name="" id="" placeholder="輸入常用信箱">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="text-button bg-white text-gray-300" v-on:click.prevent="hideEmailModal">取消</button>
+                <button class="button-sm btn btn-primary text-white" v-on:click.prevent="patchEmailAddress">送出</button>
             </div>
         </form>
     </div>
@@ -45,9 +61,9 @@
             <div class="setting-item">
                 <div class="setting-content flex-column">
                     <h4 class="heading2 text-gray-500 h4-font-size">常用信箱</h4>
-                    <p class="paragraph2">aaa@bbb.ccc</p>
+                    <p class="paragraph2">{{userInfo.username}}</p>
                 </div>
-                <button class="button-setting btn btn-light">更改</button>
+                <button class="button-setting btn btn-light" v-on:click="showEmailModal">更改</button>
             </div>
             <div class="divider"></div>
             <div class="setting-item">
