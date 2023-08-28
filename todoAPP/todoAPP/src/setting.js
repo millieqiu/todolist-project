@@ -58,5 +58,9 @@ const setting = new Vue({
         showNicknameModal() {
             this.isNicknameModal = true;
         },
+
+        hideNicknameModal() {
+            this.isNicknameModal = false;
+        },
     },
 })

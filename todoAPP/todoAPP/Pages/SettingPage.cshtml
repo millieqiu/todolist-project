@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="text-button bg-white text-gray-300" v-on:click="isNickNameModal = false">取消</button>
+                <button class="text-button bg-white text-gray-300" v-on:click.prevent="hideNicknameModal">取消</button>
                 <button class="button-sm btn btn-primary text-white">送出</button>
             </div>
         </form>
