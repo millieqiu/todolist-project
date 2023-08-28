@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
-using todoAPP.BuilderServices;
 using todoAPP.Middlewares;
 using todoAPP.Models;
 using todoAPP.Services;

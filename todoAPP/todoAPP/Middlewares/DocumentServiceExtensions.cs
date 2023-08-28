@@ -1,7 +1,7 @@
 ﻿using System;
 using NSwag;
 
-namespace todoAPP.BuilderServices
+namespace todoAPP.Middlewares
 {
 	public static class DocumentServiceExtensions
 	{
