@@ -9,24 +9,17 @@ namespace todoAPP.ViewModel
 
     public class Records
     {
-        public List<Location> location { get; set; }
+        public List<Station> Station { get; set; }
     }
 
-    public class Location
+    public class Station
     {
-        public Time time { get; set; }
-        public List<WeatherElement> weatherElement { get; set; }
-    }
-
-    public class Time
-    {
-        public string obsTime { get; set; }
+        public WeatherElement WeatherElement { get; set; }
     }
 
     public class WeatherElement
     {
-        public string elementName { get; set; }
-        public string elementValue { get; set; }
+        public string Weather { get; set; }
     }
 }
 

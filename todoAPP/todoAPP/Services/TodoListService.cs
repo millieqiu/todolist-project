@@ -45,7 +45,7 @@ namespace todoAPP.Services
             {
                 Text = text,
                 User = user,
-                Weather = await _weather.GetWeatherText(),
+                Weather = await _weather.GetWeatherText() ?? "",
             };
 
             var t = _db.TodoList.Add(item);
