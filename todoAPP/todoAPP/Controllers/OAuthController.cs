@@ -7,7 +7,7 @@ namespace todoAPP.Controllers
 {
     [ApiController]
     [Route("/api/[controller]/[action]")]
-    public class OAuthController : Controller
+    public class OAuthController : ControllerBase
     {
         private readonly IOAuthService _oauth;
         private readonly UserService _user;

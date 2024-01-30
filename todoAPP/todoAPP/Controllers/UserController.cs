@@ -10,7 +10,7 @@ namespace todoAPP.Controllers
 {
     [ApiController]
     [Route("/api/[controller]/[action]")]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         private readonly UserService _user;
         private readonly RoleService _role;
