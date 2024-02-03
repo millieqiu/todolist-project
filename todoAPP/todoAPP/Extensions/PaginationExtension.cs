@@ -12,7 +12,7 @@ public static class PaginationExtension
     var page = paginationInfo.Page ?? 1;
     var limit = paginationInfo.Limit ?? 10;
     var totalCount = await query.CountAsync();
-    var totalPages = (int)Math.Ceiling((double)totalCount / page);
+    var totalPages = (int)Math.Ceiling((double)totalCount / limit);
 
     var pagination = new Pagination
     {
@@ -20,10 +20,10 @@ public static class PaginationExtension
       TotalPages = totalPages,
       PageSize = limit,
       TotalCount = totalCount,
-      HasPrevious = page >= 1,
-      HasNext = page <= totalPages
+      HasPrevious = page > 1,
+      HasNext = totalPages - page > 0
     };
-    context.Request.Headers.Add("x-pagination", JsonSerializer.Serialize(pagination));
+    context.Response.Headers.Add("x-pagination", JsonSerializer.Serialize(pagination));
 
     return await query.Skip((page - 1) * limit).Take(limit).ToListAsync();
   }

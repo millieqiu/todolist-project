@@ -30,10 +30,12 @@ namespace todoAPP.ApiControllers
 
         [HttpGet]
         [Route("Todo/List")]
-        public async Task<IActionResult> GetTodoList()
+        public async Task<IActionResult> GetTodoList([FromQuery]PaginationRequestModel model)
         {
             var reqModel = new GetTodoListModel
             {
+                Page = model.Page,
+                Limit = model.Limit,
                 UserId = new Guid(HttpContext.User.FindFirstValue(ClaimTypes.Sid))
             };
 
