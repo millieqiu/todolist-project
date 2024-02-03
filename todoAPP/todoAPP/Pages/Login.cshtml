@@ -1,0 +1,51 @@
+﻿@page
+@model LoginModel
+@{
+  ViewData["Title"] = "Welcome";
+}
+
+<!-- Main 樣式 -->
+<section class="section" id="app">
+
+  <!-- Overlay 樣式 -->
+  <div class="loading" v-show="isLoading">
+    <div class="mask"></div>
+    <div class="animation">
+    </div>
+  </div>
+
+  <div class="main flex-center">
+    <div class="form-container flex-column bg-white">
+      <form class="flex-column" method="post" action="" v-on:submit.prevent="onClickLogin">
+        <h2 class="heading2 text-secondary h2-font-size">歡迎使用 To-Do List！</h2>
+        <div class="input-container flex-column">
+          <div class="flex-column">
+            <label class="paragraph2" for="loginEmail">常用信箱</label>
+            <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="email" name="email"
+              id="loginEmail" placeholder="輸入信箱" required v-model="loginEmail">
+          </div>
+          <div class="flex-column">
+            <label class="paragraph2" for="loginPassword">密碼</label>
+            <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="password"
+              name="password" id="loginPassword" placeholder="輸入密碼" required v-model="loginPassword">
+          </div>
+        </div>
+        <div class="btn-container">
+          <button class="btn btn-primary text-white button-lg" v-on:click.prevent="onClickLogin">登入</button>
+          <button class="button-outlined border border-primary button-lg text-primary"
+            v-on:click.prevent="onClickLoginGoogle"><img src="~/dist/img/Google.svg" class="button-icon" />Google
+            登入</button>
+          <a class="button-link text-secondary font-weight-medium" href="/Register" target="_self">還沒有帳號嗎？立即註冊</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+@section Styles {
+  <link rel="stylesheet" href="~/dist/css/site.css" asp-append-version="true" />
+}
+
+@section Scripts {
+  <script type="module" src="~/dist/site.js" asp-append-version="true"></script>
+}

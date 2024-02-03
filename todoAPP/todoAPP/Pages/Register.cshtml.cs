@@ -1,20 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using todoAPP.RequestModel;
+using todoAPP.Services;
 
 namespace todoAPP.Pages
 {
+    [IgnoreAntiforgeryToken]
     public class RegisterModel : PageModel
     {
-        public async Task<IActionResult> OnGet()
+        private readonly UserService _user;
+
+        public RegisterModel(UserService user)
         {
-            if (User.Identity.IsAuthenticated)
+            _user = user;
+        }
+
+        public IActionResult OnGet()
+        {
+            if (User.Identity!.IsAuthenticated)
             {
-                return Redirect("/TodoPage");
+                return Redirect("/Index");
             }
-            else
-            {
-                return Page();
-            }
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPost(RegisterRequestModel model)
+        {
+            await _user.CreateUser(model);
+            return Redirect("/Login");
         }
     }
 }

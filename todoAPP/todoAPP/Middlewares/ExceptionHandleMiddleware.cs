@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Net;
 using Microsoft.Extensions.Logging;
 
 namespace todoAPP.Middlewares
 {
-	public class ExceptionHandleMiddleware
-	{
+    public class ExceptionHandleMiddleware
+    {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandleMiddleware> _logger;
 
         public ExceptionHandleMiddleware(RequestDelegate next, ILogger<ExceptionHandleMiddleware> logger)
-		{
+        {
             _next = next;
             _logger = logger;
         }
@@ -19,6 +20,15 @@ namespace todoAPP.Middlewares
             try
             {
                 await _next(context);
+            }
+            catch (KeyNotFoundException)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            }
+            catch (HttpRequestException ex)
+            {
+                context.Response.StatusCode = (int)ex.StatusCode!;
+                await context.Response.WriteAsync(ex.Message);
             }
             catch (Exception exception)
             {

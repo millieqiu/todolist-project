@@ -1,109 +1,237 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Net;
 using System.Security.Claims;
+using todoAPP.Enums;
 using todoAPP.Models;
+using todoAPP.RequestModel;
+using todoAPP.ViewModel;
 
 namespace todoAPP.Services
 {
     public class UserService
     {
-        private readonly DataContext _db;
+        private readonly DBContext _dbContext;
         private readonly AuthService _auth;
         private readonly AvatarService _avartar;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(DataContext db, AuthService auth, AvatarService avatar, IHttpContextAccessor httpContextAccessor)
+        public UserService(DBContext dbContext, AuthService auth, AvatarService avatar, IHttpContextAccessor httpContextAccessor)
         {
-            _db = db;
+            _dbContext = dbContext;
             _auth = auth;
             _avartar = avatar;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public User? HasUser(int id)
+        public async Task<UserInfoViewModel> GetUserInfo(GeneralRequestModel model)
         {
-            return _db.Users
-                .Where(x => x.ID == id)
-                .SingleOrDefault();
+            return await _dbContext.User
+                .Where(x => x.Uid == model.Uid)
+                .Select(x => new UserInfoViewModel
+                {
+                    Uid = x.Uid,
+                    Username = x.Username,
+                    Nickname = x.Nickname,
+                    Role = x.Role//TODO change to byte
+                })
+                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
         }
+
+        public async Task<User> QueryUser(string username)
+        {
+            return await _dbContext.User
+                .AsNoTracking()
+                .Where(x => x.Username == username)
+                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+        }
+
 
         public User? HasUser(string username)
         {
-            return _db.Users
+            return _dbContext.User
                 .Where(x => x.Username == username)
                 .SingleOrDefault();
         }
 
-        public void CreateUser(string username, string password, string nickname)
+        public async Task CreateUser(RegisterRequestModel model)
         {
-            byte[] salt = _auth.CreateSalt();
-
-            User user = new User
+            using (var tx = await _dbContext.Database.BeginTransactionAsync())
             {
-                Username = username,
-                Password = _auth.PasswordGenerator(password, salt),
-                Nickname = nickname,
-                Salt = Convert.ToBase64String(salt),
-                Role = Models.ERole.USER,
-                Avatar = "default.jpeg"
-            };
+                try
+                {
+                    var salt = _auth.CreateSalt();
 
-            _db.Users.Add(user);
-            _db.SaveChanges();
-        }
+                    User user = new User
+                    {
+                        Uid = Guid.NewGuid(),
+                        Username = model.Username,
+                        Password = _auth.PasswordGenerator(model.Password, salt),
+                        Nickname = model.Nickname,
+                        Salt = Convert.ToBase64String(salt),
+                        Role = (int)ERole.USER,
+                        Avatar = ""
+                    };
 
-        public bool EditUsername(User user, string username)
-        {
-            if(_db.Users.Any(user => user.Username == username))
-            {
-                return false;
+                    await _dbContext.User.AddAsync(user);
+                    await _dbContext.SaveChangesAsync();
+
+                    await tx.CommitAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    await tx.RollbackAsync();
+
+                    switch (((SqlException)ex.InnerException!).Number)
+                    {
+                        case 2627:
+                            throw new HttpRequestException("帳號已存在", ex, HttpStatusCode.BadRequest);
+                        default:
+                            throw;
+                    }
+                }
+                catch (Exception)
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
-
-            user.Username = username;
-            _db.SaveChanges();
-            return true;
         }
 
-        public void EditNickname(User user, string nickname)
+        public async Task<bool> CheckUsernameDuplicated(string username)
         {
-            user.Nickname = nickname;
-            _db.SaveChanges();
+            return await _dbContext.User.AnyAsync(x => x.Username == username);
         }
 
-        public void ChangePassword(User user, string newPassword)
+        public async Task UpdateUsername(PatchUsernameModel model)
         {
-            byte[] salt = _auth.CreateSalt();
-            user.Password = _auth.PasswordGenerator(newPassword, salt);
-            user.Salt = Convert.ToBase64String(salt);
-            _db.SaveChanges();
-        }
-
-        public Stream? GetAvatar(string fileName)
-        {
-            return _avartar.ReadFile(fileName);
-        }
-
-        async public Task EditAvatar(User user, IFormFile avatar)
-        {
-            if(string.IsNullOrEmpty(user.Avatar) == false && user.Avatar != "default.jpeg")
+            using (var tx = await _dbContext.Database.BeginTransactionAsync())
             {
-                _avartar.RemoveFile(user.Avatar);
+                try
+                {
+                    if (await CheckUsernameDuplicated(model.Username))
+                    {
+                        throw new DuplicateNameException();
+                    }
+                    var user = await _dbContext.User
+                        .Where(x => x.Uid == model.UserId)
+                        .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+                    user.Username = model.Username;
+
+                    await _dbContext.SaveChangesAsync();
+
+                    await tx.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
-            string fileName = await _avartar.WriteFile(avatar);
-            user.Avatar = fileName;
-            _db.SaveChanges();
+        }
+
+        public async Task UpdateNickname(PatchNicknameModel model)
+        {
+            using (var tx = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var user = await _dbContext.User
+                        .Where(x => x.Uid == model.UserId)
+                        .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+
+                    user.Nickname = model.Nickname;
+
+                    await _dbContext.SaveChangesAsync();
+
+                    await tx.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            }
+        }
+
+        public async Task ChangePassword(PatchPasswordModel model)
+        {
+            using (var tx = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var user = await _dbContext.User
+                        .Where(x => x.Uid == model.UserId)
+                        .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+
+                    if (_auth.PasswordValidator(user.Password, user.Salt, model.OldPassword) == false)
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+
+                    var salt = _auth.CreateSalt();
+
+                    user.Password = _auth.PasswordGenerator(model.NewPassword, salt);
+                    user.Salt = Convert.ToBase64String(salt);
+
+                    await _dbContext.SaveChangesAsync();
+
+                    await tx.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            }
+        }
+
+        public async Task<string> GetAvatar()
+        {
+            return await _dbContext.User
+                .Where(x => x.Uid == GetUserId())
+                .Select(x => x.Avatar)
+                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+        }
+
+        async public Task UpdateAvatar(PatchAvatarModel model)
+        {
+            using (var tx = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var user = await _dbContext.User
+                        .Where(x => x.Uid == GetUserId())
+                        .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+
+                    _avartar.RemoveFile(user.Avatar);
+                    user.Avatar = await _avartar.WriteFile(model.File);
+
+                    await _dbContext.SaveChangesAsync();
+
+                    await tx.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            }
         }
 
         async public Task SignInUser(HttpContext context, User user)
         {
             var claims = new List<Claim>() {
-                new Claim(ClaimTypes.Sid,user.ID.ToString()), //使用者ID
+                new Claim(ClaimTypes.Sid,user.Uid.ToString()), //使用者ID
                 new Claim(ClaimTypes.NameIdentifier,user.Username),  //使用者帳號
                 new Claim(ClaimTypes.Name,user.Nickname),  //使用者名稱
                 new Claim("Avatar",user.Avatar)  //使用者圖像
             };
 
-            if (user.Role == ERole.ADMIN)
+            if (user.Role == (int)ERole.ADMIN)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
             }
@@ -112,24 +240,22 @@ namespace todoAPP.Services
                 claims.Add(new Claim(ClaimTypes.Role, "User"));
             }
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var userPrincipal = new ClaimsPrincipal(identity);
-            Thread.CurrentPrincipal = userPrincipal;
-            var props = new AuthenticationProperties();
-            await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, props);
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            var authenticationProperties = new AuthenticationProperties
+            {
+                ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(3600),
+                IsPersistent = true
+            };
+            // Thread.CurrentPrincipal = claimsPrincipal;
+            await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, authenticationProperties);
         }
 
-        public int GetUserId()
+        public Guid GetUserId()
         {
-            var identity = _httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                IEnumerable<Claim> claims = identity.Claims;
-                string Sid = claims.First().Value;
-                Int32.TryParse(Sid, out int userId);
-                return userId;
-            }
-            return 0;
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.Sid)
+                ?? throw new UnauthorizedAccessException();
+            return new Guid(userId);
         }
     }
 }

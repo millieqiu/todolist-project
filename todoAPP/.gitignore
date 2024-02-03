@@ -406,4 +406,5 @@ ASALocalRun/
 
 #custom
 log
-todoAPP/wwwroot/
+wwwroot/
+Avatar/

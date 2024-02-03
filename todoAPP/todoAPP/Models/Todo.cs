@@ -1,35 +1,19 @@
 ﻿using System;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+using System.Collections.Generic;
 
 namespace todoAPP.Models
 {
-	public class Todo
+    public partial class Todo
     {
-        [Key]
-        public int ID { get; set; }
-
-        [Required]
+        public int Idx { get; set; }
+        public Guid Uid { get; set; }
         public byte Status { get; set; }
+        public string Text { get; set; } = null!;
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+        public string Weather { get; set; } = null!;
+        public Guid UserId { get; set; }
 
-        [Required]
-        [MaxLength(30)]
-        public string Text { get; set; }
-
-        [Required]
-        [MaxLength(6)]
-        public string Weather { get; set; }
-
-        [Required]
-        public DateTime CreatedAt { get; set; }
-
-        [Required]
-        public DateTime UpdatedAt { get; set; }
-
-        [JsonIgnore]
-        public User User { get; set; }
+        public virtual User User { get; set; } = null!;
     }
 }
-

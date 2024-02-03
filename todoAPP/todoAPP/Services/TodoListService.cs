@@ -1,80 +1,123 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using todoAPP.Extensions;
 using todoAPP.Models;
+using todoAPP.RequestModel;
+using todoAPP.ViewModel;
 
 namespace todoAPP.Services
 {
-    public class TodoListService
+    public interface ITodoListService
     {
+        public Task<IEnumerable<TodoViewModel>> GetTodoList(GetTodoListModel model);
+        public Task<Guid> CreateTodoItem(CreateTodoModel model);
+        public Task ChangeTodoItemStatus(GeneralRequestModel model);
+        public Task DeleteTodoItem(GeneralRequestModel model);
+    }
 
-        private readonly DataContext _db;
+    public class TodoListService : ITodoListService
+    {
+        private readonly IHttpContextAccessor _accessor;
+        private readonly DBContext _dbContext;
         private readonly WeatherService _weather;
 
-        public TodoListService(DataContext db, WeatherService weather)
+        public TodoListService(IHttpContextAccessor accessor, DBContext dbContext, WeatherService weather)
         {
-            _db = db;
+            _accessor = accessor;
+            _dbContext = dbContext;
             _weather = weather;
         }
 
-        public List<Todo> GetPaginatedData(int page, int userId)
+        public async Task<IEnumerable<TodoViewModel>> GetTodoList(GetTodoListModel model)
         {
-            return _db.TodoList
-                .Where(x => x.User.ID == userId)
-                .OrderByDescending(item => item.CreatedAt)
-                .Skip((page - 1) * 10)
-                .Take(10)
-                .AsNoTracking()//斷開連結
-                .ToList();
+            return await _dbContext.Todo
+                .AsNoTracking()
+                .Where(x => x.UserId == model.UserId)
+                .Select(x => new TodoViewModel
+                {
+                    Uid = x.Uid,
+                    Status = x.Status,
+                    Text = x.Text,
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt,
+                    Weather = x.Weather
+                })
+                .ToPaginatedListAsync(model, _accessor.HttpContext!);
         }
 
-        public double GetNumOfPages(int userId)
+        public async Task<Guid> CreateTodoItem(CreateTodoModel model)
         {
-            int count = _db.TodoList.Where(x => x.User.ID == userId).Count();
-            return Math.Ceiling(count / 10.0);
-        }
-
-        public Todo? HasItem(int userId, int todoItemId)
-        {
-            return _db.TodoList
-                .Where(x => x.User.ID == userId && x.ID == todoItemId)
-                .SingleOrDefault();
-        }
-
-        async public Task<int> CreateItem(string text, User user)
-        {
-            Todo item = new Todo()
+            var todo = new Todo
             {
-                Text = text,
-                User = user,
+                Uid = Guid.NewGuid(),
+                Status = 0,
+                Text = model.Text,
+                CreatedAt = DateTimeOffset.UtcNow,
+                UpdatedAt = DateTimeOffset.UtcNow,
                 Weather = await _weather.GetWeatherText() ?? "",
+                UserId = model.UserId,
             };
 
-            var t = _db.TodoList.Add(item);
+            await _dbContext.Todo.AddAsync(todo);
 
-            _db.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
-            return t.Entity.ID;
+            return todo.Uid;
         }
 
-        public void ChangeItemStatus(Todo item)
+        public async Task ChangeTodoItemStatus(GeneralRequestModel model)
         {
-            if (item.Status == 0)
+            using (var tx = await _dbContext.Database.BeginTransactionAsync())
             {
-                item.Status = 1;
-            }
-            else
-            {
-                item.Status = 0;
-            }
-            item.UpdatedAt = DateTime.Now;
+                try
+                {
+                    var todoItem = await _dbContext.Todo
+                        .Where(x => x.Uid == model.Uid)
+                        .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
 
-            _db.SaveChanges();
+                    if (todoItem.Status == 0)
+                    {
+                        todoItem.Status = 1;
+                    }
+                    else
+                    {
+                        todoItem.Status = 0;
+                    }
+                    todoItem.UpdatedAt = DateTime.Now;
+
+                    await _dbContext.SaveChangesAsync();
+
+                    await tx.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            }
         }
 
-        public void DeleteItem(Todo item)
+        public async Task DeleteTodoItem(GeneralRequestModel model)
         {
-            _db.TodoList.Remove(item);
-
-            _db.SaveChanges();
+            using (var tx = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var todoItem = await _dbContext.Todo
+                        .Where(x => x.Uid == model.Uid)
+                        .SingleOrDefaultAsync();
+                    if (todoItem != null)
+                    {
+                        _dbContext.Todo.Remove(todoItem);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                    await tx.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            }
         }
     }
 }

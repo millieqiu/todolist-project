@@ -1,43 +1,24 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace todoAPP.Models
 {
-
-    [Index(nameof(Username), IsUnique = true)]
-    public class User
+    public partial class User
     {
-        [Key]
-        public int ID { get; set; }
+        public User()
+        {
+            Todo = new HashSet<Todo>();
+        }
 
-        [Required]
-        [MaxLength(50)]
-        public string Username { get; set; }
+        public int Idx { get; set; }
+        public Guid Uid { get; set; }
+        public string Username { get; set; } = null!;
+        public string Password { get; set; } = null!;
+        public string Nickname { get; set; } = null!;
+        public string Salt { get; set; } = null!;
+        public int Role { get; set; }
+        public string Avatar { get; set; } = null!;
 
-        [Required]
-        [MaxLength(50)]
-        public string Password { get; set; }
-
-        [Required]
-        [MaxLength(30)]
-        public string Salt { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string Nickname { get; set; }
-
-        [Required]
-        [MaxLength(1024)]
-        public string Avatar { get; set; }
-
-        [EnumDataType(typeof(ERole))]
-        public ERole Role { get; set; }
-
-        public ICollection<Todo> TodoList { get; set; }
-
+        public virtual ICollection<Todo> Todo { get; set; }
     }
 }
-

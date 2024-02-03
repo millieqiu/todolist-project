@@ -1,9 +1,14 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace todoAPP.RequestModel
 {
-	public class PatchUsernameRequestModel
+    public class PatchUsernameModel
+    {
+        public Guid UserId { get; set; }
+        public string Username { get; set; } = string.Empty;
+    }
+
+    public class PatchUsernameRequestModel
     {
         [Required]
         [MaxLength(50)]
@@ -11,4 +16,3 @@ namespace todoAPP.RequestModel
         public string Username { get; set; }
     }
 }
-

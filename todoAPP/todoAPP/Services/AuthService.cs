@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
-using todoAPP.Models;
-using todoAPP.ViewModel;
 
 namespace todoAPP.Services
 {

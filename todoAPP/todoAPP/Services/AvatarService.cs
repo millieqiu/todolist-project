@@ -5,12 +5,12 @@ namespace todoAPP.Services
     {
         private string basePath = "./Avatar/";
 
-        public Stream? ReadFile(string fileName)
+        public Stream ReadFile(string fileName)
         {
             string filePath = Path.Combine(basePath, fileName);
             if (File.Exists(filePath) == false)
             {
-                return null;
+                throw new FileNotFoundException();
             }
 
             return new FileStream(filePath, FileMode.Open, FileAccess.Read,
@@ -22,7 +22,7 @@ namespace todoAPP.Services
             var fileOriginName = Path.GetFileName(file.FileName);
             var fileExt = Path.GetExtension(fileOriginName);
             var fileNewName = Path.GetRandomFileName();
-            var filePath = Path.Combine(basePath, fileNewName+fileExt);
+            var filePath = Path.Combine(basePath, fileNewName + fileExt);
             if (Directory.Exists(basePath) == false)
             {
                 Directory.CreateDirectory(basePath);

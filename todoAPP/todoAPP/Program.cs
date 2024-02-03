@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
-using todoAPP.Middlewares;
+using todoAPP.Extensions;
 using todoAPP.Models;
 using todoAPP.Services;
 
@@ -24,25 +24,40 @@ public class Program
 
         builder.Services.AddControllers();
 
-        builder.Services.AddDbContext<DataContext>(options =>
+        builder.Services.AddDbContext<DBContext>(options =>
         {
-            options.UseSqlServer(builder.Configuration.GetConnectionString("TodoDbConnection"));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
         });
 
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(
-            options =>
+            .AddCookie(options =>
             {
-                options.LoginPath = "/Index";
+                options.LoginPath = "/Login";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
                 options.SlidingExpiration = true;
-            }
-            );
+
+                // 當要存取內容但驗證沒過時，會RedirectToLogin
+                options.Events.OnRedirectToLogin = (context) =>
+                {
+                    if (context.Request.Path.StartsWithSegments("/api"))
+                    {
+                        context.Response.Clear();
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return Task.CompletedTask;
+                    }
+                    else
+                    {
+                        context.Response.Clear();
+                        context.Response.Redirect("/Login");
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
         builder.Services.AddHttpClient();
         builder.Services.AddHttpContextAccessor();
 
-        builder.Services.AddTransient<TodoListService>();
+        builder.Services.AddTransient<ITodoListService, TodoListService>();
         builder.Services.AddTransient<AuthService>();
         builder.Services.AddTransient<UserService>();
         builder.Services.AddTransient<RoleService>();

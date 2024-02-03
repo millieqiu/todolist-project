@@ -1,29 +1,38 @@
-﻿using todoAPP.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using todoAPP.Models;
+using todoAPP.RequestModel;
 
 namespace todoAPP.Services
 {
-
     public class RoleService
     {
+        private readonly DBContext _dbContext;
 
-        private readonly DataContext _db;
-
-        public RoleService(DataContext db)
+        public RoleService(DBContext dbContext)
         {
-            _db = db;
+            _dbContext = dbContext;
         }
 
-        public bool IsRole(int userId, ERole role)
+        public async Task UpdateUserRole(PatchRoleRequestModel model)
         {
-            return _db.Users
-                .Where(user => user.ID == userId && user.Role == role)
-                .Any();
-        }
+            using (var tx = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var user = await _dbContext.User
+                        .Where(x => x.Uid == model.UserID)
+                        .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+                    user.Role = (int)model.RoleID;
+                    await _dbContext.SaveChangesAsync();
 
-        public void EditUserRole(User user, Models.ERole role)
-        {
-            user.Role = role;
-            _db.SaveChanges();
+                    await tx.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            }
         }
     }
 }

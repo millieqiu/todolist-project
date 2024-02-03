@@ -1,29 +1,21 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
-using todoAPP.ViewModel;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace todoAPP.RequestModel
 {
-	public class RegisterRequestModel
+    public class RegisterRequestModel
     {
-        [Required]
-        [MaxLength(50)]
+        [StringLength(50, MinimumLength = 1)]
         [EmailAddress]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(50)]
-        public string Password { get; set; }
+        [StringLength(50, MinimumLength = 1)]
+        public string Password { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(50)]
+        [StringLength(50, MinimumLength = 1)]
         [Compare("Password")]
-        public string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(50)]
-        public string Nickname { get; set; }
+        [StringLength(50, MinimumLength = 1)]
+        public string Nickname { get; set; } = string.Empty;
     }
 }
-

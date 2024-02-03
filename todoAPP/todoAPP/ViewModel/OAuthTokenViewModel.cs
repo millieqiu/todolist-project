@@ -1,7 +1,7 @@
 ﻿using System;
 namespace todoAPP.ViewModel
 {
-	public class OAuthTokenViewModel
+    public class OAuthTokenViewModel
     {
         public string access_token { get; set; }
         public int expires_in { get; set; }

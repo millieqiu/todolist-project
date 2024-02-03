@@ -1,16 +1,14 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using todoAPP.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using todoAPP.Enums;
 
 namespace todoAPP.RequestModel
 {
-	public class PatchRoleRequestModel
+    public class PatchRoleRequestModel
     {
-		public int UserID { get; set; }
+        public Guid UserID { get; set; }
 
         [EnumDataType(typeof(ERole))]
-        public Models.ERole RoleID { get; set; }
+        public ERole RoleID { get; set; }
 
     }
 }
-

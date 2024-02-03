@@ -1,9 +1,7 @@
-﻿using System;
-namespace todoAPP.RequestModel
+﻿namespace todoAPP.RequestModel
 {
-	public class GeneralRequestModel
-	{
-        public int ID { get; set; }
+    public class GeneralRequestModel
+    {
+        public Guid Uid { get; set; }
     }
 }
-

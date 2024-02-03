@@ -1,53 +1,62 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Welcome";
+    ViewData["Title"] = "My To-do List";
 }
 
-
-
-
-<!-- Main 樣式 -->
-<section class="section" id="app">
-
-    <!-- Overlay 樣式 -->
-    <div class="loading" v-show="isLoading">
-        <div class="mask"></div>
-        <div class="animation">
-        </div>
-    </div>
+<!-- Main 區塊 -->
+<section class="section" id="appTodo">
 
     <div class="main flex-center">
-        <div class="form-container flex-column bg-white">
-            <form class="flex-column" method="post" action="" v-on:submit.prevent="onClickLogin">
-                <h2 class="heading2 text-secondary h2-font-size">歡迎使用 To-Do List！</h2>
-                <div class="input-container flex-column">
-                    <div class="flex-column">
-                        <label class="paragraph2" for="loginEmail">常用信箱</label>
-                        <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="email" name="email" id="loginEmail" placeholder="輸入信箱"
-                               required v-model="loginEmail">
+        <h2 class="heading2 h2-font-size"><span id="user_name"></span>@User.Identity.Name，使用 To-do 規劃美好的一天。</h2>
+        <div class="list-container bg-light">
+            <form method="post" action="" v-on:submit.prevent="onClickCreateTodoItem()">
+                <div class="flex-column">
+                    <div class="add-container">
+                        <input type="text"
+                            class="add-input paragraph1 text-gray-300 bg-white border border-1 border-primary"
+                            id="todoText" placeholder="添加你的待辦事項..." v-model="todoText" maxlength="30">
+                        <button class="btn btn-primary text-white button-mid">新增</button>
                     </div>
-                    <div class="flex-column">
-                        <label class="paragraph2" for="loginPassword">密碼</label>
-                        <input class="input paragraph1 border border-1 border-gray-200 text-gray-400" type="password" name="password" id="loginPassword" placeholder="輸入密碼"
-                               required v-model="loginPassword">
-                    </div>
-                </div>
-                <div class="btn-container">
-                    <button class="btn btn-primary text-white button-lg" v-on:click.prevent="onClickLogin">登入</button>
-                    <button class="button-outlined border border-primary button-lg text-primary" v-on:click.prevent="onClickLoginGoogle"><img src="~/dist/img/Google.svg" class="button-icon" />Google 登入</button>
-                    <a class="button-link text-secondary font-weight-medium" href="/Register" target="_self">還沒有帳號嗎？立即註冊</a>
+                    <span class="text-gray-400 caption">{{computedText}} / 30</span>
                 </div>
             </form>
+            <button v-for="option in sortOptions"
+                v-on:click="sortList(option.value,option.order)">{{option.label}}</button>
+            <ul class="list" id="todolist" v-for="todo in todos">
+
+                <li class="task bg-white">
+                    <label class="task-content">
+                        <input type="checkbox" name="" class="form-check-input checkbox"
+                            v-on:click="onChangeStatus(todo.id)" v-bind:checked="todo.status">
+                        <span class="text-gray-500 paragraph1" for="">{{todo.text}}</span>
+                    </label>
+                    <div class="icon" id="delete_item_${value.id}" v-on:click.prevent="onClickDeleteTodoItem(todo.id)">
+                        <svg class="icon-color" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                            <path
+                                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                        </svg>
+                        @*<i class="fa-solid fa-trash icon-color"></i>*@
+                    </div>
+                </li>
+
+            </ul>
         </div>
+
+        <div id="pagination" class="pagination pagenumbers">
+            <!--li標籤不用.prevent(不會觸發預設動作)-->
+            <!--v-for如果掛在div上面，會變成整個div重複三次-->
+            <li class="page-item" v-for="page in numOfPages" v-on:click="getTodoList(page)">{{page}}</li>
+        </div>
+
     </div>
+
 </section>
 
 @section Styles {
-    <link rel="stylesheet" href="~/dist/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/css/todoList.css" asp-append-version="true" />
 }
 
 @section Scripts {
-    <script type="module" src="~/dist/site.js" asp-append-version="true"></script>
+    <script type="module" src="~/dist/todoList.js" asp-append-version="true"></script>
 }
-

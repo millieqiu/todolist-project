@@ -1,7 +1,7 @@
 ﻿using System;
 namespace todoAPP.ViewModel
 {
-	public class OAuthUserinfoViewModel
+    public class OAuthUserinfoViewModel
     {
         public string id { get; set; }
         public string email { get; set; }
