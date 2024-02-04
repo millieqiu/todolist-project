@@ -60,7 +60,6 @@ public class Program
         builder.Services.AddTransient<ITodoListService, TodoListService>();
         builder.Services.AddTransient<AuthService>();
         builder.Services.AddTransient<UserService>();
-        builder.Services.AddTransient<RoleService>();
         builder.Services.AddSingleton<WeatherService>();
         builder.Services.AddTransient<AvatarService>();
         builder.Services.AddTransient<IOAuthService, OAuthService>();

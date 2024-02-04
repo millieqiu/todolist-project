@@ -11,13 +11,11 @@ namespace todoAPP.ApiControllers
     public class UserController : ControllerBase
     {
         private readonly UserService _user;
-        private readonly RoleService _role;
         private readonly AvatarService _avartar;
 
-        public UserController(UserService user, RoleService role, AvatarService avartar)
+        public UserController(UserService user, AvatarService avartar)
         {
             _user = user;
-            _role = role;
             _avartar = avartar;
         }
 
@@ -88,7 +86,7 @@ namespace todoAPP.ApiControllers
         [Route("Role")]
         public async Task<IActionResult> PatchUserRole(PatchRoleRequestModel model)
         {
-            await _role.UpdateUserRole(model);
+            await _user.UpdateUserRole(model);
 
             return Ok();
         }

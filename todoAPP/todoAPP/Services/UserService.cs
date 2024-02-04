@@ -222,6 +222,28 @@ namespace todoAPP.Services
             }
         }
 
+        public async Task UpdateUserRole(PatchRoleRequestModel model)
+        {
+            using (var tx = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var user = await _dbContext.User
+                        .Where(x => x.Uid == model.UserID)
+                        .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+                    user.Role = (int)model.RoleID;
+                    await _dbContext.SaveChangesAsync();
+
+                    await tx.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            }
+        }
+
         async public Task SignInUser(HttpContext context, User user)
         {
             var claims = new List<Claim>() {
