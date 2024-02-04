@@ -264,7 +264,7 @@ namespace todoAPP.Services
             await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, authenticationProperties);
         }
 
-        private async Task<bool> CheckUsernameDuplicated(string username)
+        public async Task<bool> CheckUsernameDuplicated(string username)
         {
             return await _dbContext.User.AnyAsync(x => x.Username == username);
         }

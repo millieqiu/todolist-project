@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using todoAPP.Models;
 using todoAPP.RequestModel;
 using todoAPP.Services;
-using todoAPP.ViewModel;
 
 namespace todoAPP.ApiControllers
 {
@@ -20,46 +18,35 @@ namespace todoAPP.ApiControllers
         }
 
         [HttpGet]
-        public IActionResult RedirectToServiceProvider()
+        public IActionResult ProviderEndpoint()
         {
-            return Ok(_oauth.GetProviderURL());
+            return Ok(_oauth.GetProviderEndpoint());
         }
 
         [HttpGet]
-        async public Task<IActionResult> Callback(string code)
+        async public Task<IActionResult> Login(string code)
         {
+            var token = await _oauth.GetToken(code);
 
-            OAuthTokenViewModel? gtvm = await _oauth.GetToken(code);
-            if (gtvm == null)
-            {
-                throw new Exception("OAuthTokenViewModel object is null");
-            }
+            var userInfo = await _oauth.GetUserInfo(token.access_token);
 
-            OAuthUserinfoViewModel? userInfo = await _oauth.GetUserInfo(gtvm.access_token);
-            if (userInfo == null)
+            var model = new RegisterRequestModel
             {
-                throw new Exception("OAuthUserinfoViewModel object is null");
-            }
+                Username = userInfo.email,
+                Password = "",
+                Nickname = userInfo.name,
+            };
 
-            User? user = _user.HasUser(userInfo.email);
-            if (user == null)
+            if (await _user.CheckUsernameDuplicated(userInfo.email) == false)
             {
-                var model = new RegisterRequestModel
-                {
-                    Username = userInfo.email,
-                    Password = "",
-                    Nickname = userInfo.name,
-                };
                 await _user.CreateUser(model);
-                user = _user.HasUser(userInfo.email);
-                if (user == null)
-                {
-                    throw new Exception("User object is null");
-                }
             }
+
+            var user = await _user.QueryUser(userInfo.email);
+
             await _user.SignInUser(HttpContext, user);
 
-            return new RedirectToPageResult("/TodoPage");
+            return new RedirectToPageResult("/Index");
         }
     }
 }

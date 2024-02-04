@@ -53,7 +53,7 @@ const app = new Vue({
         });
     },
     onClickLoginGoogle() {
-      fetch("/api/OAuth/RedirectToServiceProvider", {
+      fetch("/api/OAuth/ProviderEndpoint", {
         method: "get",
       })
         .then((response) => {
