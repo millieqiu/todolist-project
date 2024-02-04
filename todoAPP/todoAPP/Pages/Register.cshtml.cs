@@ -24,7 +24,7 @@ namespace todoAPP.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPost(RegisterRequestModel model)
+        public async Task<IActionResult> OnPost([FromBody]RegisterRequestModel model)
         {
             await _user.CreateUser(model);
             return Redirect("/Login");
