@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using todoAPP.RequestModel;
 using todoAPP.Services;
 using Microsoft.AspNetCore.StaticFiles;
+using System.Data;
 
 namespace todoAPP.ApiControllers
 {
@@ -42,7 +43,14 @@ namespace todoAPP.ApiControllers
                 Username = model.Username
             };
 
-            await _user.UpdateUsername(patchUsernameModel);
+            try
+            {
+                await _user.UpdateUsername(patchUsernameModel);
+            }
+            catch (DuplicateNameException)
+            {
+                return BadRequest("帳號已存在");
+            }
 
             return Ok();
         }

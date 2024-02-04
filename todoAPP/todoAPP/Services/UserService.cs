@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Net;
 using System.Security.Claims;
 using todoAPP.Enums;
 using todoAPP.Models;
@@ -23,6 +21,13 @@ namespace todoAPP.Services
             _dbContext = dbContext;
             _avartar = avatar;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        public Guid GetUserId()
+        {
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.Sid)
+                ?? throw new UnauthorizedAccessException();
+            return new Guid(userId);
         }
 
         public async Task<UserInfoViewModel> GetUserInfo(GeneralRequestModel model)
@@ -47,7 +52,6 @@ namespace todoAPP.Services
                 .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
         }
 
-
         public User? HasUser(string username)
         {
             return _dbContext.User
@@ -57,6 +61,11 @@ namespace todoAPP.Services
 
         public async Task CreateUser(RegisterRequestModel model)
         {
+            if (await CheckUsernameDuplicated(model.Username))
+            {
+                throw new DuplicateNameException();
+            }
+
             using (var tx = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
@@ -79,18 +88,6 @@ namespace todoAPP.Services
 
                     await tx.CommitAsync();
                 }
-                catch (DbUpdateException ex)
-                {
-                    await tx.RollbackAsync();
-
-                    switch (((SqlException)ex.InnerException!).Number)
-                    {
-                        case 2627:
-                            throw new HttpRequestException("帳號已存在", ex, HttpStatusCode.BadRequest);
-                        default:
-                            throw;
-                    }
-                }
                 catch (Exception)
                 {
                     await tx.RollbackAsync();
@@ -99,21 +96,17 @@ namespace todoAPP.Services
             }
         }
 
-        public async Task<bool> CheckUsernameDuplicated(string username)
-        {
-            return await _dbContext.User.AnyAsync(x => x.Username == username);
-        }
-
         public async Task UpdateUsername(PatchUsernameModel model)
         {
+            if (await CheckUsernameDuplicated(model.Username))
+            {
+                throw new DuplicateNameException();
+            }
+
             using (var tx = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    if (await CheckUsernameDuplicated(model.Username))
-                    {
-                        throw new DuplicateNameException();
-                    }
                     var user = await _dbContext.User
                         .Where(x => x.Uid == model.UserId)
                         .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
@@ -271,11 +264,9 @@ namespace todoAPP.Services
             await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, authenticationProperties);
         }
 
-        public Guid GetUserId()
+        private async Task<bool> CheckUsernameDuplicated(string username)
         {
-            var userId = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.Sid)
-                ?? throw new UnauthorizedAccessException();
-            return new Guid(userId);
+            return await _dbContext.User.AnyAsync(x => x.Username == username);
         }
     }
 }

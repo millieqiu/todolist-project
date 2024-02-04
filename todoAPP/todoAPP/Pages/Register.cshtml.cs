@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using todoAPP.RequestModel;
@@ -24,9 +25,16 @@ namespace todoAPP.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPost([FromBody]RegisterRequestModel model)
+        public async Task<IActionResult> OnPost([FromBody] RegisterRequestModel model)
         {
-            await _user.CreateUser(model);
+            try
+            {
+                await _user.CreateUser(model);
+            }
+            catch (DuplicateNameException)
+            {
+                return BadRequest("帳號已存在");
+            }
             return Redirect("/Login");
         }
     }
