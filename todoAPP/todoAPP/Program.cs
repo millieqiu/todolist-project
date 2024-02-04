@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
+using todoAPP.ConfigModels;
 using todoAPP.Extensions;
 using todoAPP.Models;
 using todoAPP.Services;
@@ -57,6 +58,7 @@ public class Program
         builder.Services.AddHttpClient();
         builder.Services.AddHttpContextAccessor();
 
+        builder.Services.AddSingletonConfig<OAuthConfig>(builder.Configuration.GetSection("OAuth"));
         builder.Services.AddTransient<ITodoListService, TodoListService>();
         builder.Services.AddTransient<UserService>();
         builder.Services.AddSingleton<WeatherService>();
