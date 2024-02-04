@@ -58,7 +58,6 @@ public class Program
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddTransient<ITodoListService, TodoListService>();
-        builder.Services.AddTransient<AuthService>();
         builder.Services.AddTransient<UserService>();
         builder.Services.AddSingleton<WeatherService>();
         builder.Services.AddTransient<AvatarService>();

@@ -15,14 +15,12 @@ namespace todoAPP.Services
     public class UserService
     {
         private readonly DBContext _dbContext;
-        private readonly AuthService _auth;
         private readonly AvatarService _avartar;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(DBContext dbContext, AuthService auth, AvatarService avatar, IHttpContextAccessor httpContextAccessor)
+        public UserService(DBContext dbContext, AvatarService avatar, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
-            _auth = auth;
             _avartar = avatar;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -63,13 +61,13 @@ namespace todoAPP.Services
             {
                 try
                 {
-                    var salt = _auth.CreateSalt();
+                    var salt = PasswordHelper.CreateSalt();
 
                     User user = new User
                     {
                         Uid = Guid.NewGuid(),
                         Username = model.Username,
-                        Password = _auth.PasswordGenerator(model.Password, salt),
+                        Password = PasswordHelper.GeneratePassword(model.Password, salt),
                         Nickname = model.Nickname,
                         Salt = Convert.ToBase64String(salt),
                         Role = (int)ERole.USER,
@@ -167,14 +165,14 @@ namespace todoAPP.Services
                         .Where(x => x.Uid == model.UserId)
                         .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
 
-                    if (_auth.PasswordValidator(user.Password, user.Salt, model.OldPassword) == false)
+                    if (PasswordHelper.ValidatePassword(user.Password, user.Salt, model.OldPassword) == false)
                     {
                         throw new UnauthorizedAccessException();
                     }
 
-                    var salt = _auth.CreateSalt();
+                    var salt = PasswordHelper.CreateSalt();
 
-                    user.Password = _auth.PasswordGenerator(model.NewPassword, salt);
+                    user.Password = PasswordHelper.GeneratePassword(model.NewPassword, salt);
                     user.Salt = Convert.ToBase64String(salt);
 
                     await _dbContext.SaveChangesAsync();

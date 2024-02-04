@@ -8,12 +8,10 @@ namespace todoAPP.Pages
     [IgnoreAntiforgeryToken]
     public class LoginModel : PageModel
     {
-        private readonly AuthService _auth;
         private readonly UserService _user;
 
-        public LoginModel(AuthService auth, UserService user)
+        public LoginModel(UserService user)
         {
-            _auth = auth;
             _user = user;
         }
 
@@ -30,7 +28,7 @@ namespace todoAPP.Pages
         {
             var user = await _user.QueryUser(loginForm.Username);
 
-            if (_auth.PasswordValidator(user.Password, user.Salt, loginForm.Password))
+            if (PasswordHelper.ValidatePassword(user.Password, user.Salt, loginForm.Password))
             {
                 await _user.SignInUser(HttpContext, user);
                 return Redirect("/Index");
