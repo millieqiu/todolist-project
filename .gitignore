@@ -1,2 +1,7 @@
 *.DS_Store
 appsettings.*
+.vscode
+
+# Dependency directories
+node_modules/
+jspm_packages/
