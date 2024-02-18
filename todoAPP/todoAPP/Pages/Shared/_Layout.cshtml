@@ -1,64 +1,27 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant-TW">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - todoAPP</title>
-
-    <link rel="stylesheet" href="~/dist/css/header.css" asp-append-version="true" />
-    @await RenderSectionAsync("Styles", required: false)
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@700&family=Tilt+Prism&display=swap"
-        rel="stylesheet">
-    @*<link rel="stylesheet" href="~/css/normalize.css" asp-append-version="true" />*@
-    @*<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />*@
-
-
-    <!--試過的解法-->
-    <!--<script src="../node_modules/vue/dist/vue.js"></script>-->
-    <!--載入Vue-->
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.14/vue.min.js"
-    integrity="sha512-BAMfk70VjqBkBIyo9UTRLl3TBJ3M0c6uyy2VMUrq370bWs7kchLNN9j1WiJQus9JAJVqcriIUX859JOm12LWtw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>*@
-    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@ViewData["Title"] - EveryDay Todo</title>
+  <link rel="shortcut icon" href="~/dist/images/todo.ico">
+  <link rel="bookmark" href="~/dist/images/todo.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  @await RenderSectionAsync("Styles", required: false)
 </head>
 
-<body class="body-bg" v-bind:class="{scroll: isLoading}">
+<body>
 
-    <!-- Header 樣式 -->
-    <header class="header bg-white" id="header">
-        <a href="/Index">
-            <h1 class="heading1 text-primary font-weight-bold">
-                <img class="logo" src="~/dist/img/Logo.svg" />
-            </h1>
-        </a>
-        @if (User.Identity.IsAuthenticated == true)
-        {
-            <ul class="header-menu flex-align-center">
-                <li class="header-menu-option flex-align-center"><a class="header-menu-link flex-align-center"
-                        href="/Index">待辦事項</a></li>
-                <li class="header-menu-option flex-align-center"><a class="header-menu-link flex-align-center"
-                        href="/SettingPage">設定</a></li>
-                <li class="header-menu-option flex-align-center" v-on:click="onClickLogout">
-                    <a class="header-menu-link flex-align-center">
-                        <svg class="icon-color" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                            <path
-                                d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z" />
-                        </svg>
-                    </a>
-                </li>
-            </ul>
-        }
-    </header>
-
+  <div id="app" v-cloak>
     @RenderBody()
+  </div>
 
-    <script type="module" src="~/dist/header.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-
+  @await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>

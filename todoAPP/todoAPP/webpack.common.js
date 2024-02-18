@@ -1,45 +1,61 @@
-const path = require('path');
+"use strict";
+const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
-    entry: {
-        site: './src/site.js',
-        register: './src/register.js',
-        header: './src/header.js',
-        todoList: './src/todoList.js',
-        setting: './src/setting.js'
-    },
-    module: {
-        rules: [
-            {
-                test: /\.(js)$/,  // 編譯副檔名為js的檔案
-                exclude: /(node_modules)/,  // 排除不進行編譯的程式
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    },
-                },
+  context: path.resolve(__dirname, "src"),
+  entry: {
+    // Layout
+    _Layout: "./js/_Layout.js",
 
+    // Pages
+    login: "./js/login.js",
+    register: "./js/register.js",
+    header: "./js/header.js",
+    todoList: "./js/todoList.js",
+    setting: "./js/setting.js",
+  },
+  output: {
+    path: path.resolve(process.cwd(), "wwwroot/dist"),
+    filename: "./js/[name].js",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        loader: "vue-loader",
+      },
+      {
+        test: /\.(js)$/, // 編譯副檔名為js的檔案
+        exclude: /(node_modules)/, // 排除不進行編譯的程式
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+      // FIXME: dist 路徑下沒辦法打包圖片
+      {
+        test: /\.(jpe?g|png|gif|svg|eot|ttf|woff|woff2|otf|webp)$/i,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 10000,
+              name: "[name].[ext]",
+              outputPath: "images/",
+              fallback: require.resolve("file-loader"),
             },
-            {
-                test: /\.(png|jpg|gif|jpe?g|svg)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: 'img/[name].[ext]',
-                        }
-                    }
-                ]
-            }
+          },
         ],
-    },
-    resolve: {
-        alias: {
-            vue: 'vue/dist/vue.js',
-            '@': path.resolve(__dirname, 'src/image'),
-        }
-    },
+      },
+    ],
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS__: false,
+    }),
+  ],
 };
-
-
