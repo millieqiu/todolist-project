@@ -37,15 +37,13 @@ module.exports = {
       },
       // FIXME: dist 路徑下沒辦法打包圖片
       {
-        test: /\.(jpe?g|png|gif|svg|eot|ttf|woff|woff2|otf|webp)$/i,
+        test: /\.(jpe?g|png|gif|svg|eot|ttf|woff|woff2|otf|webp|ico)$/,
         use: [
           {
             loader: "url-loader",
             options: {
-              limit: 10000,
-              name: "[name].[ext]",
-              outputPath: "images/",
-              fallback: require.resolve("file-loader"),
+              limit: 1,
+              name: "./images/[name].[ext]",
             },
           },
         ],

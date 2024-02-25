@@ -1,2 +1,9 @@
 // 引入 todo 共用樣式
-@import "./Common/TodoGlobalStyle";
+@import "./Common/style.scss";
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

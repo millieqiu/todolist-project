@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant-TW">
 
 <head>
@@ -18,7 +18,9 @@
 <body>
 
   <div id="app" v-cloak>
-    @RenderBody()
+    <div class="container max-w-screen-md mx-auto">
+      @RenderBody()
+    </div>
   </div>
 
   @await RenderSectionAsync("Scripts", required: false)

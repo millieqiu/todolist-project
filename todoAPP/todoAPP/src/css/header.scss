@@ -1,68 +1,65 @@
-﻿@import './style.scss';
-
-.header {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 12px 312px;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 80px;
+﻿.header {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 312px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 80px;
 }
 
 .header a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .header-menu {
-    gap: 24px;
-    margin: 0;
+  gap: 24px;
+  margin: 0;
 }
 
 .header-menu-option {
-    height: 100%;
-    list-style: none;
-    cursor: pointer;
+  height: 100%;
+  list-style: none;
+  cursor: pointer;
 }
 
 .header-menu-link {
-    display: block;
-    height: 100%;
+  display: block;
+  height: 100%;
 }
 
 .header-menu-link > svg:hover {
-    fill: $gray-400;
+  fill: $gray-400;
 }
-
 
 /* RWD　設定*/
-@media(max-width: 970px) {
-    .header {
-        padding: 12px 120px;
-    }
+@media (max-width: 970px) {
+  .header {
+    padding: 12px 120px;
+  }
 }
 
-@media(max-width: 670px) {
-    .header {
-        padding: 12px 64px;
-        margin-bottom: 48px;
-    }
+@media (max-width: 670px) {
+  .header {
+    padding: 12px 64px;
+    margin-bottom: 48px;
+  }
 
-    .logo {
-        width: 150px;
-    }
+  .logo {
+    width: 150px;
+  }
 }
 
-@media(max-width: 490px) {
-    .logo {
-        width: 100px;
-    }
+@media (max-width: 490px) {
+  .logo {
+    width: 100px;
+  }
 
-    .header-menu {
-        padding-left: 12px;
-        gap: 12px;
-    }
+  .header-menu {
+    padding-left: 12px;
+    gap: 12px;
+  }
 
-    .header-menu-link {
-        font-size: 14px;
-    }
+  .header-menu-link {
+    font-size: 14px;
+  }
 }

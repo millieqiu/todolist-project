@@ -5,11 +5,10 @@ import "../css/login.scss";
 import { createApp, ref } from "vue";
 
 const app = createApp({
-  components: {},
   setup() {
-    const msg = ref("YA!!");
+    const tab = ref(0);
     return {
-      msg,
+      tab,
     };
   },
 });

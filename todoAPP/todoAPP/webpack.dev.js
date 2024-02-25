@@ -8,6 +8,7 @@ const VueLoaderPlugin = require("vue-loader");
 module.exports = merge(common, {
   mode: "development",
   devtool: "source-map",
+  watch: true,
   module: {
     rules: [
       {
