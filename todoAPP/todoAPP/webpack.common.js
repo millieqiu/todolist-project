@@ -10,9 +10,8 @@ module.exports = {
 
     // Pages
     login: "./js/login.js",
-    register: "./js/register.js",
     header: "./js/header.js",
-    todoList: "./js/todoList.js",
+    index: "./js/index.js",
     setting: "./js/setting.js",
   },
   output: {

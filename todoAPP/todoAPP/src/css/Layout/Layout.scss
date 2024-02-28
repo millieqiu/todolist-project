@@ -1,1 +1,7 @@
 @import "../Common/style.scss";
+
+.logo {
+  &:hover {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,17 @@
+﻿// 引入 todo 共用樣式
+@import "./Common/style.scss";
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  background-color: #e8ecee;
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+}
