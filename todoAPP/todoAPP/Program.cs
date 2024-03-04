@@ -21,7 +21,7 @@ public class Program
         builder.Host.UseNLog();
 
         // Add services to the container.
-        builder.Services.AddRazorPages();
+        builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
         builder.Services.AddControllers();
 
