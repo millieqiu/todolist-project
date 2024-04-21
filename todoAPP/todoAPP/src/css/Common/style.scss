@@ -11,7 +11,7 @@ body {
   font-family: "Work Sans", "Noto Sans TC", sans-serif;
 }
 
-// 客製化 DaisyUI 的樣式
+// > 客製化 DaisyUI 的樣式
 .table {
   font-size: 1rem;
 }
@@ -22,6 +22,7 @@ body {
 }
 
 // > Dropdown 樣式
+// XXX for frontend: 用太多 @apply 的話可能會耗效能，再看看有沒有更好的辦法
 .dropdown-delete {
   @apply text-error
 }
