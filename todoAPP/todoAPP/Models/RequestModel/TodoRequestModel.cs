@@ -4,14 +4,16 @@ namespace todoAPP.RequestModel;
 
 public class GetTodoListRequestModel : PaginationRequestModel
 {
-    public Guid UserId { get; set; }
+  public Guid UserId { get; set; }
 }
 
 public class CreateTodoRequestModel
 {
-    [MaxLength(30)]
-    public string Text { get; set; } = string.Empty;
-    public Guid KanbanSwimlaneId { get; set; }
+  [StringLength(50, MinimumLength = 1)]
+  public string Title { get; set; } = null!;
+
+  [MaxLength(250)]
+  public string Description { get; set; } = string.Empty;
 }
 
 public class PatchTodoSwimlaneRequestModel

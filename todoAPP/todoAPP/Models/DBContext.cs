@@ -92,9 +92,11 @@ namespace todoAPP.Models
 
                 entity.Property(e => e.Uid).ValueGeneratedNever();
 
+                entity.Property(e => e.Description).HasMaxLength(250);
+
                 entity.Property(e => e.Idx).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.Text).HasMaxLength(30);
+                entity.Property(e => e.Title).HasMaxLength(50);
 
                 entity.Property(e => e.Weather).HasMaxLength(6);
 

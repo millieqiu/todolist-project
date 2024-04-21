@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using todoAPP.DTO;
+using todoAPP.Enums;
 using todoAPP.Extensions;
 using todoAPP.Models;
 using todoAPP.RequestModel;
@@ -38,7 +39,8 @@ namespace todoAPP.Services
                 {
                     Uid = x.Uid,
                     Status = x.Status,
-                    Text = x.Text,
+                    Title = x.Title,
+                    Description = x.Description,
                     CreatedAt = x.CreatedAt,
                     UpdatedAt = x.UpdatedAt,
                     Weather = x.Weather
@@ -48,16 +50,20 @@ namespace todoAPP.Services
 
         public async Task<Guid> CreateTodoItem(CreateTodoDTO model)
         {
+            var swimlane = await _dbContext.KanbanSwimlane
+                .Where(x => x.Kanban.UserId == model.UserId && x.Type == (byte)EKanbanSwimlaneType.DEFAULT)
+                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
             var todo = new Todo
             {
                 Uid = Guid.NewGuid(),
                 Status = 0,
-                Text = model.Text,
+                Title = model.Title,
+                Description = model.Description,
                 CreatedAt = DateTimeOffset.UtcNow,
                 UpdatedAt = DateTimeOffset.UtcNow,
                 Weather = await _weather.GetWeatherText() ?? "",
                 UserId = model.UserId,
-                KanbanSwimlaneId = model.KanbanSwimlaneId,
+                KanbanSwimlaneId = swimlane.Uid,
             };
 
             await _dbContext.Todo.AddAsync(todo);

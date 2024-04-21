@@ -9,9 +9,9 @@ public class GetTodoListDTO : PaginationRequestModel
 
 public class CreateTodoDTO
 {
-  public string Text { get; set; } = string.Empty;
+  public string Title { get; set; } = string.Empty;
+  public string Description { get; set; } = string.Empty;
   public Guid UserId { get; set; }
-  public Guid KanbanSwimlaneId { get; set; }
 }
 
 public class PatchTodoSwimlaneDTO

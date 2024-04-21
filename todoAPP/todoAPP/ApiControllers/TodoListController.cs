@@ -52,9 +52,9 @@ namespace todoAPP.ApiControllers
         {
             var todoItemId = await _todo.CreateTodoItem(new CreateTodoDTO
             {
-                Text = model.Text,
+                Title = model.Title,
+                Description = model.Description,
                 UserId = _user.GetUserId(),
-                KanbanSwimlaneId = model.KanbanSwimlaneId,
             });
 
             return Ok(todoItemId);

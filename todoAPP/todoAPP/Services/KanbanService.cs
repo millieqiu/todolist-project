@@ -71,7 +71,8 @@ public class KanbanService : IKanbanService
           {
             Uid = z.Uid,
             Status = z.Status,
-            Text = z.Text,
+            Title = z.Title,
+            Description = z.Description,
             CreatedAt = z.CreatedAt,
             UpdatedAt = z.UpdatedAt,
             Weather = z.Weather,
