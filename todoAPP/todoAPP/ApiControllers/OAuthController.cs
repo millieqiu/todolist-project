@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using todoAPP.DTO;
 using todoAPP.RequestModel;
 using todoAPP.Services;
 
@@ -10,11 +11,13 @@ namespace todoAPP.ApiControllers
     {
         private readonly IOAuthService _oauth;
         private readonly UserService _user;
+        private readonly IKanbanService _kanban;
 
-        public OAuthController(IOAuthService oauth, UserService user)
+        public OAuthController(IOAuthService oauth, UserService user, IKanbanService kanban)
         {
             _oauth = oauth;
             _user = user;
+            _kanban = kanban;
         }
 
         [HttpGet]
@@ -39,7 +42,13 @@ namespace todoAPP.ApiControllers
 
             if (await _user.CheckUsernameDuplicated(userInfo.email) == false)
             {
-                await _user.CreateUser(model);
+                var userId = await _user.CreateUser(model);
+                await _kanban.InitKanban(new InitKanbanDTO
+                {
+                    Name = "Default",
+                    SwimlaneName = "New",
+                    UserId = userId
+                });
             }
 
             var user = await _user.QueryUser(userInfo.email);

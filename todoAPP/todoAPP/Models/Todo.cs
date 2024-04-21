@@ -13,7 +13,9 @@ namespace todoAPP.Models
         public DateTimeOffset UpdatedAt { get; set; }
         public string Weather { get; set; } = null!;
         public Guid UserId { get; set; }
+        public Guid KanbanSwimlaneId { get; set; }
 
+        public virtual KanbanSwimlane KanbanSwimlane { get; set; } = null!;
         public virtual User User { get; set; } = null!;
     }
 }

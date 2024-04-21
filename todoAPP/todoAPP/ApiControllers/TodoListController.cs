@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using todoAPP.DTO;
 using todoAPP.RequestModel;
 using todoAPP.Services;
 
@@ -23,36 +24,38 @@ namespace todoAPP.ApiControllers
         [HttpGet]
         [Authorize(Roles = "Admin")]
         [Route("User/{UserId}/Todo/List")]
-        public async Task<IActionResult> AdminGetUserTodoList([FromRoute] GetTodoListModel model)
+        public async Task<IActionResult> AdminGetUserTodoList([FromRoute] GetTodoListRequestModel model)
         {
-            return Ok(await _todo.GetTodoList(model));
+            return Ok(await _todo.GetTodoList(new GetTodoListDTO
+            {
+                Page = model.Page,
+                Limit = model.Limit,
+                UserId = model.UserId
+            }));
         }
 
         [HttpGet]
         [Route("Todo/List")]
-        public async Task<IActionResult> GetTodoList([FromQuery]PaginationRequestModel model)
+        public async Task<IActionResult> GetTodoList([FromQuery] PaginationRequestModel model)
         {
-            var reqModel = new GetTodoListModel
+            return Ok(await _todo.GetTodoList(new GetTodoListDTO
             {
                 Page = model.Page,
                 Limit = model.Limit,
                 UserId = new Guid(HttpContext.User.FindFirstValue(ClaimTypes.Sid))
-            };
-
-            return Ok(await _todo.GetTodoList(reqModel));
+            }));
         }
 
         [HttpPost]
         [Route("Todo")]
         async public Task<IActionResult> CreateTodoItem(CreateTodoRequestModel model)
         {
-            var createTodoModel = new CreateTodoModel
+            var todoItemId = await _todo.CreateTodoItem(new CreateTodoDTO
             {
                 Text = model.Text,
                 UserId = _user.GetUserId(),
-            };
-
-            var todoItemId = await _todo.CreateTodoItem(createTodoModel);
+                KanbanSwimlaneId = model.KanbanSwimlaneId,
+            });
 
             return Ok(todoItemId);
         }
@@ -63,6 +66,18 @@ namespace todoAPP.ApiControllers
         {
             await _todo.ChangeTodoItemStatus(model);
 
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Route("Todo/{Uid}/Swimlane")]
+        public async Task<IActionResult> ChangeTodoSwimlane([FromRoute] Guid Uid, PatchTodoSwimlaneRequestModel model)
+        {
+            await _todo.ChangeTodoSwimlane(new PatchTodoSwimlaneDTO
+            {
+                TodoId = Uid,
+                KanbanSwimlaneId = model.KanbanSwimlaneId,
+            });
             return Ok();
         }
 

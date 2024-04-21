@@ -16,6 +16,8 @@ namespace todoAPP.Models
         {
         }
 
+        public virtual DbSet<Kanban> Kanban { get; set; } = null!;
+        public virtual DbSet<KanbanSwimlane> KanbanSwimlane { get; set; } = null!;
         public virtual DbSet<Todo> Todo { get; set; } = null!;
         public virtual DbSet<User> User { get; set; } = null!;
 
@@ -29,6 +31,54 @@ namespace todoAPP.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Kanban>(entity =>
+            {
+                entity.HasKey(e => e.Uid)
+                    .HasName("PK__Kanban__C5B69A4B0445C3DC")
+                    .IsClustered(false);
+
+                entity.HasIndex(e => e.Idx, "CX_Kanban")
+                    .IsClustered();
+
+                entity.HasIndex(e => e.Uid, "IX_Kanban");
+
+                entity.Property(e => e.Uid).ValueGeneratedNever();
+
+                entity.Property(e => e.Idx).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name).HasMaxLength(30);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Kanban)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Kanban");
+            });
+
+            modelBuilder.Entity<KanbanSwimlane>(entity =>
+            {
+                entity.HasKey(e => e.Uid)
+                    .HasName("PK__tmp_ms_x__C5B69A4BE47E58B1")
+                    .IsClustered(false);
+
+                entity.HasIndex(e => e.Idx, "CX_KanbanSwimlane")
+                    .IsClustered();
+
+                entity.HasIndex(e => e.Uid, "IX_KanbanSwimlane");
+
+                entity.Property(e => e.Uid).ValueGeneratedNever();
+
+                entity.Property(e => e.Idx).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name).HasMaxLength(30);
+
+                entity.HasOne(d => d.Kanban)
+                    .WithMany(p => p.KanbanSwimlane)
+                    .HasForeignKey(d => d.KanbanId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Kanban_KanbanSwimlane");
+            });
+
             modelBuilder.Entity<Todo>(entity =>
             {
                 entity.HasKey(e => e.Uid)
@@ -38,7 +88,7 @@ namespace todoAPP.Models
                 entity.HasIndex(e => e.Idx, "CX_Todo")
                     .IsClustered();
 
-                entity.HasIndex(e => new { e.Uid, e.UserId }, "IX_Todo");
+                entity.HasIndex(e => new { e.Uid, e.KanbanSwimlaneId }, "IX_Todo");
 
                 entity.Property(e => e.Uid).ValueGeneratedNever();
 
@@ -47,6 +97,12 @@ namespace todoAPP.Models
                 entity.Property(e => e.Text).HasMaxLength(30);
 
                 entity.Property(e => e.Weather).HasMaxLength(6);
+
+                entity.HasOne(d => d.KanbanSwimlane)
+                    .WithMany(p => p.Todo)
+                    .HasForeignKey(d => d.KanbanSwimlaneId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_KanbanSwimlane_Todo");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Todo)
@@ -65,6 +121,9 @@ namespace todoAPP.Models
                     .IsClustered();
 
                 entity.HasIndex(e => new { e.Uid, e.Username }, "IX_User")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Username, "UC_Username")
                     .IsUnique();
 
                 entity.Property(e => e.Uid).ValueGeneratedNever();

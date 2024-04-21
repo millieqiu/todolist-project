@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using todoAPP.DTO;
 using todoAPP.Extensions;
 using todoAPP.Models;
 using todoAPP.RequestModel;
@@ -8,9 +9,10 @@ namespace todoAPP.Services
 {
     public interface ITodoListService
     {
-        public Task<IEnumerable<TodoViewModel>> GetTodoList(GetTodoListModel model);
-        public Task<Guid> CreateTodoItem(CreateTodoModel model);
+        public Task<IEnumerable<TodoViewModel>> GetTodoList(GetTodoListDTO model);
+        public Task<Guid> CreateTodoItem(CreateTodoDTO model);
         public Task ChangeTodoItemStatus(GeneralRequestModel model);
+        public Task ChangeTodoSwimlane(PatchTodoSwimlaneDTO model);
         public Task DeleteTodoItem(GeneralRequestModel model);
     }
 
@@ -27,7 +29,7 @@ namespace todoAPP.Services
             _weather = weather;
         }
 
-        public async Task<IEnumerable<TodoViewModel>> GetTodoList(GetTodoListModel model)
+        public async Task<IEnumerable<TodoViewModel>> GetTodoList(GetTodoListDTO model)
         {
             return await _dbContext.Todo
                 .AsNoTracking()
@@ -44,7 +46,7 @@ namespace todoAPP.Services
                 .ToPaginatedListAsync(model, _accessor.HttpContext!);
         }
 
-        public async Task<Guid> CreateTodoItem(CreateTodoModel model)
+        public async Task<Guid> CreateTodoItem(CreateTodoDTO model)
         {
             var todo = new Todo
             {
@@ -55,6 +57,7 @@ namespace todoAPP.Services
                 UpdatedAt = DateTimeOffset.UtcNow,
                 Weather = await _weather.GetWeatherText() ?? "",
                 UserId = model.UserId,
+                KanbanSwimlaneId = model.KanbanSwimlaneId,
             };
 
             await _dbContext.Todo.AddAsync(todo);
@@ -93,6 +96,29 @@ namespace todoAPP.Services
                     await tx.RollbackAsync();
                     throw;
                 }
+            }
+        }
+
+        public async Task ChangeTodoSwimlane(PatchTodoSwimlaneDTO model)
+        {
+            using var tx = await _dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                var todo = await _dbContext.Todo
+                    .Where(x => x.Uid == model.TodoId)
+                    .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+
+                todo.KanbanSwimlaneId = model.KanbanSwimlaneId;
+
+                await _dbContext.SaveChangesAsync();
+
+                await tx.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await tx.RollbackAsync();
+                throw;
             }
         }
 

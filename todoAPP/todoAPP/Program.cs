@@ -64,6 +64,7 @@ public class Program
         builder.Services.AddSingleton<WeatherService>();
         builder.Services.AddTransient<AvatarService>();
         builder.Services.AddTransient<IOAuthService, OAuthService>();
+        builder.Services.AddTransient<IKanbanService, KanbanService>();
 
         builder.Services.AddDocumentService();
 

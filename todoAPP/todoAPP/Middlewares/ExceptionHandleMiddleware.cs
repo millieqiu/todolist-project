@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net;
-using Microsoft.Extensions.Logging;
+﻿using System.Net;
 
 namespace todoAPP.Middlewares
 {
@@ -21,6 +19,12 @@ namespace todoAPP.Middlewares
             {
                 await _next(context);
             }
+            catch (ArgumentException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "text/plain; charset=UTF-8";
+                await context.Response.WriteAsync(ex.Message);
+            }
             catch (KeyNotFoundException)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -28,6 +32,7 @@ namespace todoAPP.Middlewares
             catch (HttpRequestException ex)
             {
                 context.Response.StatusCode = (int)ex.StatusCode!;
+                context.Response.ContentType = "text/plain; charset=UTF-8";
                 await context.Response.WriteAsync(ex.Message);
             }
             catch (Exception exception)

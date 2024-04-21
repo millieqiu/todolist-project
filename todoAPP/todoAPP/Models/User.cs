@@ -7,6 +7,7 @@ namespace todoAPP.Models
     {
         public User()
         {
+            Kanban = new HashSet<Kanban>();
             Todo = new HashSet<Todo>();
         }
 
@@ -19,6 +20,7 @@ namespace todoAPP.Models
         public int Role { get; set; }
         public string Avatar { get; set; } = null!;
 
+        public virtual ICollection<Kanban> Kanban { get; set; }
         public virtual ICollection<Todo> Todo { get; set; }
     }
 }

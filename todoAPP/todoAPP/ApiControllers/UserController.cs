@@ -4,6 +4,7 @@ using todoAPP.RequestModel;
 using todoAPP.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using System.Data;
+using todoAPP.DTO;
 
 namespace todoAPP.ApiControllers
 {
@@ -37,15 +38,13 @@ namespace todoAPP.ApiControllers
         [Route("Username")]
         public async Task<IActionResult> PatchUsername(PatchUsernameRequestModel model)
         {
-            var patchUsernameModel = new PatchUsernameModel
-            {
-                UserId = _user.GetUserId(),
-                Username = model.Username
-            };
-
             try
             {
-                await _user.UpdateUsername(patchUsernameModel);
+                await _user.UpdateUsername(new PatchUsernameDTO
+                {
+                    UserId = _user.GetUserId(),
+                    Username = model.Username
+                });
             }
             catch (DuplicateNameException)
             {
@@ -60,13 +59,11 @@ namespace todoAPP.ApiControllers
         [Route("Nickname")]
         public async Task<IActionResult> PatchUserNickname(PatchNicknameRequestModel model)
         {
-            var patchNicknameModel = new PatchNicknameModel
+            await _user.UpdateNickname(new PatchNicknameDTO
             {
                 UserId = _user.GetUserId(),
                 Nickname = model.Nickname
-            };
-
-            await _user.UpdateNickname(patchNicknameModel);
+            });
             return Ok();
         }
 
@@ -75,15 +72,12 @@ namespace todoAPP.ApiControllers
         [Route("Password")]
         public async Task<IActionResult> PatchUserPassword(PatchPasswordRequestModel model)
         {
-            var patchPasswordModel = new PatchPasswordModel
+            await _user.ChangePassword(new PatchPasswordDTO
             {
                 UserId = _user.GetUserId(),
                 OldPassword = model.OldPassword,
                 NewPassword = model.NewPassword,
-                ConfirmNewPassword = model.NewPassword,
-            };
-
-            await _user.ChangePassword(patchPasswordModel);
+            });
 
             return Ok();
         }
@@ -131,7 +125,7 @@ namespace todoAPP.ApiControllers
                 return BadRequest("不支援的圖片格式");
             }
 
-            var model = new PatchAvatarModel
+            var model = new PatchAvatarDTO
             {
                 UserId = _user.GetUserId(),
                 File = avatarFile,

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Claims;
+using todoAPP.DTO;
 using todoAPP.Enums;
 using todoAPP.Models;
 using todoAPP.RequestModel;
@@ -59,11 +60,11 @@ namespace todoAPP.Services
                 .SingleOrDefault();
         }
 
-        public async Task CreateUser(RegisterRequestModel model)
+        public async Task<Guid> CreateUser(RegisterRequestModel model)
         {
             if (await CheckUsernameDuplicated(model.Username))
             {
-                throw new DuplicateNameException();
+                throw new ArgumentException("使用者名稱已存在");
             }
 
             using (var tx = await _dbContext.Database.BeginTransactionAsync())
@@ -87,6 +88,7 @@ namespace todoAPP.Services
                     await _dbContext.SaveChangesAsync();
 
                     await tx.CommitAsync();
+                    return user.Uid;
                 }
                 catch (Exception)
                 {
@@ -96,7 +98,7 @@ namespace todoAPP.Services
             }
         }
 
-        public async Task UpdateUsername(PatchUsernameModel model)
+        public async Task UpdateUsername(PatchUsernameDTO model)
         {
             if (await CheckUsernameDuplicated(model.Username))
             {
@@ -124,7 +126,7 @@ namespace todoAPP.Services
             }
         }
 
-        public async Task UpdateNickname(PatchNicknameModel model)
+        public async Task UpdateNickname(PatchNicknameDTO model)
         {
             using (var tx = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -148,7 +150,7 @@ namespace todoAPP.Services
             }
         }
 
-        public async Task ChangePassword(PatchPasswordModel model)
+        public async Task ChangePassword(PatchPasswordDTO model)
         {
             using (var tx = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -188,7 +190,7 @@ namespace todoAPP.Services
                 .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
         }
 
-        async public Task UpdateAvatar(PatchAvatarModel model)
+        async public Task UpdateAvatar(PatchAvatarDTO model)
         {
             using (var tx = await _dbContext.Database.BeginTransactionAsync())
             {
