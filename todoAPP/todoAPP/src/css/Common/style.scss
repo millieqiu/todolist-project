@@ -10,3 +10,18 @@ html,
 body {
   font-family: "Work Sans", "Noto Sans TC", sans-serif;
 }
+
+// 客製化 DaisyUI 的樣式
+.table {
+  font-size: 1rem;
+}
+
+.table-todo {
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+}
+
+// > Dropdown 樣式
+.dropdown-delete {
+  @apply text-error
+}

@@ -9,10 +9,10 @@ module.exports = {
     _Layout: "./js/_Layout.js",
 
     // Pages
-    login: "./js/login.js",
+    login: "./js/login.js", // 登入註冊頁
     header: "./js/header.js",
-    index: "./js/index.js",
-    setting: "./js/setting.js",
+    index: "./js/index.js", // 首頁; 待辦清單
+    setting: "./js/setting.js", // 設定頁
   },
   output: {
     path: path.resolve(process.cwd(), "wwwroot/dist"),
