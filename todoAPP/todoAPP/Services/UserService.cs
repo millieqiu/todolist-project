@@ -31,6 +31,13 @@ namespace todoAPP.Services
             return new Guid(userId);
         }
 
+        public string GetClaim(string type)
+        {
+            var identity = _httpContextAccessor.HttpContext!.User.Identity ?? throw new UnauthorizedAccessException("Identity not found");
+            var claimsIdentity = new ClaimsIdentity(identity).FindFirst(type) ?? throw new UnauthorizedAccessException("Identity not found");
+            return claimsIdentity.Value ?? throw new UnauthorizedAccessException("Identity not found");
+        }
+
         public async Task<UserInfoViewModel> GetUserInfo(GeneralRequestModel model)
         {
             return await _dbContext.User
