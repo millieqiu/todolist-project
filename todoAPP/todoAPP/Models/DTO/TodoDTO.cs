@@ -1,8 +1,8 @@
-﻿using todoAPP.RequestModel;
+﻿using todoAPP.Enums;
 
 namespace todoAPP.DTO;
 
-public class GetTodoListDTO : PaginationRequestModel
+public class GetTodoListDTO
 {
   public Guid UserId { get; set; }
 }
@@ -18,4 +18,11 @@ public class PatchTodoSwimlaneDTO
 {
   public Guid TodoId { get; set; }
   public Guid KanbanSwimlaneId { get; set; }
+}
+
+public class PatchUserTodoOrderDTO
+{
+  public EUpdateTodoOrderAction Action { get; set; }
+  public Guid DragTodoId { get; set; }
+  public Guid DropTodoId { get; set; }
 }

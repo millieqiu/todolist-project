@@ -18,5 +18,6 @@ namespace todoAPP.Models
 
         public virtual KanbanSwimlane KanbanSwimlane { get; set; } = null!;
         public virtual User User { get; set; } = null!;
+        public virtual UserTodoOrder? UserTodoOrder { get; set; }
     }
 }

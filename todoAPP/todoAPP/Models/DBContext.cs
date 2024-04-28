@@ -20,6 +20,7 @@ namespace todoAPP.Models
         public virtual DbSet<KanbanSwimlane> KanbanSwimlane { get; set; } = null!;
         public virtual DbSet<Todo> Todo { get; set; } = null!;
         public virtual DbSet<User> User { get; set; } = null!;
+        public virtual DbSet<UserTodoOrder> UserTodoOrder { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -141,6 +142,20 @@ namespace todoAPP.Models
                 entity.Property(e => e.Salt).HasMaxLength(30);
 
                 entity.Property(e => e.Username).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<UserTodoOrder>(entity =>
+            {
+                entity.HasKey(e => e.TodoId)
+                    .HasName("PK__TodoUser__95862552B087862F");
+
+                entity.Property(e => e.TodoId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Todo)
+                    .WithOne(p => p.UserTodoOrder)
+                    .HasForeignKey<UserTodoOrder>(d => d.TodoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Todo_UserTodoOrder");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -1,9 +1,10 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using todoAPP.DTO;
+using todoAPP.Helpers;
 using todoAPP.RequestModel;
 using todoAPP.Services;
+using todoAPP.ViewModel;
 
 namespace todoAPP.ApiControllers
 {
@@ -26,10 +27,8 @@ namespace todoAPP.ApiControllers
         [Route("User/{UserId}/Todo/List")]
         public async Task<IActionResult> AdminGetUserTodoList([FromRoute] GetTodoListRequestModel model)
         {
-            return Ok(await _todo.GetTodoList(new GetTodoListDTO
+            return Ok(await _todo.GetSortedUserTodoList(new GetTodoListDTO
             {
-                Page = model.Page,
-                Limit = model.Limit,
                 UserId = model.UserId
             }));
         }
@@ -38,12 +37,18 @@ namespace todoAPP.ApiControllers
         [Route("Todo/List")]
         public async Task<IActionResult> GetTodoList([FromQuery] PaginationRequestModel model)
         {
-            return Ok(await _todo.GetTodoList(new GetTodoListDTO
+            var todolist = await _todo.GetSortedUserTodoList(new GetTodoListDTO
             {
-                Page = model.Page,
-                Limit = model.Limit,
-                UserId = new Guid(HttpContext.User.FindFirstValue(ClaimTypes.Sid))
-            }));
+                UserId = _user.GetUserId(),
+            });
+
+            var first = todolist.Where(x => x.PrevId == Guid.Empty).SingleOrDefault() ?? throw new Exception("排序錯誤");
+            var dict = new Dictionary<Guid, TodoViewModel>();
+            foreach (var todo in todolist)
+            {
+                dict.Add(todo.Uid, todo);
+            }
+            return Ok(TraversalHelper.Traversal<TodoViewModel>(first, dict));
         }
 
         [HttpPost]
@@ -80,6 +85,20 @@ namespace todoAPP.ApiControllers
             });
             return Ok();
         }
+
+        [HttpPatch]
+        [Route("UserTodo/Order")]
+        public async Task<IActionResult> PatchUserTodoOrder(PatchUserTodoOrderRequestModel model)
+        {
+            await _todo.UpdateUserTodoOrder(new PatchUserTodoOrderDTO
+            {
+                Action = model.Action,
+                DragTodoId = model.DragTodoId,
+                DropTodoId = model.DropTodoId,
+            });
+            return Ok();
+        }
+
 
         [HttpDelete]
         [Route("Todo/{Uid}")]

@@ -9,4 +9,6 @@ public class TodoViewModel
   public DateTimeOffset CreatedAt { get; set; }
   public DateTimeOffset UpdatedAt { get; set; }
   public string Weather { get; set; } = null!;
+  public Guid PrevId { get; set; }
+  public Guid NextId { get; set; }
 }
