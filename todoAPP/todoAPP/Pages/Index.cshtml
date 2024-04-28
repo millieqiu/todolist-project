@@ -54,7 +54,11 @@
                 </svg>
               </button>
               <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                <li><a>編輯項目</a></li>
+                <li>
+                  <button @@click="openModalEditTodoItem(item)">
+                    <a>編輯項目</a>
+                  </button>
+                </li>
                 <li class=dropdown-delete><a>刪除</a></li>
               </ul>
             </div>
@@ -65,3 +69,5 @@
     </div>
   </div>
 </div>
+
+<modal-edit-todo-item ref="modalEditTodoItem"></modal-edit-todo-item>

@@ -5,11 +5,13 @@ import "../css/index.scss";
 import { createApp, ref } from "vue";
 
 // # Custom Components
-import BaseSidebar from "./components/BaseSidebar.vue"
+import BaseSidebar from "./components/BaseSidebar.vue";
+import ModalEditTodoItem from "./components/ModalEditTodoItem.vue";
 
 const app = createApp({
   components: {
-    BaseSidebar
+    BaseSidebar,
+    ModalEditTodoItem
   },
   setup() {
 
@@ -34,8 +36,15 @@ const app = createApp({
       },
     ])
 
+    const modalEditTodoItem = ref(null);
+    function openModalEditTodoItem(item) {
+      modalEditTodoItem.value.openModal(item);
+    }
+
     return {
       fakeTodoList,
+      modalEditTodoItem,
+      openModalEditTodoItem,
     };
   },
 });

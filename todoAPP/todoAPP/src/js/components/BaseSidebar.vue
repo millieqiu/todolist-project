@@ -1,7 +1,7 @@
 <template>
   <ul class="menu bg-base-100 rounded-box drop-shadow-lg flex-1">
     <li>
-      <a>
+      <a @click="openModalEditTodoItem">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
           <path fill-rule="evenodd"
             d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
@@ -42,13 +42,31 @@
       </a>
     </li>
   </ul>
+  <modal-edit-todo-item ref="modalEditTodoItem"></modal-edit-todo-item>
 </template>
 
 <script>
 // # Vue
 import { ref } from 'vue';
 
+// # Custom Components
+import ModalEditTodoItem from './ModalEditTodoItem.vue';
+
 export default {
-  // 內容
+  components: {
+    ModalEditTodoItem
+  },
+  setup() {
+
+    const modalEditTodoItem = ref(null);
+    function openModalEditTodoItem() {
+      modalEditTodoItem.value.openModal();
+    }
+
+    return {
+      modalEditTodoItem,
+      openModalEditTodoItem
+    }
+  }
 }
 </script>

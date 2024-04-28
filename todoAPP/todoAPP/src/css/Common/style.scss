@@ -21,6 +21,13 @@ body {
   border-spacing: 0 0.5rem;
 }
 
+.modal-body {
+  padding: 1rem 0rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem
+}
+
 // > Dropdown 樣式
 // XXX for frontend: 用太多 @apply 的話可能會耗效能，再看看有沒有更好的辦法
 .dropdown-delete {

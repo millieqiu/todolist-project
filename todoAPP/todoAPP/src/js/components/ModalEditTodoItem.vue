@@ -1,0 +1,66 @@
+<template>
+  <dialog ref="modalEl" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">{{ isEdit ? '編輯' : '新增' }}待辦事項</h3>
+      <div class="modal-body">
+        <label class="input input-bordered flex items-center gap-2">
+          <input type="text" class="grow" placeholder="待辦事項名稱..." v-model="todoForm.title" />
+        </label>
+        <label class="input input-bordered flex items-center gap-2">
+          <input type="text" class="grow" placeholder="時間及日期" v-model="todoForm.time" />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-4 h-4 opacity-70 flex-none">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+          </svg>
+        </label>
+        <textarea class="textarea textarea-bordered" rows="5" placeholder="備註及描述" v-model="todoForm.note"></textarea>
+      </div>
+      <div class="modal-action">
+        <button class="btn" @click="closeModal">關閉</button>
+        <button class="btn btn-primary">儲存變更</button>
+      </div>
+    </div>
+  </dialog>
+</template>
+
+<script>
+// # Vue
+import { onMounted, reactive, ref } from 'vue';
+
+export default {
+  setup(props, { emit }) {
+
+    const isEdit = ref(false);
+
+    const defaultTodoForm = {
+      title: "",
+      time: null,
+      note: ""
+    };
+    const todoForm = reactive({...defaultTodoForm});
+
+    const modalEl = ref(null);
+
+    function openModal(item) {
+      isEdit.value = item ? true : false;
+      Object.assign(todoForm, item);
+      modalEl.value.showModal();
+    }
+
+    function closeModal() {
+      Object.assign(todoForm, defaultTodoForm);
+      isEdit.value = false;
+      modalEl.value.close();
+    }
+
+    return {
+      modalEl,
+      openModal,
+      closeModal,
+      isEdit,
+      todoForm,
+    }
+  }
+}
+</script>

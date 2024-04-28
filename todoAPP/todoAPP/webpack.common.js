@@ -6,7 +6,7 @@ module.exports = {
   context: path.resolve(__dirname, "src"),
   entry: {
     // Layout
-    _Layout: "./js/_Layout.js",
+    Layout: "./js/Layout.js",
 
     // Pages
     login: "./js/login.js", // 登入註冊頁
@@ -53,6 +53,7 @@ module.exports = {
     new webpack.DefinePlugin({
       __VUE_OPTIONS_API__: true,
       __VUE_PROD_DEVTOOLS__: false,
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
     }),
   ],
 };
