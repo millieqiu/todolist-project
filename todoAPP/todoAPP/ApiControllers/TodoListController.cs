@@ -75,6 +75,20 @@ namespace todoAPP.ApiControllers
         }
 
         [HttpPatch]
+        [Route("Todo/{Uid}/Info")]
+        public async Task<IActionResult> UpdateTodoInfo([FromRoute] GeneralRequestModel route, PatchTodoInfoRequestModel model)
+        {
+            await _todo.UpdateTodoInfo(new PatchTodoInfoDTO
+            {
+                Title = model.Title,
+                Description = model.Description,
+                TodoId = route.Uid,
+            });
+
+            return Ok();
+        }
+
+        [HttpPatch]
         [Route("Todo/{Uid}/Swimlane")]
         public async Task<IActionResult> ChangeTodoSwimlane([FromRoute] Guid Uid, PatchTodoSwimlaneRequestModel model)
         {

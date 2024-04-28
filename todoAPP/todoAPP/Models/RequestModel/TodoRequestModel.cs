@@ -17,6 +17,15 @@ public class CreateTodoRequestModel
   public string Description { get; set; } = string.Empty;
 }
 
+public class PatchTodoInfoRequestModel
+{
+  [StringLength(50, MinimumLength = 1)]
+  public string Title { get; set; } = null!;
+
+  [MaxLength(250)]
+  public string Description { get; set; } = string.Empty;
+}
+
 public class PatchTodoSwimlaneRequestModel
 {
   public Guid KanbanSwimlaneId { get; set; }

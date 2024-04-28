@@ -12,6 +12,7 @@ namespace todoAPP.Services
         public Task<IEnumerable<TodoViewModel>> GetSortedUserTodoList(GetTodoListDTO model);
         public Task<Guid> CreateTodoItem(CreateTodoDTO model);
         public Task ChangeTodoItemStatus(GeneralRequestModel model);
+        public Task UpdateTodoInfo(PatchTodoInfoDTO model);
         public Task ChangeTodoSwimlane(PatchTodoSwimlaneDTO model);
         public Task UpdateUserTodoOrder(PatchUserTodoOrderDTO model);
         public Task DeleteTodoItem(GeneralRequestModel model);
@@ -107,6 +108,30 @@ namespace todoAPP.Services
                     await tx.RollbackAsync();
                     throw;
                 }
+            }
+        }
+
+        public async Task UpdateTodoInfo(PatchTodoInfoDTO model)
+        {
+            using var tx = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                var todoItem = await _dbContext.Todo
+                    .Where(x => x.Uid == model.TodoId)
+                    .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+
+                todoItem.Title = model.Title;
+                todoItem.Description = model.Description;
+                todoItem.UpdatedAt = DateTimeOffset.UtcNow;
+
+                await _dbContext.SaveChangesAsync();
+
+                await tx.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await tx.RollbackAsync();
+                throw;
             }
         }
 

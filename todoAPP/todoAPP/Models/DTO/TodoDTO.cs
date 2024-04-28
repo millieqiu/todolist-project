@@ -14,6 +14,13 @@ public class CreateTodoDTO
   public Guid UserId { get; set; }
 }
 
+public class PatchTodoInfoDTO
+{
+  public Guid TodoId { get; set; }
+  public string Title { get; set; } = string.Empty;
+  public string Description { get; set; } = string.Empty;
+}
+
 public class PatchTodoSwimlaneDTO
 {
   public Guid TodoId { get; set; }
