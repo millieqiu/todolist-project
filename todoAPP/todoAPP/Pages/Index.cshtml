@@ -42,7 +42,7 @@
             </div>
           </td>
           <td class="text-center">
-            <button class="btn btn-ghost btn-xs">備註便條</button>
+            <button class="btn btn-ghost btn-xs" @@click="openModalShowTodoNote()">查看備註</button>
           </td>
           <td class="text-center">
             <div class="dropdown dropdown-bottom dropdown-end">
@@ -71,3 +71,4 @@
 </div>
 
 <modal-edit-todo-item ref="modalEditTodoItem"></modal-edit-todo-item>
+<modal-show-todo-note ref="modalShowTodoNote"></modal-show-todo-note>

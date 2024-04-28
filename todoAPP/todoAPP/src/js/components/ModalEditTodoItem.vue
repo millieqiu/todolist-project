@@ -36,7 +36,8 @@ export default {
     const defaultTodoForm = {
       title: "",
       time: null,
-      note: ""
+      note: "",
+      isComplete: false
     };
     const todoForm = reactive({...defaultTodoForm});
 
