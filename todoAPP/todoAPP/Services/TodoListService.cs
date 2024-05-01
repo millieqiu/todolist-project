@@ -62,7 +62,7 @@ namespace todoAPP.Services
             var todo = new Todo
             {
                 Uid = Guid.NewGuid(),
-                Status = 0,
+                Status = (byte)ETodoStatus.UNDONE,
                 Title = model.Title,
                 Description = model.Description,
                 CreateAt = DateTimeOffset.UtcNow,
@@ -89,14 +89,8 @@ namespace todoAPP.Services
                         .Where(x => x.Uid == model.Uid)
                         .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
 
-                    if (todoItem.Status == 0)
-                    {
-                        todoItem.Status = 1;
-                    }
-                    else
-                    {
-                        todoItem.Status = 0;
-                    }
+                    todoItem.Status = (byte)(todoItem.Status == (byte)ETodoStatus.UNDONE ?
+                        ETodoStatus.DONE : ETodoStatus.UNDONE);
                     todoItem.UpdateAt = DateTimeOffset.UtcNow;
 
                     await _dbContext.SaveChangesAsync();
