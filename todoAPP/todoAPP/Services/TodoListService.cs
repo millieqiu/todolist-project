@@ -67,7 +67,7 @@ namespace todoAPP.Services
                 Description = model.Description,
                 CreateAt = DateTimeOffset.UtcNow,
                 UpdateAt = DateTimeOffset.UtcNow,
-                ExecuteAt = DateTimeOffset.UnixEpoch,
+                ExecuteAt = model.ExecuteAt.ToUniversalTime(),
                 UserId = model.UserId,
                 KanbanSwimlaneId = swimlane.Uid,
             };

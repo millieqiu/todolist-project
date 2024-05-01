@@ -59,6 +59,7 @@ namespace todoAPP.ApiControllers
             {
                 Title = model.Title,
                 Description = model.Description,
+                ExecuteAt = model.ExecuteAt ?? DateTimeOffset.UnixEpoch,
                 UserId = _user.GetUserId(),
             });
 

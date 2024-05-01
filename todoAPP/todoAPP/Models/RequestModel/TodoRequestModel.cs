@@ -15,6 +15,8 @@ public class CreateTodoRequestModel
 
   [MaxLength(250)]
   public string Description { get; set; } = string.Empty;
+
+  public DateTimeOffset? ExecuteAt { get; set; } = null;
 }
 
 public class PatchTodoInfoRequestModel
