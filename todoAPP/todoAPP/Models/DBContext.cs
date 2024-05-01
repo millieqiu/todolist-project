@@ -99,8 +99,6 @@ namespace todoAPP.Models
 
                 entity.Property(e => e.Title).HasMaxLength(50);
 
-                entity.Property(e => e.Weather).HasMaxLength(6);
-
                 entity.HasOne(d => d.KanbanSwimlane)
                     .WithMany(p => p.Todo)
                     .HasForeignKey(d => d.KanbanSwimlaneId)

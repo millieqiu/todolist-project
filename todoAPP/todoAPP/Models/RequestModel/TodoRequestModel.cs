@@ -24,6 +24,8 @@ public class PatchTodoInfoRequestModel
 
   [MaxLength(250)]
   public string Description { get; set; } = string.Empty;
+
+  public DateTimeOffset? ExecuteAt { get; set; } = DateTimeOffset.UnixEpoch;
 }
 
 public class PatchTodoSwimlaneRequestModel

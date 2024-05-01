@@ -45,9 +45,9 @@ namespace todoAPP.Services
                     Status = x.Todo.Status,
                     Title = x.Todo.Title,
                     Description = x.Todo.Description,
-                    CreatedAt = x.Todo.CreatedAt,
-                    UpdatedAt = x.Todo.UpdatedAt,
-                    Weather = x.Todo.Weather,
+                    CreateAt = x.Todo.CreateAt,
+                    UpdateAt = x.Todo.UpdateAt,
+                    ExecuteAt = x.Todo.ExecuteAt,
                     PrevId = x.UserTodoOrder.PrevId,
                     NextId = x.UserTodoOrder.NextId,
                 })
@@ -65,9 +65,9 @@ namespace todoAPP.Services
                 Status = 0,
                 Title = model.Title,
                 Description = model.Description,
-                CreatedAt = DateTimeOffset.UtcNow,
-                UpdatedAt = DateTimeOffset.UtcNow,
-                Weather = await _weather.GetWeatherText() ?? "",
+                CreateAt = DateTimeOffset.UtcNow,
+                UpdateAt = DateTimeOffset.UtcNow,
+                ExecuteAt = DateTimeOffset.UnixEpoch,
                 UserId = model.UserId,
                 KanbanSwimlaneId = swimlane.Uid,
             };
@@ -97,7 +97,7 @@ namespace todoAPP.Services
                     {
                         todoItem.Status = 0;
                     }
-                    todoItem.UpdatedAt = DateTime.Now;
+                    todoItem.UpdateAt = DateTimeOffset.UtcNow;
 
                     await _dbContext.SaveChangesAsync();
 
@@ -122,7 +122,8 @@ namespace todoAPP.Services
 
                 todoItem.Title = model.Title;
                 todoItem.Description = model.Description;
-                todoItem.UpdatedAt = DateTimeOffset.UtcNow;
+                todoItem.ExecuteAt = model.ExecuteAt;
+                todoItem.UpdateAt = DateTimeOffset.UtcNow;
 
                 await _dbContext.SaveChangesAsync();
 

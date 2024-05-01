@@ -73,9 +73,9 @@ public class KanbanService : IKanbanService
             Status = z.Status,
             Title = z.Title,
             Description = z.Description,
-            CreatedAt = z.CreatedAt,
-            UpdatedAt = z.UpdatedAt,
-            Weather = z.Weather,
+            CreateAt = z.CreateAt,
+            UpdateAt = z.UpdateAt,
+            ExecuteAt = z.ExecuteAt,
           })
         })
       })
