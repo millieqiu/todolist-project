@@ -1,8 +1,29 @@
 // 引入 Todo 專案全域共用樣式
 @import "../Common/style.scss";
 
+// > Top Navigation
 .logo {
   &:hover {
     cursor: pointer;
   }
+}
+
+// > Layout 
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  background-color: #e8ecee;
+  display: flex;
+}
+
+.main-sidebar {
+  min-width: 15rem;
+}
+
+.main-content {
+  flex: 1;
 }

@@ -1,0 +1,40 @@
+@page
+@{
+  ViewData["Title"] = "Index";
+  Layout = "_Layout";
+}
+
+@section Styles {
+  <link rel="stylesheet" href="~/dist/css/board.css" asp-append-version="true" />
+}
+
+@section Scripts {
+  <script type="module" src="~/dist/js/board.js" asp-append-version="true"></script>
+}
+
+<div class="main p-3">
+  <div class="main-sidebar flex flex-col me-3">
+    <base-sidebar></base-sidebar>
+  </div>
+  <div class="main-content p-2">
+    <div class="board-area">
+      <div class="board-lane" v-for="n in 8">
+        <div class="board-title flex justify-between p-2">
+          <h2 class="text-lg">Inbox</h2>
+          <button class="btn btn-sm btn-square btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+            </svg>
+          </button>
+        </div>
+        <div class="board-card-box flex flex-col gap-3">
+          <div class="board-card" v-for="n in 30">
+            aaaa
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

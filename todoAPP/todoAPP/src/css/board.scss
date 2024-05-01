@@ -1,0 +1,43 @@
+// > 外層 Layout
+.main {
+  overflow-y: hidden;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+// 將泳道橫向排列的容器
+.board-area {
+  display: flex;
+  flex: 1;
+  padding: 0 1.5rem;
+  overflow-x: auto;
+}
+
+// 泳道
+.board-lane {
+  min-width: 18rem;
+  max-width: 18rem;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+// 卡片捲軸容器
+.board-card-box {
+  padding: 0 0.75rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.board-title {
+  background-color: #e8ecee;
+}
+
+// 主要卡片
+.board-card {
+  @apply p-3 bg-base-100 rounded-md shadow-md;
+}

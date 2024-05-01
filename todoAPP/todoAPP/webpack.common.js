@@ -10,8 +10,8 @@ module.exports = {
 
     // Pages
     login: "./js/login.js", // 登入註冊頁
-    header: "./js/header.js",
     index: "./js/index.js", // 首頁; 待辦清單
+    board: "./js/board.js", // 看板頁
     setting: "./js/setting.js", // 設定頁
   },
   output: {

@@ -1,28 +1,8 @@
-﻿
-#app {
-  display: flex;
-  flex-direction: column;
-}
-
-.main {
-  flex: 1;
-  background-color: #e8ecee;
-  display: flex;
-}
-
-.main-sidebar {
-  min-width: 15rem;
-}
-
-.main-content {
-  flex: 1;
-}
-
-.todo-complete {
+﻿.todo-complete {
   text-decoration: line-through;
 }
 
-// NOTE: 目前沒用到的樣式
+// ** 目前沒用到的樣式
 .pagination {
   display: flex;
   justify-content: center;
