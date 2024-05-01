@@ -1,12 +1,11 @@
 <template>
   <dialog ref="modalEl" class="modal">
     <div class="modal-box">
-      <h3 class="font-bold text-lg">Hello!</h3>
-      <p class="py-4">Press ESC key or click the button below to close</p>
+      <h3 class="font-bold text-lg">查看備註</h3>
+      <p class="py-4">{{ note }}</p>
       <div class="modal-action">
         <form method="dialog">
-          <!-- if there is a button in form, it will close the modal -->
-          <button class="btn">Close</button>
+          <button class="btn">關閉</button>
         </form>
       </div>
     </div>
@@ -20,13 +19,17 @@ import { onMounted, reactive, ref } from 'vue';
 export default {
   setup(props, { emit }) {
 
+    const note = ref("");
+
     const modalEl = ref(null);
 
-    function openModal(item) {
+    function openModal(val) {
+      note.value = val;
       modalEl.value.showModal();
     }
 
     function closeModal() {
+      note.value = "";
       modalEl.value.close();
     }
 
@@ -34,6 +37,7 @@ export default {
       modalEl,
       openModal,
       closeModal,
+      note
     }
   }
 }

@@ -7,7 +7,8 @@
           <input type="text" class="grow" placeholder="待辦事項名稱..." v-model="todoForm.title" />
         </label>
         <label class="input input-bordered flex items-center gap-2">
-          <input type="text" class="grow" placeholder="時間及日期" v-model="todoForm.time" />
+          <base-date-picker class="grow" v-model="todoForm.time" placeholder="時間及日期"></base-date-picker>
+          <!-- <input type="text" class="grow" placeholder="時間及日期" v-model="todoForm.time" /> -->
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-4 h-4 opacity-70 flex-none">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -25,10 +26,14 @@
 </template>
 
 <script>
-// # Vue
 import { onMounted, reactive, ref } from 'vue';
 
+import BaseDatePicker from './BaseDatePicker.vue';
+
 export default {
+  components: {
+    BaseDatePicker
+  },
   setup(props, { emit }) {
 
     const isEdit = ref(false);
@@ -39,7 +44,7 @@ export default {
       note: "",
       isComplete: false
     };
-    const todoForm = reactive({...defaultTodoForm});
+    const todoForm = reactive({ ...defaultTodoForm });
 
     const modalEl = ref(null);
 
@@ -65,3 +70,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.modal-box {
+  overflow-y: visible;
+}
+</style>

@@ -17,3 +17,14 @@
 .main-content {
   flex: 1;
 }
+
+.todo-complete {
+  text-decoration: line-through;
+}
+
+// NOTE: 目前沒用到的樣式
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

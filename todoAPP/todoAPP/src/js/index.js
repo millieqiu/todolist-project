@@ -13,7 +13,7 @@ const app = createApp({
   components: {
     BaseSidebar,
     ModalEditTodoItem,
-    ModalShowTodoNote
+    ModalShowTodoNote,
   },
   setup() {
 
@@ -33,7 +33,7 @@ const app = createApp({
       {
         title: "買衛生紙", // 限制 50 字
         time: "2024-05-31 16:17",
-        note: "THIS IS A TODO!THIS IS A TODO!THIS IS A TODO!THIS IS A TODO!THIS IS A TODO!", // 限制 250 字
+        note: "", // 限制 250 字
         isComplete: true,
       },
     ])
@@ -44,8 +44,8 @@ const app = createApp({
     }
 
     const modalShowTodoNote = ref(null);
-    function openModalShowTodoNote() {
-      modalShowTodoNote.value.openModal();
+    function openModalShowTodoNote(val) {
+      modalShowTodoNote.value.openModal(val);
     }
 
     return {
