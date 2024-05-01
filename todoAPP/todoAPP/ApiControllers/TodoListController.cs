@@ -115,6 +115,16 @@ namespace todoAPP.ApiControllers
             return Ok();
         }
 
+        [HttpDelete]
+        [Route("Todo/Done")]
+        public async Task<IActionResult> DeleteAlreadyDoneTodoItem()
+        {
+            await _todo.DeleteUserAlreadyDoneTodoItem(new DeleteUserAlreadyDoneTodoDTO
+            {
+                UserId = _user.GetUserId(),
+            });
+            return Ok();
+        }
 
         [HttpDelete]
         [Route("Todo/{Uid}")]

@@ -35,3 +35,8 @@ public class PatchUserTodoOrderDTO
   public Guid DragTodoId { get; set; }
   public Guid DropTodoId { get; set; }
 }
+
+public class DeleteUserAlreadyDoneTodoDTO
+{
+  public Guid UserId { get; set; }
+}

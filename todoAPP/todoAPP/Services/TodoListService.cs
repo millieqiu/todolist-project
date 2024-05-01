@@ -15,6 +15,7 @@ namespace todoAPP.Services
         public Task UpdateTodoInfo(PatchTodoInfoDTO model);
         public Task ChangeTodoSwimlane(PatchTodoSwimlaneDTO model);
         public Task UpdateUserTodoOrder(PatchUserTodoOrderDTO model);
+        public Task DeleteUserAlreadyDoneTodoItem(DeleteUserAlreadyDoneTodoDTO model);
         public Task DeleteTodoItem(GeneralRequestModel model);
     }
 
@@ -210,6 +211,21 @@ namespace todoAPP.Services
                 await tx.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task DeleteUserAlreadyDoneTodoItem(DeleteUserAlreadyDoneTodoDTO model)
+        {
+            using var tx = await _dbContext.Database.BeginTransactionAsync();
+
+            var todoListQuery = _dbContext.Todo.Where(x => x.UserId == model.UserId && x.Status == (byte)ETodoStatus.DONE);
+            var todoIdList = await todoListQuery.Select(x => x.Uid).ToListAsync();
+            _dbContext.RemoveRange(
+                _dbContext.UserTodoOrder.Where(x => todoIdList.Contains(x.TodoId))
+            );
+            _dbContext.RemoveRange(todoListQuery);
+            await _dbContext.SaveChangesAsync();
+
+            await tx.CommitAsync();
         }
 
         public async Task DeleteTodoItem(GeneralRequestModel model)
