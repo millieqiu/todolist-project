@@ -42,3 +42,11 @@ public class PatchUserTodoOrderRequestModel
   public Guid DragTodoId { get; set; }
   public Guid DropTodoId { get; set; }
 }
+
+public class PatchSwimlaneTodoOrderRequestModel
+{
+  public Guid TodoId { get; set; }
+  public Guid? KanbanSwimlaneId { get; set; }
+  public Guid? DropPrevTodoId { get; set; }
+  public Guid? DropNextTodoId { get; set; }
+}

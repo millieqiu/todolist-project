@@ -15,6 +15,7 @@ namespace todoAPP.Services
         public Task UpdateTodoInfo(PatchTodoInfoDTO model);
         public Task ChangeTodoSwimlane(PatchTodoSwimlaneDTO model);
         public Task UpdateUserTodoOrder(PatchUserTodoOrderDTO model);
+        public Task UpdateSwimlaneTodoOrder(PatchSwimlaneTodoOrderDTO model);
         public Task DeleteUserAlreadyDoneTodoItem(DeleteUserAlreadyDoneTodoDTO model);
         public Task DeleteTodoItem(GeneralRequestModel model);
     }
@@ -57,12 +58,15 @@ namespace todoAPP.Services
 
         public async Task<Guid> CreateTodoItem(CreateTodoDTO model)
         {
+            using var tx = await _dbContext.Database.BeginTransactionAsync();
+            var todoId = Guid.NewGuid();
+
             var swimlane = await _dbContext.KanbanSwimlane
                 .Where(x => x.Kanban.UserId == model.UserId && x.Type == (byte)EKanbanSwimlaneType.DEFAULT)
                 .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-            var todo = new Todo
+            await _dbContext.Todo.AddAsync(new Todo
             {
-                Uid = Guid.NewGuid(),
+                Uid = todoId,
                 Status = (byte)ETodoStatus.UNDONE,
                 Title = model.Title,
                 Description = model.Description,
@@ -71,13 +75,25 @@ namespace todoAPP.Services
                 ExecuteAt = model.ExecuteAt.ToUniversalTime(),
                 UserId = model.UserId,
                 KanbanSwimlaneId = swimlane.Uid,
-            };
+            });
 
-            await _dbContext.Todo.AddAsync(todo);
+            var swimlaneTodoMaxOrder = await _dbContext.SwimlaneTodoOrder
+                .Include(x => x.Todo)
+                .Where(x => x.Todo.KanbanSwimlaneId == swimlane.Uid)
+                .OrderByDescending(x => x.Order)
+                .Select(x => x.Order)
+                .FirstOrDefaultAsync();
+            var swimlaneOrder = new SwimlaneTodoOrder
+            {
+                TodoId = todoId,
+                Order = swimlaneTodoMaxOrder + 1,
+            };
+            await _dbContext.SwimlaneTodoOrder.AddAsync(swimlaneOrder);
 
             await _dbContext.SaveChangesAsync();
+            await tx.CommitAsync();
 
-            return todo.Uid;
+            return todoId;
         }
 
         public async Task ChangeTodoItemStatus(GeneralRequestModel model)
@@ -213,6 +229,76 @@ namespace todoAPP.Services
             }
         }
 
+        public async Task UpdateSwimlaneTodoOrder(PatchSwimlaneTodoOrderDTO model)
+        {
+            using var tx = await _dbContext.Database.BeginTransactionAsync();
+            var order = await _dbContext.SwimlaneTodoOrder
+                .Include(x => x.Todo)
+                .Where(x => x.TodoId == model.TodoId)
+                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+
+            decimal newOrder;
+            if (model.DropPrevTodoId == null && model.DropNextTodoId == null)
+            {
+                newOrder = 1;
+            }
+            else if (model.DropPrevTodoId == null && model.DropNextTodoId != null)
+            {
+                var nextTodoOrder = await _dbContext.SwimlaneTodoOrder
+                    .Where(x => x.TodoId == model.DropNextTodoId)
+                    .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+                newOrder = nextTodoOrder.Order / 2;
+            }
+            else if (model.DropPrevTodoId != null && model.DropNextTodoId == null)
+            {
+                var prevTodoOrder = await _dbContext.SwimlaneTodoOrder
+                    .Where(x => x.TodoId == model.DropPrevTodoId)
+                    .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+                newOrder = prevTodoOrder.Order + 1;
+            }
+            else if (model.DropPrevTodoId != null && model.DropNextTodoId != null)
+            {
+                var prevAndNextTodoOrderSum = await _dbContext.SwimlaneTodoOrder
+                    .Where(x => x.TodoId == model.DropPrevTodoId || x.TodoId == model.DropNextTodoId)
+                    .Select(x => x.Order)
+                    .SumAsync();
+                newOrder = prevAndNextTodoOrderSum / 2;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+
+            order.Order = newOrder;
+            await _dbContext.SaveChangesAsync();
+
+            var afterPoint = newOrder - Decimal.Floor(newOrder);
+            if (afterPoint < 0.0625M && afterPoint > 0)
+            {
+                var swimlaneTodoList = await _dbContext.SwimlaneTodoOrder
+                .Where(x => x.Todo.KanbanSwimlaneId == order.Todo.KanbanSwimlaneId)
+                .OrderBy(x => x.Order)
+                .ToListAsync();
+
+                var count = 1;
+                foreach (var todoOrder in swimlaneTodoList)
+                {
+                    todoOrder.Order = count++;
+                }
+            }
+
+            if (model.KanbanSwimlaneId != null)
+            {
+                var todo = await _dbContext.Todo
+                    .Where(x=>x.Uid == model.TodoId)
+                    .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+                todo.KanbanSwimlaneId = model.KanbanSwimlaneId.Value;
+            }
+
+            await _dbContext.SaveChangesAsync();
+            await tx.CommitAsync();
+        }
+
         public async Task DeleteUserAlreadyDoneTodoItem(DeleteUserAlreadyDoneTodoDTO model)
         {
             using var tx = await _dbContext.Database.BeginTransactionAsync();
@@ -230,26 +316,15 @@ namespace todoAPP.Services
 
         public async Task DeleteTodoItem(GeneralRequestModel model)
         {
-            using (var tx = await _dbContext.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    var todoItem = await _dbContext.Todo
-                        .Where(x => x.Uid == model.Uid)
-                        .SingleOrDefaultAsync();
-                    if (todoItem != null)
-                    {
-                        _dbContext.Todo.Remove(todoItem);
-                        await _dbContext.SaveChangesAsync();
-                    }
-                    await tx.CommitAsync();
-                }
-                catch (Exception)
-                {
-                    await tx.RollbackAsync();
-                    throw;
-                }
-            }
+            using var tx = await _dbContext.Database.BeginTransactionAsync();
+
+            _dbContext.SwimlaneTodoOrder.RemoveRange(
+                _dbContext.SwimlaneTodoOrder.Where(x => x.TodoId == model.Uid));
+            _dbContext.Todo.RemoveRange(
+                _dbContext.Todo.Where(x => x.Uid == model.Uid));
+
+            await _dbContext.SaveChangesAsync();
+            await tx.CommitAsync();
         }
     }
 }

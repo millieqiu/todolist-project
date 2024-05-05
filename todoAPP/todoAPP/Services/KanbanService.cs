@@ -67,7 +67,9 @@ public class KanbanService : IKanbanService
           Uid = y.Uid,
           Type = y.Type,
           Name = y.Name,
-          TodoList = y.Todo.Select(z => new TodoViewModel
+          TodoList = y.Todo
+          .OrderBy(z=>z.SwimlaneTodoOrder.Order)
+          .Select(z => new TodoViewModel
           {
             Uid = z.Uid,
             Status = z.Status,

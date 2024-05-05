@@ -36,6 +36,14 @@ public class PatchUserTodoOrderDTO
   public Guid DropTodoId { get; set; }
 }
 
+public class PatchSwimlaneTodoOrderDTO
+{
+  public Guid TodoId { get; set; }
+  public Guid? KanbanSwimlaneId { get; set; }
+  public Guid? DropPrevTodoId { get; set; }
+  public Guid? DropNextTodoId { get; set; }
+}
+
 public class DeleteUserAlreadyDoneTodoDTO
 {
   public Guid UserId { get; set; }

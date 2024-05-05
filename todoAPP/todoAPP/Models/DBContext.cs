@@ -18,6 +18,7 @@ namespace todoAPP.Models
 
         public virtual DbSet<Kanban> Kanban { get; set; } = null!;
         public virtual DbSet<KanbanSwimlane> KanbanSwimlane { get; set; } = null!;
+        public virtual DbSet<SwimlaneTodoOrder> SwimlaneTodoOrder { get; set; } = null!;
         public virtual DbSet<Todo> Todo { get; set; } = null!;
         public virtual DbSet<User> User { get; set; } = null!;
         public virtual DbSet<UserTodoOrder> UserTodoOrder { get; set; } = null!;
@@ -78,6 +79,29 @@ namespace todoAPP.Models
                     .HasForeignKey(d => d.KanbanId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Kanban_KanbanSwimlane");
+            });
+
+            modelBuilder.Entity<SwimlaneTodoOrder>(entity =>
+            {
+                entity.HasKey(e => e.TodoId)
+                    .IsClustered(false);
+
+                entity.HasIndex(e => e.Idx, "CX_SwimlaneTodoOrder")
+                    .IsClustered();
+
+                entity.HasIndex(e => e.TodoId, "IX_SwimlaneTodoOrder");
+
+                entity.Property(e => e.TodoId).ValueGeneratedNever();
+
+                entity.Property(e => e.Idx).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Order).HasColumnType("decimal(18, 10)");
+
+                entity.HasOne(d => d.Todo)
+                    .WithOne(p => p.SwimlaneTodoOrder)
+                    .HasForeignKey<SwimlaneTodoOrder>(d => d.TodoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Todo_SwimlaneTodoOrder");
             });
 
             modelBuilder.Entity<Todo>(entity =>

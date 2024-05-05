@@ -115,6 +115,20 @@ namespace todoAPP.ApiControllers
             return Ok();
         }
 
+        [HttpPatch]
+        [Route("SwimlaneTodo/Order")]
+        public async Task<IActionResult> PatchSwimlaneTodoOrder(PatchSwimlaneTodoOrderRequestModel model)
+        {
+            await _todo.UpdateSwimlaneTodoOrder(new PatchSwimlaneTodoOrderDTO
+            {
+                TodoId = model.TodoId,
+                KanbanSwimlaneId = model.KanbanSwimlaneId,
+                DropPrevTodoId = model.DropPrevTodoId,
+                DropNextTodoId = model.DropNextTodoId,
+            });
+            return Ok();
+        }
+
         [HttpDelete]
         [Route("Todo/Done")]
         public async Task<IActionResult> DeleteAlreadyDoneTodoItem()
