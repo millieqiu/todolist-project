@@ -1,5 +1,5 @@
 <template>
-  <VueDatePicker v-model="date" cancel-text="取消" select-text="選擇" :month-change-on-scroll="false" disable-year-select format="yyyy/MM/dd HH:mm" :teleport="dialog"></VueDatePicker>
+  <VueDatePicker v-model="date" cancel-text="取消" select-text="選擇" :month-change-on-scroll="false" disable-year-select format="yyyy/MM/dd HH:mm"></VueDatePicker>
 </template>
 
 <script>

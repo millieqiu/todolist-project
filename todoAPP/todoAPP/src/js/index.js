@@ -6,12 +6,14 @@ import { createApp, ref } from "vue";
 
 // # Custom Components
 import BaseSidebar from "./components/BaseSidebar.vue";
+import BasePageTitle from "./components/BasePageTitle.vue";
 import ModalEditTodoItem from "./components/ModalEditTodoItem.vue";
 import ModalShowTodoNote from "./components/ModalShowTodoNote.vue";
 
 const app = createApp({
   components: {
     BaseSidebar,
+    BasePageTitle,
     ModalEditTodoItem,
     ModalShowTodoNote,
   },

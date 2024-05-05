@@ -13,7 +13,7 @@
 .board-area {
   display: flex;
   flex: 1;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
   overflow-x: auto;
 }
 
@@ -22,6 +22,7 @@
   min-width: 18rem;
   max-width: 18rem;
   overflow-y: hidden;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -30,14 +31,35 @@
 .board-card-box {
   padding: 0 0.75rem;
   overflow-y: auto;
+  overflow-x: hidden;
   flex: 1;
 }
 
 .board-title {
+  display: flex;
+  padding: 0.5rem;
   background-color: #e8ecee;
+  h2 {
+    overflow-wrap: break-word;
+  }
 }
 
 // 主要卡片
 .board-card {
   @apply p-3 bg-base-100 rounded-md shadow-md;
+}
+
+.board-card-tag {
+  word-break: break-all;
+  height: auto;
+}
+
+.board-card-dropdown {
+  right: 1px;
+}
+
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
