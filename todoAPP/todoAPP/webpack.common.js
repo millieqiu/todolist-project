@@ -12,6 +12,7 @@ module.exports = {
     login: "./js/login.js", // 登入註冊頁
     index: "./js/index.js", // 首頁; 待辦清單
     board: "./js/board.js", // 看板頁
+    label: "./js/label.js", // 標籤管理頁
     setting: "./js/setting.js", // 設定頁
   },
   output: {

@@ -1,0 +1,23 @@
+@page
+@{
+  ViewData["Title"] = "標籤管理";
+  Layout = "_Layout";
+}
+
+@section Styles {
+  <link rel="stylesheet" href="~/dist/css/label.css" asp-append-version="true" />
+}
+
+@section Scripts {
+  <script type="module" src="~/dist/js/label.js" asp-append-version="true"></script>
+}
+
+<div class="main p-3">
+  <div class="main-sidebar flex flex-col me-3">
+    <base-sidebar></base-sidebar>
+  </div>
+  <div class="main-content p-2">
+    <base-page-title :title="'@ViewData["Title"]'"></base-page-title>
+    {{ msg }}
+  </div>
+</div>

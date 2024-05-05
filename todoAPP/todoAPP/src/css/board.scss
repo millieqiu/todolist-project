@@ -43,10 +43,14 @@
 
 // 主要卡片
 .board-card {
-  @apply p-3 bg-base-100 rounded-md shadow-md;
+  @apply p-3 bg-base-100 rounded-xl shadow-md;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  &:hover {
+    @apply shadow-lg;
+    cursor: pointer;
+  }
 }
 
 .board-card-tag {
