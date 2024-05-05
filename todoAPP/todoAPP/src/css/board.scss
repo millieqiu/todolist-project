@@ -39,19 +39,18 @@
   display: flex;
   padding: 0.5rem;
   background-color: #e8ecee;
-  h2 {
-    overflow-wrap: break-word;
-  }
 }
 
 // 主要卡片
 .board-card {
   @apply p-3 bg-base-100 rounded-md shadow-md;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .board-card-tag {
-  word-break: break-all;
-  height: auto;
+  display: block;
 }
 
 .board-card-dropdown {

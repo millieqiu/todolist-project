@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center mb-3">
-    <h1 class="text-xl font-semibold mr-auto">{{ pageTitle }}</h1>
+    <h1 class="text-xl font-semibold mr-auto">{{ title }}</h1>
     <slot></slot>
   </div>
 </template>
@@ -18,10 +18,8 @@ export default {
   },
   setup(props) {
 
-    const pageTitle = ref(props.title);
-
     return {
-      pageTitle
+      // 內容
     }
   }
 }
