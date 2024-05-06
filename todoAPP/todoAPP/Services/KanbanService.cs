@@ -72,6 +72,7 @@ public class KanbanService : IKanbanService
             CreateAt = z.CreateAt,
             UpdateAt = z.UpdateAt,
             ExecuteAt = z.ExecuteAt,
+            Position = z.SwimlaneTodoPosition,
           })
         })
       })
