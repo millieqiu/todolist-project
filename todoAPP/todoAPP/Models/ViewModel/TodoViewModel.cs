@@ -24,6 +24,5 @@ public class TodoViewModel
     get { return executeAt == DateTimeOffset.UnixEpoch ? null : executeAt; }
     set { executeAt = value; }
   }
-  public Guid PrevId { get; set; }
-  public Guid NextId { get; set; }
+  public decimal Position { get; set; }
 }

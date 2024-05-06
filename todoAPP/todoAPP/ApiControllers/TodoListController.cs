@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using todoAPP.DTO;
-using todoAPP.Helpers;
 using todoAPP.RequestModel;
 using todoAPP.Services;
-using todoAPP.ViewModel;
 
 namespace todoAPP.ApiControllers
 {
@@ -27,7 +25,7 @@ namespace todoAPP.ApiControllers
         [Route("User/{UserId}/Todo/List")]
         public async Task<IActionResult> AdminGetUserTodoList([FromRoute] GetTodoListRequestModel model)
         {
-            return Ok(await _todo.GetSortedUserTodoList(new GetTodoListDTO
+            return Ok(await _todo.GetGeneralTodoList(new GetTodoListDTO
             {
                 UserId = model.UserId
             }));
@@ -37,25 +35,18 @@ namespace todoAPP.ApiControllers
         [Route("Todo/List")]
         public async Task<IActionResult> GetTodoList([FromQuery] PaginationRequestModel model)
         {
-            var todolist = await _todo.GetSortedUserTodoList(new GetTodoListDTO
+            var todolist = await _todo.GetGeneralTodoList(new GetTodoListDTO
             {
                 UserId = _user.GetUserId(),
             });
-
-            var first = todolist.Where(x => x.PrevId == Guid.Empty).SingleOrDefault() ?? throw new Exception("排序錯誤");
-            var dict = new Dictionary<Guid, TodoViewModel>();
-            foreach (var todo in todolist)
-            {
-                dict.Add(todo.Uid, todo);
-            }
-            return Ok(TraversalHelper.Traversal<TodoViewModel>(first, dict));
+            return Ok(todolist);
         }
 
         [HttpPost]
         [Route("Todo")]
         async public Task<IActionResult> CreateTodoItem(CreateTodoRequestModel model)
         {
-            var todoItemId = await _todo.CreateTodoItem(new CreateTodoDTO
+            var todoItemId = await _todo.CreateTodo(new CreateTodoDTO
             {
                 Title = model.Title,
                 Description = model.Description,
@@ -70,7 +61,7 @@ namespace todoAPP.ApiControllers
         [Route("Todo/{Uid}/Status")]
         public async Task<IActionResult> ChangeTodoStatus([FromRoute] GeneralRequestModel model)
         {
-            await _todo.ChangeTodoItemStatus(model);
+            await _todo.UpdateTodoStatus(model);
 
             return Ok();
         }
@@ -91,32 +82,21 @@ namespace todoAPP.ApiControllers
         }
 
         [HttpPatch]
-        [Route("Todo/{Uid}/Swimlane")]
-        public async Task<IActionResult> ChangeTodoSwimlane([FromRoute] Guid Uid, PatchTodoSwimlaneRequestModel model)
+        [Route("Todo/Order/General")]
+        public async Task<IActionResult> PatchGeneralTodoOrder(PatchGeneralTodoOrderRequestModel model)
         {
-            await _todo.ChangeTodoSwimlane(new PatchTodoSwimlaneDTO
+            await _todo.UpdateGeneralTodoOrder(new PatchGeneralTodoOrderDTO
             {
-                TodoId = Uid,
-                KanbanSwimlaneId = model.KanbanSwimlaneId,
-            });
-            return Ok();
-        }
-
-        [HttpPatch]
-        [Route("UserTodo/Order")]
-        public async Task<IActionResult> PatchUserTodoOrder(PatchUserTodoOrderRequestModel model)
-        {
-            await _todo.UpdateUserTodoOrder(new PatchUserTodoOrderDTO
-            {
-                Action = model.Action,
+                UserId = _user.GetUserId(),
                 DragTodoId = model.DragTodoId,
-                DropTodoId = model.DropTodoId,
+                DropPrevTodoId = model.DropPrevTodoId,
+                DropNextTodoId = model.DropNextTodoId,
             });
             return Ok();
         }
 
         [HttpPatch]
-        [Route("SwimlaneTodo/Order")]
+        [Route("Todo/Order/Swimlane")]
         public async Task<IActionResult> PatchSwimlaneTodoOrder(PatchSwimlaneTodoOrderRequestModel model)
         {
             await _todo.UpdateSwimlaneTodoOrder(new PatchSwimlaneTodoOrderDTO
@@ -133,7 +113,7 @@ namespace todoAPP.ApiControllers
         [Route("Todo/Done")]
         public async Task<IActionResult> DeleteAlreadyDoneTodoItem()
         {
-            await _todo.DeleteUserAlreadyDoneTodoItem(new DeleteUserAlreadyDoneTodoDTO
+            await _todo.DeleteAlreadyDoneTodo(new DeleteAlreadyDoneTodoDTO
             {
                 UserId = _user.GetUserId(),
             });
@@ -144,7 +124,7 @@ namespace todoAPP.ApiControllers
         [Route("Todo/{Uid}")]
         public async Task<IActionResult> Delete([FromRoute] GeneralRequestModel model)
         {
-            await _todo.DeleteTodoItem(model);
+            await _todo.DeleteTodo(model);
 
             return Ok();
         }

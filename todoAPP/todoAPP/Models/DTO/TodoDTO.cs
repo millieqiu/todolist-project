@@ -23,17 +23,12 @@ public class PatchTodoInfoDTO
   public DateTimeOffset ExecuteAt { get; set; } = DateTimeOffset.UnixEpoch;
 }
 
-public class PatchTodoSwimlaneDTO
+public class PatchGeneralTodoOrderDTO
 {
-  public Guid TodoId { get; set; }
-  public Guid KanbanSwimlaneId { get; set; }
-}
-
-public class PatchUserTodoOrderDTO
-{
-  public EUpdateTodoOrderAction Action { get; set; }
+  public Guid UserId { get; set; }
   public Guid DragTodoId { get; set; }
-  public Guid DropTodoId { get; set; }
+  public Guid? DropPrevTodoId { get; set; }
+  public Guid? DropNextTodoId { get; set; }
 }
 
 public class PatchSwimlaneTodoOrderDTO
@@ -44,7 +39,7 @@ public class PatchSwimlaneTodoOrderDTO
   public Guid? DropNextTodoId { get; set; }
 }
 
-public class DeleteUserAlreadyDoneTodoDTO
+public class DeleteAlreadyDoneTodoDTO
 {
   public Guid UserId { get; set; }
 }

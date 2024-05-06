@@ -28,30 +28,24 @@ public class KanbanService : IKanbanService
   public async Task InitKanban(InitKanbanDTO model)
   {
     using var tx = await _dbContext.Database.BeginTransactionAsync();
-    try
+
+    var kanbanId = Guid.NewGuid();
+    await _dbContext.Kanban.AddAsync(new Kanban
     {
-      var kanbanId = Guid.NewGuid();
-      await _dbContext.Kanban.AddAsync(new Kanban
-      {
-        Uid = kanbanId,
-        Name = model.Name,
-        UserId = model.UserId,
-      });
-      await _dbContext.KanbanSwimlane.AddAsync(new KanbanSwimlane
-      {
-        Uid = Guid.NewGuid(),
-        Name = model.SwimlaneName,
-        Type = (byte)EKanbanSwimlaneType.DEFAULT,
-        KanbanId = kanbanId,
-      });
-      await _dbContext.SaveChangesAsync();
-      await tx.CommitAsync();
-    }
-    catch (Exception)
+      Uid = kanbanId,
+      Name = model.Name,
+      UserId = model.UserId,
+    });
+    await _dbContext.KanbanSwimlane.AddAsync(new KanbanSwimlane
     {
-      await tx.RollbackAsync();
-      throw;
-    }
+      Uid = Guid.NewGuid(),
+      Name = model.SwimlaneName,
+      Type = (byte)EKanbanSwimlaneType.DEFAULT,
+      KanbanId = kanbanId,
+    });
+
+    await _dbContext.SaveChangesAsync();
+    await tx.CommitAsync();
   }
 
   public async Task<IEnumerable<KanbanViewModel>> GetKanbanList(GetKanbanListDTO model)
@@ -68,7 +62,7 @@ public class KanbanService : IKanbanService
           Type = y.Type,
           Name = y.Name,
           TodoList = y.Todo
-          .OrderBy(z=>z.SwimlaneTodoOrder.Order)
+          .OrderBy(z => z.SwimlaneTodoPosition)
           .Select(z => new TodoViewModel
           {
             Uid = z.Uid,
@@ -95,81 +89,61 @@ public class KanbanService : IKanbanService
   public async Task<IEnumerable<KanbanSwimlaneListViewModel>> GetKanbanSwimlaneList(GetKanbanSwimlaneListDTO model)
   {
     return await _dbContext.KanbanSwimlane
-    .Where(x => x.KanbanId == model.KanbanId)
-    .Select(x => new KanbanSwimlaneListViewModel
-    {
-      Uid = x.Uid,
-      Name = x.Name
-    })
-    .ToListAsync();
+      .Where(x => x.KanbanId == model.KanbanId)
+      .Select(x => new KanbanSwimlaneListViewModel
+      {
+        Uid = x.Uid,
+        Name = x.Name
+      })
+      .ToListAsync();
   }
 
   public async Task CreateKanbanSwimlane(CreateKanbanSwimlaneDTO model)
   {
     using var tx = await _dbContext.Database.BeginTransactionAsync();
-    try
+
+    await _dbContext.KanbanSwimlane.AddAsync(new KanbanSwimlane
     {
-      await _dbContext.KanbanSwimlane.AddAsync(new KanbanSwimlane
-      {
-        Uid = Guid.NewGuid(),
-        Name = model.Name,
-        Type = (byte)EKanbanSwimlaneType.GENERAL,
-        KanbanId = model.KanbanId,
-      });
-      await _dbContext.SaveChangesAsync();
-      await tx.CommitAsync();
-    }
-    catch (Exception)
-    {
-      await tx.RollbackAsync();
-      throw;
-    }
+      Uid = Guid.NewGuid(),
+      Name = model.Name,
+      Type = (byte)EKanbanSwimlaneType.GENERAL,
+      KanbanId = model.KanbanId,
+    });
+
+    await _dbContext.SaveChangesAsync();
+    await tx.CommitAsync();
   }
 
   public async Task PatchKanbanSwimlaneName(PatchKanbanSwimlaneNameDTO model)
   {
     using var tx = await _dbContext.Database.BeginTransactionAsync();
-    try
-    {
-      var swimlane = await _dbContext.KanbanSwimlane
-        .Where(x => x.Uid == model.KanbanSwimlaneId)
-        .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-      swimlane.Name = model.Name;
-      await _dbContext.SaveChangesAsync();
 
-      await tx.CommitAsync();
-    }
-    catch (Exception)
-    {
-      await tx.RollbackAsync();
-      throw;
-    }
+    var swimlane = await _dbContext.KanbanSwimlane
+      .Where(x => x.Uid == model.KanbanSwimlaneId)
+      .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+    swimlane.Name = model.Name;
+
+    await _dbContext.SaveChangesAsync();
+    await tx.CommitAsync();
   }
 
   public async Task DeleteKanbanSwimlane(DeleteKanbanSwimlaneDTO model)
   {
     using var tx = await _dbContext.Database.BeginTransactionAsync();
-    try
-    {
-      var swimlane = await _dbContext.KanbanSwimlane
-        .Where(x => x.Uid == model.KanbanSwimlaneId)
-        .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-      if (swimlane.Type == (byte)EKanbanSwimlaneType.DEFAULT)
-      {
-        throw new ArgumentException("無法刪除預設的KanbanSwimlane");
-      }
 
-      _dbContext.Todo.RemoveRange(
-        _dbContext.Todo.Where(x => x.KanbanSwimlaneId == model.KanbanSwimlaneId));
-      _dbContext.KanbanSwimlane.Remove(swimlane);
-      await _dbContext.SaveChangesAsync();
-
-      await tx.CommitAsync();
-    }
-    catch (Exception)
+    var swimlane = await _dbContext.KanbanSwimlane
+      .Where(x => x.Uid == model.KanbanSwimlaneId)
+      .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+    if (swimlane.Type == (byte)EKanbanSwimlaneType.DEFAULT)
     {
-      await tx.RollbackAsync();
-      throw;
+      throw new ArgumentException("無法刪除預設的KanbanSwimlane");
     }
+
+    _dbContext.Todo.RemoveRange(
+      _dbContext.Todo.Where(x => x.KanbanSwimlaneId == model.KanbanSwimlaneId));
+    _dbContext.KanbanSwimlane.Remove(swimlane);
+
+    await _dbContext.SaveChangesAsync();
+    await tx.CommitAsync();
   }
 }

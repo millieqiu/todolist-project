@@ -30,17 +30,11 @@ public class PatchTodoInfoRequestModel
   public DateTimeOffset? ExecuteAt { get; set; } = DateTimeOffset.UnixEpoch;
 }
 
-public class PatchTodoSwimlaneRequestModel
+public class PatchGeneralTodoOrderRequestModel
 {
-  public Guid KanbanSwimlaneId { get; set; }
-}
-
-public class PatchUserTodoOrderRequestModel
-{
-  [Range(1, 2)]
-  public EUpdateTodoOrderAction Action { get; set; }
   public Guid DragTodoId { get; set; }
-  public Guid DropTodoId { get; set; }
+  public Guid? DropPrevTodoId { get; set; }
+  public Guid? DropNextTodoId { get; set; }
 }
 
 public class PatchSwimlaneTodoOrderRequestModel
