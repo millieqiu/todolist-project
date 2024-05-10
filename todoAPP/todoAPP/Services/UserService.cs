@@ -5,6 +5,7 @@ using System.Data;
 using System.Security.Claims;
 using todoAPP.DTO;
 using todoAPP.Enums;
+using todoAPP.Helpers;
 using todoAPP.Models;
 using todoAPP.RequestModel;
 using todoAPP.ViewModel;
@@ -67,42 +68,60 @@ namespace todoAPP.Services
                 .SingleOrDefault();
         }
 
-        public async Task<Guid> CreateUser(RegisterRequestModel model)
+        public async Task CreateUser(RegisterRequestModel model)
         {
+            using var tx = await _dbContext.Database.BeginTransactionAsync();
+
             if (await CheckUsernameDuplicated(model.Username))
-            {
                 throw new ArgumentException("使用者名稱已存在");
-            }
 
-            using (var tx = await _dbContext.Database.BeginTransactionAsync())
+            var salt = PasswordHelper.CreateSalt();
+            var userId = Guid.NewGuid();
+            await _dbContext.User.AddAsync(new User
             {
-                try
-                {
-                    var salt = PasswordHelper.CreateSalt();
+                Uid = userId,
+                Username = model.Username,
+                Password = PasswordHelper.GeneratePassword(model.Password, salt),
+                Nickname = model.Nickname,
+                Salt = Convert.ToBase64String(salt),
+                Role = (int)ERole.USER,
+                Avatar = ""
+            });
 
-                    User user = new User
-                    {
-                        Uid = Guid.NewGuid(),
-                        Username = model.Username,
-                        Password = PasswordHelper.GeneratePassword(model.Password, salt),
-                        Nickname = model.Nickname,
-                        Salt = Convert.ToBase64String(salt),
-                        Role = (int)ERole.USER,
-                        Avatar = ""
-                    };
+            await CreateUserInitKanban(new InitKanbanDTO
+            {
+                Name = "Default",
+                SwimlaneName = "New",
+                UserId = userId
+            });
+            await CreateUserInitUserTag(userId);
 
-                    await _dbContext.User.AddAsync(user);
-                    await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
-                    await tx.CommitAsync();
-                    return user.Uid;
-                }
-                catch (Exception)
-                {
-                    await tx.RollbackAsync();
-                    throw;
-                }
-            }
+            await tx.CommitAsync();
+        }
+
+        private async Task CreateUserInitKanban(InitKanbanDTO model)
+        {
+            var kanbanId = Guid.NewGuid();
+            await _dbContext.Kanban.AddAsync(new Kanban
+            {
+                Uid = kanbanId,
+                Name = model.Name,
+                UserId = model.UserId,
+            });
+            await _dbContext.KanbanSwimlane.AddAsync(new KanbanSwimlane
+            {
+                Uid = Guid.NewGuid(),
+                Name = model.SwimlaneName,
+                Type = (byte)EKanbanSwimlaneType.DEFAULT,
+                KanbanId = kanbanId,
+            });
+        }
+
+        private async Task CreateUserInitUserTag(Guid userId)
+        {
+            await _dbContext.UserTag.AddRangeAsync(UserTagHelper.GetDefaultUserTagList(userId));
         }
 
         public async Task UpdateUsername(PatchUsernameDTO model)

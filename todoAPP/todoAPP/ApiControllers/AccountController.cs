@@ -21,13 +21,7 @@ public class AccountController : ControllerBase
   [Route("/Register")]
   public async Task<IActionResult> Register(RegisterRequestModel model)
   {
-    var userId = await _user.CreateUser(model);
-    await _kanban.InitKanban(new InitKanbanDTO
-    {
-      Name = "Default",
-      SwimlaneName = "Default",
-      UserId = userId
-    });
+    await _user.CreateUser(model);
     return Ok();
   }
 }

@@ -9,6 +9,7 @@ namespace todoAPP.Models
         {
             Kanban = new HashSet<Kanban>();
             Todo = new HashSet<Todo>();
+            UserTag = new HashSet<UserTag>();
         }
 
         public int Idx { get; set; }
@@ -22,5 +23,6 @@ namespace todoAPP.Models
 
         public virtual ICollection<Kanban> Kanban { get; set; }
         public virtual ICollection<Todo> Todo { get; set; }
+        public virtual ICollection<UserTag> UserTag { get; set; }
     }
 }

@@ -42,13 +42,7 @@ namespace todoAPP.ApiControllers
 
             if (await _user.CheckUsernameDuplicated(userInfo.email) == false)
             {
-                var userId = await _user.CreateUser(model);
-                await _kanban.InitKanban(new InitKanbanDTO
-                {
-                    Name = "Default",
-                    SwimlaneName = "New",
-                    UserId = userId
-                });
+                await _user.CreateUser(model);
             }
 
             var user = await _user.QueryUser(userInfo.email);

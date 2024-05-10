@@ -20,6 +20,7 @@ namespace todoAPP.Models
         public virtual DbSet<KanbanSwimlane> KanbanSwimlane { get; set; } = null!;
         public virtual DbSet<Todo> Todo { get; set; } = null!;
         public virtual DbSet<User> User { get; set; } = null!;
+        public virtual DbSet<UserTag> UserTag { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -143,6 +144,29 @@ namespace todoAPP.Models
                 entity.Property(e => e.Salt).HasMaxLength(30);
 
                 entity.Property(e => e.Username).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<UserTag>(entity =>
+            {
+                entity.HasKey(e => e.Uid)
+                    .IsClustered(false);
+
+                entity.HasIndex(e => e.Idx, "CX_UserTag")
+                    .IsClustered();
+
+                entity.HasIndex(e => e.Uid, "IX_UserTag");
+
+                entity.Property(e => e.Uid).ValueGeneratedNever();
+
+                entity.Property(e => e.Idx).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name).HasMaxLength(15);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserTag)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_UserTag");
             });
 
             OnModelCreatingPartial(modelBuilder);

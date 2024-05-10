@@ -8,7 +8,6 @@ namespace todoAPP.Services;
 
 public interface IKanbanService
 {
-  public Task InitKanban(InitKanbanDTO model);
   public Task<Guid> GetDefaultKanbanId(GetDefaultKanbanDTO model);
   public Task<IEnumerable<KanbanSwimlaneListViewModel>> GetKanbanSwimlaneList(GetKanbanSwimlaneListDTO model);
   public Task<IEnumerable<KanbanViewModel>> GetKanbanList(GetKanbanListDTO model);
@@ -23,29 +22,6 @@ public class KanbanService : IKanbanService
   public KanbanService(DBContext dbContext)
   {
     _dbContext = dbContext;
-  }
-
-  public async Task InitKanban(InitKanbanDTO model)
-  {
-    using var tx = await _dbContext.Database.BeginTransactionAsync();
-
-    var kanbanId = Guid.NewGuid();
-    await _dbContext.Kanban.AddAsync(new Kanban
-    {
-      Uid = kanbanId,
-      Name = model.Name,
-      UserId = model.UserId,
-    });
-    await _dbContext.KanbanSwimlane.AddAsync(new KanbanSwimlane
-    {
-      Uid = Guid.NewGuid(),
-      Name = model.SwimlaneName,
-      Type = (byte)EKanbanSwimlaneType.DEFAULT,
-      KanbanId = kanbanId,
-    });
-
-    await _dbContext.SaveChangesAsync();
-    await tx.CommitAsync();
   }
 
   public async Task<IEnumerable<KanbanViewModel>> GetKanbanList(GetKanbanListDTO model)

@@ -13,10 +13,11 @@ namespace todoAPP.Models
         public DateTimeOffset CreateAt { get; set; }
         public DateTimeOffset UpdateAt { get; set; }
         public DateTimeOffset ExecuteAt { get; set; }
-        public Guid UserId { get; set; }
-        public Guid KanbanSwimlaneId { get; set; }
         public decimal GeneralTodoPosition { get; set; }
         public decimal SwimlaneTodoPosition { get; set; }
+        public Guid UserId { get; set; }
+        public Guid TagId { get; set; }
+        public Guid KanbanSwimlaneId { get; set; }
 
         public virtual KanbanSwimlane KanbanSwimlane { get; set; } = null!;
         public virtual User User { get; set; } = null!;
