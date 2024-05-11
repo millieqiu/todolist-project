@@ -61,7 +61,6 @@ public class Program
         builder.Services.AddSingletonConfig<OAuthConfig>(builder.Configuration.GetSection("OAuth"));
         builder.Services.AddTransient<ITodoListService, TodoListService>();
         builder.Services.AddTransient<UserService>();
-        builder.Services.AddSingleton<WeatherService>();
         builder.Services.AddTransient<AvatarService>();
         builder.Services.AddTransient<IOAuthService, OAuthService>();
         builder.Services.AddTransient<IKanbanService, KanbanService>();
