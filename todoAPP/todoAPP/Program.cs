@@ -65,6 +65,7 @@ public class Program
         builder.Services.AddTransient<AvatarService>();
         builder.Services.AddTransient<IOAuthService, OAuthService>();
         builder.Services.AddTransient<IKanbanService, KanbanService>();
+        builder.Services.AddTransient<IUserTagService, UserTagService>();
 
         builder.Services.AddDocumentService();
 
