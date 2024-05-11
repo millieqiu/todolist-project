@@ -13,6 +13,7 @@ namespace todoAPP.Services
         public Task<Guid> CreateTodo(CreateTodoDTO model);
         public Task UpdateTodoStatus(GeneralRequestModel model);
         public Task UpdateTodoInfo(PatchTodoInfoDTO model);
+        public Task UpdateTodoTag(PatchTodoTagDTO model);
         public Task UpdateGeneralTodoOrder(PatchGeneralTodoOrderDTO model);
         public Task UpdateSwimlaneTodoOrder(PatchSwimlaneTodoOrderDTO model);
         public Task DeleteAlreadyDoneTodo(DeleteAlreadyDoneTodoDTO model);
@@ -32,7 +33,7 @@ namespace todoAPP.Services
         {
             return await _dbContext.Todo
                 .Where(x => x.UserId == model.UserId)
-                .OrderBy(x=>x.GeneralTodoPosition)
+                .OrderBy(x => x.GeneralTodoPosition)
                 .Select(x => new TodoViewModel
                 {
                     Uid = x.Uid,
@@ -111,6 +112,20 @@ namespace todoAPP.Services
             todoItem.Title = model.Title;
             todoItem.Description = model.Description;
             todoItem.ExecuteAt = model.ExecuteAt;
+            todoItem.UpdateAt = DateTimeOffset.UtcNow;
+
+            await _dbContext.SaveChangesAsync();
+            await tx.CommitAsync();
+        }
+
+        public async Task UpdateTodoTag(PatchTodoTagDTO model)
+        {
+            using var tx = await _dbContext.Database.BeginTransactionAsync();
+
+            var todoItem = await _dbContext.Todo
+                .Where(x => x.Uid == model.TodoId)
+                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+            todoItem.TagId = model.TagId;
             todoItem.UpdateAt = DateTimeOffset.UtcNow;
 
             await _dbContext.SaveChangesAsync();

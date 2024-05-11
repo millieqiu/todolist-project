@@ -82,6 +82,19 @@ namespace todoAPP.ApiControllers
         }
 
         [HttpPatch]
+        [Route("Todo/{Uid}/Tag")]
+        public async Task<IActionResult> UpdateTodoTag([FromRoute] GeneralRequestModel route, PatchTodoTagRequestModel model)
+        {
+            await _todo.UpdateTodoTag(new PatchTodoTagDTO
+            {
+                TodoId = route.Uid,
+                TagId = model.TagId,
+            });
+
+            return Ok();
+        }
+
+        [HttpPatch]
         [Route("Todo/Order/General")]
         public async Task<IActionResult> PatchGeneralTodoOrder(PatchGeneralTodoOrderRequestModel model)
         {

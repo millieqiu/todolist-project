@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using todoAPP.Enums;
+using todoAPP.ValidationAttributes;
 
 namespace todoAPP.RequestModel;
 
@@ -28,6 +28,12 @@ public class PatchTodoInfoRequestModel
   public string Description { get; set; } = string.Empty;
 
   public DateTimeOffset? ExecuteAt { get; set; } = DateTimeOffset.UnixEpoch;
+}
+
+public class PatchTodoTagRequestModel
+{
+  [GuidRequired]
+  public Guid TagId { get; set; }
 }
 
 public class PatchGeneralTodoOrderRequestModel

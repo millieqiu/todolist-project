@@ -23,6 +23,12 @@ public class PatchTodoInfoDTO
   public DateTimeOffset ExecuteAt { get; set; } = DateTimeOffset.UnixEpoch;
 }
 
+public class PatchTodoTagDTO
+{
+  public Guid TodoId { get; set; }
+  public Guid TagId { get; set; }
+}
+
 public class PatchGeneralTodoOrderDTO
 {
   public Guid UserId { get; set; }
