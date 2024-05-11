@@ -6,6 +6,7 @@ namespace todoAPP.Services;
 public interface IUserTagService
 {
     public Task<IEnumerable<UserTagViewModel>> GetUserTagList(GetUserTagListDTO model);
+    public Task PatchUserTagName(PatchUserTagNameDTO model);
 }
 
 public class UserTagService : IUserTagService
@@ -28,5 +29,18 @@ public class UserTagService : IUserTagService
             })
             .OrderBy(x => x.Name)
             .ToListAsync();
+    }
+
+    public async Task PatchUserTagName(PatchUserTagNameDTO model)
+    {
+        using var tx = await _dbContext.Database.BeginTransactionAsync();
+
+        var tag = await _dbContext.UserTag
+            .Where(x => x.Uid == model.UserTagId)
+            .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+        tag.Name = model.Name;
+        await _dbContext.SaveChangesAsync();
+
+        await tx.CommitAsync();
     }
 }

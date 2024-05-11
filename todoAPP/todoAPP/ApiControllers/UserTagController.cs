@@ -27,4 +27,16 @@ public class UserTagController : ControllerBase
             UserId = _user.GetUserId(),
         }));
     }
+
+    [HttpPatch]
+    [Route("{userTagId}")]
+    public async Task<IActionResult> PatchUserTagName(Guid userTagId, PatchUserTagNameRequestModel model)
+    {
+        await _userTag.PatchUserTagName(new PatchUserTagNameDTO
+        {
+            UserTagId = userTagId,
+            Name = model.Name,
+        });
+        return Ok();
+    }
 }
