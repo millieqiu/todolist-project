@@ -20,6 +20,7 @@ namespace todoAPP.Models
         public Guid KanbanSwimlaneId { get; set; }
 
         public virtual KanbanSwimlane KanbanSwimlane { get; set; } = null!;
+        public virtual UserTag Tag { get; set; } = null!;
         public virtual User User { get; set; } = null!;
     }
 }

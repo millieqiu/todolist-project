@@ -43,7 +43,13 @@ namespace todoAPP.Services
                     CreateAt = x.CreateAt,
                     UpdateAt = x.UpdateAt,
                     ExecuteAt = x.ExecuteAt,
-                    Position = x.GeneralTodoPosition
+                    Position = x.GeneralTodoPosition,
+                    Tag = new UserTagViewModel
+                    {
+                        Uid = x.Tag.Uid,
+                        Type = x.Tag.Type,
+                        Name = x.Tag.Name,
+                    }
                 })
                 .ToListAsync();
         }
@@ -55,6 +61,9 @@ namespace todoAPP.Services
 
             var swimlane = await _dbContext.KanbanSwimlane
                 .Where(x => x.Kanban.UserId == model.UserId && x.Type == (byte)EKanbanSwimlaneType.DEFAULT)
+                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+            var tag = await _dbContext.UserTag
+                .Where(x => x.UserId == model.UserId && x.Type == (byte)EUserTagType.DEFAULT)
                 .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
             var maxGeneralTodoPosition = await _dbContext.Todo
                 .Where(x => x.UserId == model.UserId)
@@ -75,10 +84,11 @@ namespace todoAPP.Services
                 CreateAt = DateTimeOffset.UtcNow,
                 UpdateAt = DateTimeOffset.UtcNow,
                 ExecuteAt = model.ExecuteAt.ToUniversalTime(),
-                UserId = model.UserId,
-                KanbanSwimlaneId = swimlane.Uid,
                 GeneralTodoPosition = maxGeneralTodoPosition + 1,
                 SwimlaneTodoPosition = maxSwimlaneTodoPosition + 1,
+                TagId = tag.Uid,
+                KanbanSwimlaneId = swimlane.Uid,
+                UserId = model.UserId,
             });
 
             await _dbContext.SaveChangesAsync();
@@ -125,7 +135,17 @@ namespace todoAPP.Services
             var todoItem = await _dbContext.Todo
                 .Where(x => x.Uid == model.TodoId)
                 .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-            todoItem.TagId = model.TagId;
+            if (model.TagId == Guid.Empty)
+            {
+                var deafultTag = await _dbContext.UserTag
+                    .Where(x => x.UserId == todoItem.UserId && x.Type == (byte)EUserTagType.DEFAULT)
+                    .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+                todoItem.TagId = deafultTag.Uid;
+            }
+            else
+            {
+                todoItem.TagId = model.TagId;
+            }
             todoItem.UpdateAt = DateTimeOffset.UtcNow;
 
             await _dbContext.SaveChangesAsync();

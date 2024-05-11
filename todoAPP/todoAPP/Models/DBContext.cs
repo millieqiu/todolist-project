@@ -109,6 +109,12 @@ namespace todoAPP.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_KanbanSwimlane_Todo");
 
+                entity.HasOne(d => d.Tag)
+                    .WithMany(p => p.Todo)
+                    .HasForeignKey(d => d.TagId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserTag_Todo");
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Todo)
                     .HasForeignKey(d => d.UserId)

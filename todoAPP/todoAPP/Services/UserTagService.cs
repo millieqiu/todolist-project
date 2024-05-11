@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using todoAPP.Enums;
 using todoAPP.Models;
 
 namespace todoAPP.Services;
@@ -25,9 +26,11 @@ public class UserTagService : IUserTagService
             .Select(x => new UserTagViewModel
             {
                 Uid = x.Uid,
+                Type = x.Type,
                 Name = x.Name
             })
-            .OrderBy(x => x.Name)
+            .OrderBy(x => x.Type)
+            .ThenBy(x => x.Name)
             .ToListAsync();
     }
 

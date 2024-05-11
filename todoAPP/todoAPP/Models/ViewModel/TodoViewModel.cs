@@ -1,4 +1,5 @@
 using todoAPP.Enums;
+using todoAPP.Models;
 using TodoAPP_EnumService.Extensions;
 
 namespace todoAPP.ViewModel;
@@ -25,4 +26,5 @@ public class TodoViewModel
     set { executeAt = value; }
   }
   public decimal Position { get; set; }
+  public UserTagViewModel? Tag { get; set; }
 }

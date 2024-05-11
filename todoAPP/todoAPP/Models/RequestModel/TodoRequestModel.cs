@@ -32,8 +32,7 @@ public class PatchTodoInfoRequestModel
 
 public class PatchTodoTagRequestModel
 {
-  [GuidRequired]
-  public Guid TagId { get; set; }
+  public Guid TagId { get; set; } = Guid.Empty;
 }
 
 public class PatchGeneralTodoOrderRequestModel
