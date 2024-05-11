@@ -14,7 +14,7 @@ namespace todoAPP.ApiControllers
         private readonly ITodoListService _todo;
         private readonly UserService _user;
 
-        public TodoListController(ITodoListService todo, UserService user, WeatherService weather)
+        public TodoListController(ITodoListService todo, UserService user)
         {
             _todo = todo;
             _user = user;
