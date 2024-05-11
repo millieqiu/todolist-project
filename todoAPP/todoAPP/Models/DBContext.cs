@@ -59,7 +59,7 @@ namespace todoAPP.Models
             modelBuilder.Entity<KanbanSwimlane>(entity =>
             {
                 entity.HasKey(e => e.Uid)
-                    .HasName("PK__tmp_ms_x__C5B69A4BE47E58B1")
+                    .HasName("PK__tmp_ms_x__C5B69A4B5C6D9436")
                     .IsClustered(false);
 
                 entity.HasIndex(e => e.Idx, "CX_KanbanSwimlane")
@@ -72,6 +72,8 @@ namespace todoAPP.Models
                 entity.Property(e => e.Idx).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name).HasMaxLength(30);
+
+                entity.Property(e => e.Position).HasColumnType("decimal(18, 10)");
 
                 entity.HasOne(d => d.Kanban)
                     .WithMany(p => p.KanbanSwimlane)

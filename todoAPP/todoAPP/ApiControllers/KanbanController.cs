@@ -55,13 +55,26 @@ public class KanbanController : ControllerBase
   }
 
   [HttpPatch]
-  [Route("Swimlane/{Uid}")]
+  [Route("Swimlane/{Uid}/Name")]
   public async Task<IActionResult> PatchKanbanSwimlaneName([FromRoute] GeneralRequestModel route, PatchKanbanSwimlaneNameRequestModel model)
   {
     await _kanban.PatchKanbanSwimlaneName(new PatchKanbanSwimlaneNameDTO
     {
       KanbanSwimlaneId = route.Uid,
       Name = model.Name,
+    });
+    return Ok();
+  }
+
+  [HttpPatch]
+  [Route("Swimlane/{Uid}/Order")]
+  public async Task<IActionResult> PatchKanbanSwimlaneName([FromRoute] GeneralRequestModel route, PatchKanbanSwimlaneOrderRequestModel model)
+  {
+    await _kanban.PatchKanbanSwimlaneOrder(new PatchKanbanSwimlaneOrderDTO
+    {
+      DragSwimlaneId = route.Uid,
+      DropPrevSwimlaneId = model.DropPrevSwimlaneId,
+      DropNextSwimlaneId = model.DropNextSwimlaneId,
     });
     return Ok();
   }

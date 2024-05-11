@@ -21,5 +21,6 @@ public class KanbanSwimlaneViewModel
     }
   }
   public string Name { get; set; } = string.Empty;
+  public decimal Position { get; set; }
   public IEnumerable<TodoViewModel> TodoList { get; set; } = new List<TodoViewModel>();
 }

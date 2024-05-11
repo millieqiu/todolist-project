@@ -17,6 +17,13 @@ public class PatchKanbanSwimlaneNameDTO
   public string Name { get; set; } = string.Empty;
 }
 
+public class PatchKanbanSwimlaneOrderDTO
+{
+  public Guid DragSwimlaneId { get; set; }
+  public Guid? DropPrevSwimlaneId { get; set; }
+  public Guid? DropNextSwimlaneId { get; set; }
+}
+
 public class DeleteKanbanSwimlaneDTO
 {
   public Guid KanbanSwimlaneId { get; set; }

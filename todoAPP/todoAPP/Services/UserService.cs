@@ -115,6 +115,7 @@ namespace todoAPP.Services
                 Uid = Guid.NewGuid(),
                 Name = model.SwimlaneName,
                 Type = (byte)EKanbanSwimlaneType.DEFAULT,
+                Position = 0,
                 KanbanId = kanbanId,
             });
         }
