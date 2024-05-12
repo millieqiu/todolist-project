@@ -25,6 +25,7 @@ public interface IUserService
     public Task<string> GetAvatar();
     public Task UpdateAvatar(PatchAvatarDTO model);
     public Task UpdateUserRole(PatchRoleRequestModel model);
+    public Task DeleteUser(DeleteUserDTO model);
     public Task SignInUser(HttpContext context, User user);
     public Task<bool> CheckUsernameDuplicated(string username);
 }
@@ -218,7 +219,28 @@ public class UserService : IUserService
             .Where(x => x.Uid == model.UserID)
             .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
         user.Role = (int)model.RoleID;
-        
+
+        await _dbContext.SaveChangesAsync();
+        await tx.CommitAsync();
+    }
+
+    public async Task DeleteUser(DeleteUserDTO model)
+    {
+        using var tx = await _dbContext.Database.BeginTransactionAsync();
+
+        _dbContext.Todo.RemoveRange(
+            _dbContext.Todo.Where(x => x.UserId == model.UserId));
+        _dbContext.KanbanSwimlane.RemoveRange(
+            _dbContext.KanbanSwimlane.Where(x => x.Kanban.UserId == model.UserId));
+        _dbContext.Kanban.RemoveRange(
+            _dbContext.Kanban.Where(x => x.UserId == model.UserId));
+        _dbContext.UserTag.RemoveRange(
+            _dbContext.UserTag.Where(x => x.UserId == model.UserId));
+        var user = await _dbContext.User
+            .Where(x => x.Uid == model.UserId)
+            .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
+        _dbContext.User.Remove(user);
+
         await _dbContext.SaveChangesAsync();
         await tx.CommitAsync();
     }

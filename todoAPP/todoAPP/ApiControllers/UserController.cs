@@ -117,7 +117,7 @@ public class UserController : ControllerBase
     [HttpPatch]
     [Authorize]
     [Route("Avatar")]
-    async public Task<IActionResult> PatchUserAvatar([FromForm] IFormFile avatarFile)
+    public async Task<IActionResult> PatchUserAvatar([FromForm] IFormFile avatarFile)
     {
         if (avatarFile.ContentType.Contains("image") == false)
         {
@@ -132,5 +132,17 @@ public class UserController : ControllerBase
 
         return Ok();
     }
+
+    [HttpDelete]
+    [Authorize]
+    public async Task<IActionResult> DeleteUser()
+    {
+        await _user.DeleteUser(new DeleteUserDTO
+        {
+            UserId = _user.GetUserId(),
+        });
+        return Ok();
+    }
+
 }
 
