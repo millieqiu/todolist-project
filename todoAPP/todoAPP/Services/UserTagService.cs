@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using todoAPP.Enums;
+using todoAPP.DTO;
 using todoAPP.Models;
+using todoAPP.ViewModel;
 
 namespace todoAPP.Services;
 

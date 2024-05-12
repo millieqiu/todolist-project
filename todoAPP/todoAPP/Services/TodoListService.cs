@@ -11,13 +11,13 @@ namespace todoAPP.Services
     {
         public Task<IEnumerable<TodoViewModel>> GetGeneralTodoList(GetTodoListDTO model);
         public Task<Guid> CreateTodo(CreateTodoDTO model);
-        public Task UpdateTodoStatus(GeneralRequestModel model);
+        public Task UpdateTodoStatus(GeneralRouteRequestModel model);
         public Task UpdateTodoInfo(PatchTodoInfoDTO model);
         public Task UpdateTodoTag(PatchTodoTagDTO model);
         public Task UpdateGeneralTodoOrder(PatchGeneralTodoOrderDTO model);
         public Task UpdateSwimlaneTodoOrder(PatchSwimlaneTodoOrderDTO model);
         public Task DeleteAlreadyDoneTodo(DeleteAlreadyDoneTodoDTO model);
-        public Task DeleteTodo(GeneralRequestModel model);
+        public Task DeleteTodo(GeneralRouteRequestModel model);
     }
 
     public class TodoListService : ITodoListService
@@ -97,7 +97,7 @@ namespace todoAPP.Services
             return todoId;
         }
 
-        public async Task UpdateTodoStatus(GeneralRequestModel model)
+        public async Task UpdateTodoStatus(GeneralRouteRequestModel model)
         {
             var tx = await _dbContext.Database.BeginTransactionAsync();
 
@@ -283,7 +283,7 @@ namespace todoAPP.Services
             await tx.CommitAsync();
         }
 
-        public async Task DeleteTodo(GeneralRequestModel model)
+        public async Task DeleteTodo(GeneralRouteRequestModel model)
         {
             using var tx = await _dbContext.Database.BeginTransactionAsync();
 

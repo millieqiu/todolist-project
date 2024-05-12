@@ -1,4 +1,4 @@
-﻿namespace todoAPP.Models;
+﻿namespace todoAPP.DTO;
 
 public class GetUserTagListDTO
 {

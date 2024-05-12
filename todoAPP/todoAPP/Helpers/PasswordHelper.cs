@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace todoAPP;
+namespace todoAPP.Helpers;
 
 public static class PasswordHelper
 {

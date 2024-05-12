@@ -1,7 +1,7 @@
 ﻿using todoAPP.Enums;
 using TodoAPP_EnumService.Extensions;
 
-namespace todoAPP.Models;
+namespace todoAPP.ViewModel;
 
 public class UserTagViewModel
 {

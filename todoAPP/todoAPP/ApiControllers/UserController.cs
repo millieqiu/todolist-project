@@ -6,135 +6,131 @@ using Microsoft.AspNetCore.StaticFiles;
 using System.Data;
 using todoAPP.DTO;
 
-namespace todoAPP.ApiControllers
+namespace todoAPP.ApiControllers;
+
+[ApiController]
+[Route("/api/[controller]")]
+public class UserController : ControllerBase
 {
-    [ApiController]
-    [Route("/api/[controller]")]
-    public class UserController : ControllerBase
+    private readonly IUserService _user;
+    private readonly AvatarService _avartar;
+
+    public UserController(IUserService user, AvatarService avartar)
     {
-        private readonly UserService _user;
-        private readonly AvatarService _avartar;
+        _user = user;
+        _avartar = avartar;
+    }
 
-        public UserController(UserService user, AvatarService avartar)
+    [HttpGet]
+    [Authorize]
+    [Route("Info")]
+    public async Task<IActionResult> GetUserInfo()
+    {
+        return Ok(await _user.GetUserInfo(new GeneralRouteRequestModel
         {
-            _user = user;
-            _avartar = avartar;
-        }
+            Uid = _user.GetUserId()
+        }));
+    }
 
-        [HttpGet]
-        [Authorize]
-        [Route("Info")]
-        public async Task<IActionResult> GetUserInfo()
+    [HttpPatch]
+    [Authorize]
+    [Route("Username")]
+    public async Task<IActionResult> PatchUsername(PatchUsernameRequestModel model)
+    {
+        try
         {
-            var model = new GeneralRequestModel
-            {
-                Uid = _user.GetUserId()
-            };
-            return Ok(await _user.GetUserInfo(model));
-        }
-
-        [HttpPatch]
-        [Authorize]
-        [Route("Username")]
-        public async Task<IActionResult> PatchUsername(PatchUsernameRequestModel model)
-        {
-            try
-            {
-                await _user.UpdateUsername(new PatchUsernameDTO
-                {
-                    UserId = _user.GetUserId(),
-                    Username = model.Username
-                });
-            }
-            catch (DuplicateNameException)
-            {
-                return BadRequest("帳號已存在");
-            }
-
-            return Ok();
-        }
-
-        [HttpPatch]
-        [Authorize]
-        [Route("Nickname")]
-        public async Task<IActionResult> PatchUserNickname(PatchNicknameRequestModel model)
-        {
-            await _user.UpdateNickname(new PatchNicknameDTO
+            await _user.UpdateUsername(new PatchUsernameDTO
             {
                 UserId = _user.GetUserId(),
-                Nickname = model.Nickname
+                Username = model.Username
             });
-            return Ok();
         }
-
-        [HttpPatch]
-        [Authorize]
-        [Route("Password")]
-        public async Task<IActionResult> PatchUserPassword(PatchPasswordRequestModel model)
+        catch (DuplicateNameException)
         {
-            await _user.ChangePassword(new PatchPasswordDTO
-            {
-                UserId = _user.GetUserId(),
-                OldPassword = model.OldPassword,
-                NewPassword = model.NewPassword,
-            });
-
-            return Ok();
+            return BadRequest("帳號已存在");
         }
 
+        return Ok();
+    }
 
-        [HttpPatch]
-        [Authorize(Roles = "Admin")]
-        [Route("Role")]
-        public async Task<IActionResult> PatchUserRole(PatchRoleRequestModel model)
+    [HttpPatch]
+    [Authorize]
+    [Route("Nickname")]
+    public async Task<IActionResult> PatchUserNickname(PatchNicknameRequestModel model)
+    {
+        await _user.UpdateNickname(new PatchNicknameDTO
         {
-            await _user.UpdateUserRole(model);
+            UserId = _user.GetUserId(),
+            Nickname = model.Nickname
+        });
+        return Ok();
+    }
 
-            return Ok();
-        }
-
-        [HttpGet]
-        [Authorize]
-        [Route("Avatar")]
-        public async Task<IActionResult> GetUserAvatar()
+    [HttpPatch]
+    [Authorize]
+    [Route("Password")]
+    public async Task<IActionResult> PatchUserPassword(PatchPasswordRequestModel model)
+    {
+        await _user.ChangePassword(new PatchPasswordDTO
         {
-            string avatar = await _user.GetAvatar();
+            UserId = _user.GetUserId(),
+            OldPassword = model.OldPassword,
+            NewPassword = model.NewPassword,
+        });
 
-            if (string.IsNullOrEmpty(avatar))
-            {
-                avatar = "default.jpeg";
-            }
+        return Ok();
+    }
 
-            var stream = _avartar.ReadFile(avatar);
-            var provider = new FileExtensionContentTypeProvider();
-            if (provider.TryGetContentType(avatar, out string? contentType) == false)
-            {
-                contentType = "application/octet-stream";
-            }
 
-            return File(stream, contentType);
-        }
+    [HttpPatch]
+    [Authorize(Roles = "Admin")]
+    [Route("Role")]
+    public async Task<IActionResult> PatchUserRole(PatchRoleRequestModel model)
+    {
+        await _user.UpdateUserRole(model);
 
-        [HttpPatch]
-        [Authorize]
-        [Route("Avatar")]
-        async public Task<IActionResult> PatchUserAvatar([FromForm] IFormFile avatarFile)
+        return Ok();
+    }
+
+    [HttpGet]
+    [Authorize]
+    [Route("Avatar")]
+    public async Task<IActionResult> GetUserAvatar()
+    {
+        string avatar = await _user.GetAvatar();
+
+        if (string.IsNullOrEmpty(avatar))
         {
-            if (avatarFile.ContentType.Contains("image") == false)
-            {
-                return BadRequest("不支援的圖片格式");
-            }
-
-            var model = new PatchAvatarDTO
-            {
-                UserId = _user.GetUserId(),
-                File = avatarFile,
-            };
-
-            await _user.UpdateAvatar(model);
-
-            return Ok();
+            avatar = "default.jpeg";
         }
+
+        var stream = _avartar.ReadFile(avatar);
+        var provider = new FileExtensionContentTypeProvider();
+        if (provider.TryGetContentType(avatar, out string? contentType) == false)
+        {
+            contentType = "application/octet-stream";
+        }
+
+        return File(stream, contentType);
+    }
+
+    [HttpPatch]
+    [Authorize]
+    [Route("Avatar")]
+    async public Task<IActionResult> PatchUserAvatar([FromForm] IFormFile avatarFile)
+    {
+        if (avatarFile.ContentType.Contains("image") == false)
+        {
+            return BadRequest("不支援的圖片格式");
+        }
+
+        await _user.UpdateAvatar(new PatchAvatarDTO
+        {
+            UserId = _user.GetUserId(),
+            File = avatarFile,
+        });
+
+        return Ok();
     }
 }
 

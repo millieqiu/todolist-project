@@ -9,12 +9,12 @@ namespace todoAPP.Pages;
 // [Authorize]
 public class IndexModel : PageModel
 {
-    private readonly UserService _user;
+    private readonly IUserService _user;
     public string UserId = "";
     public string Username = "";
     public string Nickname = "";
     public string Avatar = "";
-    public IndexModel(UserService user)
+    public IndexModel(IUserService user)
     {
         _user = user;
     }

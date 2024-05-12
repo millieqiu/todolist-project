@@ -1,6 +1,4 @@
-﻿using todoAPP.Enums;
-
-namespace todoAPP.DTO;
+﻿namespace todoAPP.DTO;
 
 public class GetTodoListDTO
 {

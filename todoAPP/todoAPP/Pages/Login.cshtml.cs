@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using todoAPP.Helpers;
 using todoAPP.RequestModel;
 using todoAPP.Services;
 
@@ -8,9 +9,9 @@ namespace todoAPP.Pages
     [IgnoreAntiforgeryToken]
     public class LoginModel : PageModel
     {
-        private readonly UserService _user;
+        private readonly IUserService _user;
 
-        public LoginModel(UserService user)
+        public LoginModel(IUserService user)
         {
             _user = user;
         }

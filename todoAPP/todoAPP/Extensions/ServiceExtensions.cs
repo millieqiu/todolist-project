@@ -1,35 +1,33 @@
-﻿using System;
-using NSwag;
+﻿using NSwag;
 
-namespace todoAPP.Extensions
+namespace todoAPP.Extensions;
+
+public static class ServiceExtensions
 {
-    public static class ServiceExtensions
+    public static IServiceCollection AddDocumentService(this IServiceCollection collection)
     {
-        public static IServiceCollection AddDocumentService(this IServiceCollection collection)
+        return collection.AddOpenApiDocument(options =>
         {
-            return collection.AddOpenApiDocument(options =>
+            options.PostProcess = document =>
             {
-                options.PostProcess = document =>
+                document.Info = new OpenApiInfo
                 {
-                    document.Info = new OpenApiInfo
-                    {
-                        Version = "v1",
-                        Title = "TodoList",
-                        Description = "An ASP.NET Core Web API for managing ToDo items"
-                    };
+                    Version = "v1",
+                    Title = "TodoList",
+                    Description = "An ASP.NET Core Web API for managing ToDo items"
                 };
-            });
-        }
+            };
+        });
+    }
 
-        public static IServiceCollection AddSingletonConfig<TConfig>(this IServiceCollection services, IConfiguration section) where TConfig : class
+    public static IServiceCollection AddSingletonConfig<TConfig>(this IServiceCollection services, IConfiguration section) where TConfig : class
+    {
+        return services.AddSingleton(p =>
         {
-            return services.AddSingleton(p =>
-            {
-                var instance = Activator.CreateInstance<TConfig>();
-                section.Bind(instance);
-                return instance;
-            });
-        }
+            var instance = Activator.CreateInstance<TConfig>();
+            section.Bind(instance);
+            return instance;
+        });
     }
 }
 

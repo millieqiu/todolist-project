@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using todoAPP.Models;
+using todoAPP.DTO;
+using todoAPP.RequestModel;
 using todoAPP.Services;
 
 namespace todoAPP.ApiControllers;
@@ -10,9 +11,9 @@ namespace todoAPP.ApiControllers;
 [Route("/api/[controller]")]
 public class UserTagController : ControllerBase
 {
-    private readonly UserService _user;
+    private readonly IUserService _user;
     private readonly IUserTagService _userTag;
-    public UserTagController(UserService user, IUserTagService userTag)
+    public UserTagController(IUserService user, IUserTagService userTag)
     {
         _user = user;
         _userTag = userTag;
@@ -29,12 +30,12 @@ public class UserTagController : ControllerBase
     }
 
     [HttpPatch]
-    [Route("{userTagId}")]
-    public async Task<IActionResult> PatchUserTagName(Guid userTagId, PatchUserTagNameRequestModel model)
+    [Route("{Uid}")]
+    public async Task<IActionResult> PatchUserTagName([FromRoute] GeneralRouteRequestModel route, PatchUserTagNameRequestModel model)
     {
         await _userTag.PatchUserTagName(new PatchUserTagNameDTO
         {
-            UserTagId = userTagId,
+            UserTagId = route.Uid,
             Name = model.Name,
         });
         return Ok();
