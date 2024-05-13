@@ -1,4 +1,6 @@
-﻿namespace todoAPP.DTO;
+﻿using todoAPP.Enums;
+
+namespace todoAPP.DTO;
 
 public class PatchUsernameDTO
 {
@@ -23,6 +25,12 @@ public class PatchAvatarDTO
 {
 	public Guid UserId { get; set; }
 	public IFormFile File { get; set; } = null!;
+}
+
+public class PatchUserRoleDTO
+{
+	public Guid UserId { get; set; }
+	public ERole Role { get; set; }
 }
 
 public class DeleteUserDTO

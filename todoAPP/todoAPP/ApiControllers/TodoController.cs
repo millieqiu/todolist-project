@@ -21,17 +21,6 @@ public class TodoController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
-    [Route("/api/User/{Uid}/Todo/List")]
-    public async Task<IActionResult> AdminGetUserTodoList([FromRoute] GeneralRouteRequestModel route)
-    {
-        return Ok(await _todo.GetGeneralTodoList(new GetTodoListDTO
-        {
-            UserId = route.Uid
-        }));
-    }
-
-    [HttpGet]
     [Route("List")]
     public async Task<IActionResult> GetTodoList([FromQuery] PaginationRequestModel model)
     {

@@ -11,9 +11,7 @@ public class PatchNicknameRequestModel
 
 public class PatchRoleRequestModel
 {
-	public Guid UserID { get; set; }
-
 	[EnumDataType(typeof(ERole))]
-	public ERole RoleID { get; set; }
+	public ERole Role { get; set; }
 
 }

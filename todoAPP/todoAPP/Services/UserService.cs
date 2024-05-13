@@ -24,7 +24,7 @@ public interface IUserService
     public Task ChangePassword(PatchPasswordDTO model);
     public Task<string> GetAvatar();
     public Task UpdateAvatar(PatchAvatarDTO model);
-    public Task UpdateUserRole(PatchRoleRequestModel model);
+    public Task UpdateUserRole(PatchUserRoleDTO model);
     public Task DeleteUser(DeleteUserDTO model);
     public Task SignInUser(HttpContext context, User user);
     public Task<bool> CheckUsernameDuplicated(string username);
@@ -211,14 +211,14 @@ public class UserService : IUserService
         await tx.CommitAsync();
     }
 
-    public async Task UpdateUserRole(PatchRoleRequestModel model)
+    public async Task UpdateUserRole(PatchUserRoleDTO model)
     {
         using var tx = await _dbContext.Database.BeginTransactionAsync();
 
         var user = await _dbContext.User
-            .Where(x => x.Uid == model.UserID)
+            .Where(x => x.Uid == model.UserId)
             .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-        user.Role = (int)model.RoleID;
+        user.Role = (byte)model.Role;
 
         await _dbContext.SaveChangesAsync();
         await tx.CommitAsync();

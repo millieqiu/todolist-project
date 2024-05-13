@@ -81,17 +81,6 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-
-    [HttpPatch]
-    [Authorize(Roles = "Admin")]
-    [Route("Role")]
-    public async Task<IActionResult> PatchUserRole(PatchRoleRequestModel model)
-    {
-        await _user.UpdateUserRole(model);
-
-        return Ok();
-    }
-
     [HttpGet]
     [Authorize]
     [Route("Avatar")]
