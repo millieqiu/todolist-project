@@ -5,6 +5,7 @@ import "../css/label.scss";
 import { createApp, ref } from "vue";
 
 // # Custom Components
+import BaseHeader from "./components/BaseHeader.vue";
 import BaseSidebar from "./components/BaseSidebar.vue";
 import BasePageTitle from "./components/BasePageTitle.vue";
 
@@ -13,6 +14,7 @@ import { tagColorsEnum } from "./common/enum";
 
 const app = createApp({
   components: {
+    BaseHeader,
     BaseSidebar,
     BasePageTitle,
   },
