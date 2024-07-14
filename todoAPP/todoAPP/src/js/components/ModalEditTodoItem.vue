@@ -7,7 +7,7 @@
           <input type="text" class="grow" placeholder="待辦事項名稱..." v-model="todoForm.title" />
         </label>
         <label class="input input-bordered flex items-center gap-2">
-          <base-date-picker class="grow" v-model="todoForm.time" placeholder="時間及日期"></base-date-picker>
+          <base-date-picker class="grow" v-model="todoForm.executeAt" placeholder="時間及日期"></base-date-picker>
           <!-- <input type="text" class="grow" placeholder="時間及日期" v-model="todoForm.time" /> -->
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-4 h-4 opacity-70 flex-none">
@@ -21,7 +21,7 @@
           <option>Normal Orange</option>
           <option>Normal Tomato</option>
         </select>
-        <textarea class="textarea textarea-bordered" rows="5" placeholder="備註及描述" v-model="todoForm.note"></textarea>
+        <textarea class="textarea textarea-bordered" rows="5" placeholder="備註及描述" v-model="todoForm.description"></textarea>
       </div>
       <div class="modal-action">
         <button class="btn" @click="closeModal">關閉</button>
@@ -33,6 +33,8 @@
 
 <script>
 import { onMounted, reactive, ref } from 'vue';
+
+import { formatDateTime } from "../common/format"
 
 import BaseDatePicker from './BaseDatePicker.vue';
 
@@ -72,6 +74,7 @@ export default {
       closeModal,
       isEdit,
       todoForm,
+      formatDateTime
     }
   }
 }
