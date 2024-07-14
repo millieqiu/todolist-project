@@ -29,7 +29,7 @@
         </div>
         <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
           <li><a @click="openModalSetting">設定</a></li>
-          <li><a>登出</a></li>
+          <li><a @click="logout">登出</a></li>
         </ul>
       </div>
     </div>
@@ -44,6 +44,8 @@ import { ref } from 'vue';
 // # Custom Components
 import ModalSetting from "./ModalSetting.vue"
 
+import axios from "axios";
+
 export default {
   components: {
     ModalSetting
@@ -55,9 +57,20 @@ export default {
       modalSetting.value.openModal();
     }
 
+    function logout() {
+      axios.get("/Logout")
+        .then(res => {
+          console.log(res);
+          window.location.replace("/Login");
+        }).catch(err => {
+          console.log(err);
+        })
+    }
+
     return {
       modalSetting,
       openModalSetting,
+      logout
     }
   }
 }

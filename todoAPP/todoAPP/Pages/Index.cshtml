@@ -25,29 +25,29 @@
     <base-page-title :title="'@ViewData["Title"]'"></base-page-title>
     <div class="flex-1">
       <table class="table table-todo">
-        <tr class="hover" v-for="(item, index) in fakeTodoList.filter((x) => !x.isComplete)">
+        <tr class="hover" v-for="(item, index) in todoList.filter((x) => x.status == 0)">
           <td class="text-center border-l-4 border-indigo-500 w-8">
             <label>
-              <input type="checkbox" class="checkbox" :checked="item.isComplete" />
+              <input type="checkbox" class="checkbox" :checked="item.status" @@change="changeTodoStatus(item.uid)" />
             </label>
           </td>
           <td>
             <div class="flex items-center gap-3">
               <div>
-                <p class="font-base" :class="{ 'todo-complete': item.isComplete }">{{ item.title }}</p>
+                <p class="font-base" :class="{ 'todo-complete': item.status == 1 }">{{ item.title }}</p>
                 <div class="text-sm opacity-50 flex items-center gap-1">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round"
                       d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                   </svg>
-                  <span>{{ item.time }}</span>
+                  <span>{{ formatDateTime(item.executeAt) }}</span>
                 </div>
               </div>
             </div>
           </td>
           <td class="text-center w-32">
-            <button class="btn btn-ghost btn-xs" @@click="openModalShowTodoNote(item.note)"
+            <button class="btn btn-ghost btn-xs" @@click="openModalShowTodoNote(item.description)"
               :disabled="!item.note">查看備註</button>
           </td>
           <td class="text-center w-8">
@@ -99,7 +99,7 @@
       </table>
       <div class="flex flex-col w-full border-opacity-50 mt-4 mb-2">
         <div class="flex items-center">
-          <span class="text-sm">已完成 (1)</span>
+          <span class="text-sm">已完成 ({{ todoList.filter((x) => x.status == 1).length }})</span>
           <div class="ml-auto">
             <!-- NOTE: 一鍵刪除已完成的待辦事項 -->
             <button class="btn btn-sm btn-link no-underline">清除</button>
@@ -111,30 +111,30 @@
         <div class="divider my-0"></div>
       </div>
       <table class="table table-todo">
-        <tr class="hover" v-for="(item, index) in fakeTodoList.filter((x) => x.isComplete)">
+        <tr class="hover" v-for="(item, index) in todoList.filter((x) => x.status == 1)">
           <td class="text-center border-l-4 border-indigo-500 w-8">
             <label>
-              <input type="checkbox" class="checkbox" :checked="item.isComplete" />
+              <input type="checkbox" class="checkbox" :checked="item.status" @@change="changeTodoStatus(item.uid)" />
             </label>
           </td>
           <td>
             <div class="flex items-center gap-3">
               <div>
-                <p class="font-base" :class="{ 'todo-complete': item.isComplete }">{{ item.title }}</p>
+                <p class="font-base" :class="{ 'todo-complete': item.status == 1 }">{{ item.title }}</p>
                 <div class="text-sm opacity-50 flex items-center gap-1">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round"
                       d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                   </svg>
-                  <span>{{ item.time }}</span>
+                  <span>{{ item.executeAt }}</span>
                 </div>
               </div>
             </div>
           </td>
           <td class="text-center w-32">
-            <button class="btn btn-ghost btn-xs" @@click="openModalShowTodoNote(item.note)"
-              :disabled="!item.note">查看備註</button>
+            <button class="btn btn-ghost btn-xs" @@click="openModalShowTodoNote(item.description)"
+              :disabled="!item.description">查看備註</button>
           </td>
           <td class="text-center w-8">
             <div class="dropdown dropdown-bottom dropdown-end">

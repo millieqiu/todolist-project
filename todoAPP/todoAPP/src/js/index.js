@@ -2,7 +2,7 @@
 import "../css/index.scss";
 
 // # Vue
-import { createApp, ref } from "vue";
+import { createApp, onMounted, ref } from "vue";
 
 // # Custom Components
 import BaseHeader from "./components/BaseHeader.vue";
@@ -10,6 +10,10 @@ import BaseSidebar from "./components/BaseSidebar.vue";
 import BasePageTitle from "./components/BasePageTitle.vue";
 import ModalEditTodoItem from "./components/ModalEditTodoItem.vue";
 import ModalShowTodoNote from "./components/ModalShowTodoNote.vue";
+
+import axios from "axios";
+
+import { formatDateTime } from "./common/format";
 
 const app = createApp({
   components: {
@@ -20,27 +24,7 @@ const app = createApp({
     ModalShowTodoNote,
   },
   setup() {
-
-    const fakeTodoList = ref([
-      {
-        title: "THIS IS A TODO!", // 限制 50 字
-        time: "2024-05-31 16:17",
-        note: "THIS IS A TODO!THIS IS A TODO!THIS IS A TODO!THIS IS A TODO!THIS IS A TODO!", // 限制 250 字
-        isComplete: false,
-      },
-      {
-        title: "記得幫小花澆水記得幫小花澆水記得幫小花澆水記得幫小花澆水", // 限制 50 字
-        time: "2024-05-31 16:17",
-        note: "THIS IS A TODO!THIS IS A TODO!THIS IS A TODO!THIS IS A TODO!THIS IS A TODO!", // 限制 250 字
-        isComplete: false,
-      },
-      {
-        title: "買衛生紙", // 限制 50 字
-        time: "2024-05-31 16:17",
-        note: "", // 限制 250 字
-        isComplete: true,
-      },
-    ])
+    const todoList = ref([]);
 
     const modalEditTodoItem = ref(null);
     function openModalEditTodoItem(item) {
@@ -52,12 +36,42 @@ const app = createApp({
       modalShowTodoNote.value.openModal(val);
     }
 
+    async function getTodoList() {
+      await axios
+        .get("/api/Todo/List")
+        .then((res) => {
+          console.log(res);
+          todoList.value = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function changeTodoStatus(id) {
+      await axios
+        .patch(`/api/Todo/${id}/Status`)
+        .then((res) => {
+          console.log(res);
+          getTodoList();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    onMounted(async () => {
+      await getTodoList();
+    });
+
     return {
-      fakeTodoList,
       modalEditTodoItem,
       openModalEditTodoItem,
       modalShowTodoNote,
-      openModalShowTodoNote
+      openModalShowTodoNote,
+      todoList,
+      formatDateTime,
+      changeTodoStatus,
     };
   },
 });

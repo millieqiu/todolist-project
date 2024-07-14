@@ -12,7 +12,6 @@
 }
 
 <div>
-  {{ textMsg }}
   <div class="p-4 bg-base-100 rounded-md drop-shadow-md">
     <div v-if="tab == 0">
       <h1 class="text-3xl font-bold text-primary mb-1">登入</h1>
@@ -32,18 +31,18 @@
         <div class="label">
           <span class="label-text">帳號</span>
         </div>
-        <input type="text" placeholder="請輸入 E-mail" class="input input-bordered w-full" />
+        <input type="text" placeholder="請輸入 E-mail" class="input input-bordered w-full" v-model="loginData.username" />
       </label>
       <label class="form-control w-full">
         <div class="label">
           <span class="label-text">密碼</span>
         </div>
-        <input type="text" placeholder="請輸入密碼" class="input input-bordered w-full" />
+        <input type="text" placeholder="請輸入密碼" class="input input-bordered w-full" v-model="loginData.password" />
         <div class="label">
           <button class="btn btn-active btn-sm btn-link px-0 ms-auto">忘記密碼？</button>
         </div>
       </label>
-      <button class="btn btn-primary btn-wide mx-auto mt-2">登入</button>
+      <button class="btn btn-primary btn-wide mx-auto mt-2" @@click="login">登入</button>
     </div>
     <!-- 註冊 -->
     <div class="flex flex-col gap-3" v-if="tab == 1">
@@ -51,27 +50,27 @@
         <div class="label">
           <span class="label-text">使用者名稱</span>
         </div>
-        <input type="text" placeholder="請輸入您的姓名或暱稱" class="input input-bordered w-full" />
+        <input type="text" placeholder="請輸入您的姓名或暱稱" class="input input-bordered w-full" v-model="registerData.nickname" />
       </label>
       <label class="form-control w-full">
         <div class="label">
           <span class="label-text">帳號</span>
         </div>
-        <input type="text" placeholder="請輸入 E-mail" class="input input-bordered w-full" />
+        <input type="text" placeholder="請輸入 E-mail" class="input input-bordered w-full" v-model="registerData.username" />
       </label>
       <label class="form-control w-full">
         <div class="label">
           <span class="label-text">密碼</span>
         </div>
-        <input type="text" placeholder="請輸入密碼" class="input input-bordered w-full" />
+        <input type="text" placeholder="請輸入密碼" class="input input-bordered w-full" v-model="registerData.password" />
       </label>
       <label class="form-control w-full">
         <div class="label">
           <span class="label-text">確認密碼</span>
         </div>
-        <input type="text" placeholder="請再次輸入密碼" class="input input-bordered w-full" />
+        <input type="text" placeholder="請再次輸入密碼" class="input input-bordered w-full" v-model="registerData.confirmPassword" />
       </label>
-      <button class="btn btn-primary btn-wide mx-auto mt-2">註冊</button>
+      <button class="btn btn-primary btn-wide mx-auto mt-2" @@click="register">註冊</button>
     </div>
   </div>
 </div>
