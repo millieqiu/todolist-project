@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,7 +7,7 @@ using todoAPP.Services;
 
 namespace todoAPP.Pages;
 
-// [Authorize]
+[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class IndexModel : PageModel
 {
     private readonly IUserService _user;
@@ -21,7 +22,7 @@ public class IndexModel : PageModel
 
     public IActionResult OnGet()
     {
-        // InitUserInfo();
+        InitUserInfo();
         return Page();
     }
 
