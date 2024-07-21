@@ -2,7 +2,7 @@
 import "../css/index.scss";
 
 // # Vue
-import { createApp, onMounted, ref, provide, computed } from "vue";
+import { createApp, onMounted, ref, provide, computed, reactive } from "vue";
 
 // # Custom Components
 import BaseHeader from "./components/BaseHeader.vue";
@@ -27,6 +27,12 @@ const app = createApp({
     const todoList = ref([]);
 
     const isHideDoneTodo = ref(false);
+
+    const todoItemObj = reactive({
+      title: "",
+      description: "",
+      executeAt: null,
+    });
 
     const modalEditTodoItem = ref(null);
     function openModalEditTodoItem(item) {
@@ -91,6 +97,24 @@ const app = createApp({
         });
     }
 
+    // FIXME: dropdown 中的複製跟刪除點了沒反應
+    function copyTodoItem(item) {
+      let params = {
+        title: item.title,
+        description: item.description,
+        executeAt: item.executeAt,
+      };
+      axios
+        .post("/api/Todo", params)
+        .then(function (response) {
+          console.log(response);
+          getTodoList();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
     // ** provide 重整頁面的 function 到孫組件
     provide("update", getTodoList);
 
@@ -110,6 +134,7 @@ const app = createApp({
       deleteAllDoneTodoItem,
       isHideDoneTodo,
       toggleHideDoneTodo,
+      copyTodoItem
     };
   },
 });
