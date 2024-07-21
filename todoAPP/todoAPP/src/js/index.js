@@ -2,7 +2,7 @@
 import "../css/index.scss";
 
 // # Vue
-import { createApp, onMounted, ref } from "vue";
+import { createApp, onMounted, ref, provide, computed } from "vue";
 
 // # Custom Components
 import BaseHeader from "./components/BaseHeader.vue";
@@ -26,6 +26,8 @@ const app = createApp({
   setup() {
     const todoList = ref([]);
 
+    const isHideDoneTodo = ref(false);
+
     const modalEditTodoItem = ref(null);
     function openModalEditTodoItem(item) {
       modalEditTodoItem.value.openModal(item);
@@ -34,6 +36,10 @@ const app = createApp({
     const modalShowTodoNote = ref(null);
     function openModalShowTodoNote(val) {
       modalShowTodoNote.value.openModal(val);
+    }
+
+    function toggleHideDoneTodo() {
+      isHideDoneTodo.value = isHideDoneTodo.value ? false : true;
     }
 
     async function getTodoList() {
@@ -60,6 +66,34 @@ const app = createApp({
         });
     }
 
+    async function deleteTodoItem(id) {
+      console.log("D");
+      await axios
+        .delete(`/api/Todo/${id}`)
+        .then(function (response) {
+          console.log(response);
+          getTodoList();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    async function deleteAllDoneTodoItem() {
+      await axios
+        .delete("/api/Todo/Done")
+        .then(function (response) {
+          console.log(response);
+          getTodoList();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    // ** provide 重整頁面的 function 到孫組件
+    provide("update", getTodoList);
+
     onMounted(async () => {
       await getTodoList();
     });
@@ -72,6 +106,10 @@ const app = createApp({
       todoList,
       formatDateTime,
       changeTodoStatus,
+      deleteTodoItem,
+      deleteAllDoneTodoItem,
+      isHideDoneTodo,
+      toggleHideDoneTodo,
     };
   },
 });

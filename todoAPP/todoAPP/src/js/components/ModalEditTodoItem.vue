@@ -8,7 +8,6 @@
         </label>
         <label class="input input-bordered flex items-center gap-2">
           <base-date-picker class="grow" v-model="todoForm.executeAt" placeholder="時間及日期"></base-date-picker>
-          <!-- <input type="text" class="grow" placeholder="時間及日期" v-model="todoForm.time" /> -->
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-4 h-4 opacity-70 flex-none">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -21,22 +20,26 @@
           <option>Normal Orange</option>
           <option>Normal Tomato</option>
         </select>
-        <textarea class="textarea textarea-bordered" rows="5" placeholder="備註及描述" v-model="todoForm.description"></textarea>
+        <textarea class="textarea textarea-bordered" rows="5" placeholder="備註及描述"
+          v-model="todoForm.description"></textarea>
       </div>
       <div class="modal-action">
         <button class="btn" @click="closeModal">關閉</button>
-        <button class="btn btn-primary">儲存變更</button>
+        <button class="btn btn-primary" v-if="isEdit" @click="editTodoItem(todoForm.uid)">儲存變更</button>
+        <button class="btn btn-primary" v-else @click="createTodoItem">添加任務</button>
       </div>
     </div>
   </dialog>
 </template>
 
 <script>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, inject } from 'vue';
 
 import { formatDateTime } from "../common/format"
 
 import BaseDatePicker from './BaseDatePicker.vue';
+
+import axios from "axios";
 
 export default {
   components: {
@@ -48,11 +51,13 @@ export default {
 
     const defaultTodoForm = {
       title: "",
-      time: null,
-      note: "",
+      executeAt: null,
+      description: "",
       isComplete: false
     };
     const todoForm = reactive({ ...defaultTodoForm });
+
+    const updateList = inject("update");
 
     const modalEl = ref(null);
 
@@ -68,13 +73,51 @@ export default {
       modalEl.value.close();
     }
 
+    function createTodoItem() {
+      let params = {
+        title: todoForm.title,
+        description: todoForm.description,
+        executeAt: todoForm.executeAt
+      }
+      axios.post('/api/Todo', params)
+        .then(function (response) {
+          console.log(response);
+          updateList();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        closeModal();
+    }
+
+    function editTodoItem(id) {
+      let params = {
+        title: todoForm.title,
+        description: todoForm.description,
+        executeAt: todoForm.executeAt
+      }
+      axios.patch(`/api/Todo/${id}/Info`, params)
+        .then(function (response) {
+          console.log(response);
+          updateList();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        closeModal();
+    }
+
     return {
       modalEl,
       openModal,
       closeModal,
+
       isEdit,
       todoForm,
-      formatDateTime
+      formatDateTime,
+
+      createTodoItem,
+      editTodoItem,
     }
   }
 }
