@@ -62,9 +62,6 @@ namespace todoAPP.Services
             var swimlane = await _dbContext.KanbanSwimlane
                 .Where(x => x.Kanban.UserId == model.UserId && x.Type == (byte)EKanbanSwimlaneType.DEFAULT)
                 .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-            var tag = await _dbContext.UserTag
-                .Where(x => x.UserId == model.UserId && x.Type == (byte)EUserTagType.DEFAULT)
-                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
             var maxGeneralTodoPosition = await _dbContext.Todo
                 .Where(x => x.UserId == model.UserId)
                 .OrderByDescending(x => x.GeneralTodoPosition)
@@ -75,6 +72,20 @@ namespace todoAPP.Services
                 .OrderByDescending(x => x.SwimlaneTodoPosition)
                 .Select(x => x.SwimlaneTodoPosition)
                 .FirstOrDefaultAsync();
+
+            Guid tagId;
+            if (model.TodoId == Guid.Empty)
+            {
+                tagId = await _dbContext.UserTag
+                    .Where(x => x.UserId == model.UserId && x.Type == (byte)EUserTagType.DEFAULT)
+                    .Select(x => x.Uid)
+                    .SingleOrDefaultAsync();
+            }
+            else
+            {
+                tagId = model.TodoId;
+            }
+
             await _dbContext.Todo.AddAsync(new Todo
             {
                 Uid = todoId,
@@ -86,7 +97,7 @@ namespace todoAPP.Services
                 ExecuteAt = model.ExecuteAt.ToUniversalTime(),
                 GeneralTodoPosition = maxGeneralTodoPosition + 1,
                 SwimlaneTodoPosition = maxSwimlaneTodoPosition + 1,
-                TagId = tag.Uid,
+                TagId = tagId,
                 KanbanSwimlaneId = swimlane.Uid,
                 UserId = model.UserId,
             });

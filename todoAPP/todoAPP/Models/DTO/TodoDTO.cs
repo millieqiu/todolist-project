@@ -10,6 +10,7 @@ public class CreateTodoDTO
   public string Title { get; set; } = string.Empty;
   public string Description { get; set; } = string.Empty;
   public DateTimeOffset ExecuteAt { get; set; } = DateTimeOffset.UnixEpoch;
+  public Guid TodoId { get; set; }
   public Guid UserId { get; set; }
 }
 
