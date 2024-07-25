@@ -29,6 +29,12 @@ module.exports = merge(common, {
     }),
     new VueLoaderPlugin.VueLoaderPlugin(),
   ],
+  resolve: {
+    alias: {
+      vue: "vue/dist/vue.esm-bundler.js",
+      "@": path.resolve(__dirname, "src/image"),
+    },
+  },
   optimization: {
     minimize: true,
     minimizer: [
