@@ -17,7 +17,7 @@ public class CreateTodoRequestModel
 
 	public DateTimeOffset? ExecuteAt { get; set; } = null;
 
-	public Guid TodoId { get; set; }
+	public Guid TagId { get; set; }
 }
 
 public class PatchTodoInfoRequestModel

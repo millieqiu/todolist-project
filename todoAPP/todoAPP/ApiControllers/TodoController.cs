@@ -38,7 +38,7 @@ public class TodoController : ControllerBase
             Title = model.Title,
             Description = model.Description,
             ExecuteAt = model.ExecuteAt ?? DateTimeOffset.UnixEpoch,
-            TodoId = model.TodoId,
+            TagId = model.TagId,
             UserId = _user.GetUserId(),
         }));
     }

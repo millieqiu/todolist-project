@@ -74,7 +74,7 @@ namespace todoAPP.Services
                 .FirstOrDefaultAsync();
 
             Guid tagId;
-            if (model.TodoId == Guid.Empty)
+            if (model.TagId == Guid.Empty)
             {
                 tagId = await _dbContext.UserTag
                     .Where(x => x.UserId == model.UserId && x.Type == (byte)EUserTagType.DEFAULT)
@@ -83,7 +83,7 @@ namespace todoAPP.Services
             }
             else
             {
-                tagId = model.TodoId;
+                tagId = model.TagId;
             }
 
             await _dbContext.Todo.AddAsync(new Todo
