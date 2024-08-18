@@ -97,7 +97,7 @@ const app = createApp({
         });
     }
 
-    // FIXME: dropdown 中的複製跟刪除點了沒反應
+    // NOTE: 對 <li> 標籤加 @click.prevent，且 <a> 標籤加 href="/" 就可以，但不曉得為什麼，待研究
     function copyTodoItem(item) {
       let params = {
         title: item.title,
