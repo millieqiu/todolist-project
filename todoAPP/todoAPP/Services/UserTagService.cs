@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using todoAPP.DTO;
+using todoAPP.Enums;
 using todoAPP.Models;
 using todoAPP.ViewModel;
 
@@ -8,7 +9,7 @@ namespace todoAPP.Services;
 public interface IUserTagService
 {
     public Task<IEnumerable<UserTagViewModel>> GetUserTagList(GetUserTagListDTO model);
-    public Task PatchUserTagName(PatchUserTagNameDTO model);
+    public Task PatchUserTagName(PatchUserTagDTO model);
 }
 
 public class UserTagService : IUserTagService
@@ -35,16 +36,18 @@ public class UserTagService : IUserTagService
             .ToListAsync();
     }
 
-    public async Task PatchUserTagName(PatchUserTagNameDTO model)
+    public async Task PatchUserTagName(PatchUserTagDTO model)
     {
         using var tx = await _dbContext.Database.BeginTransactionAsync();
 
-        var tag = await _dbContext.UserTag
-            .Where(x => x.Uid == model.UserTagId)
-            .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-        tag.Name = model.Name;
-        await _dbContext.SaveChangesAsync();
+        foreach (var tag in model.TagList)
+        {
+            await _dbContext.UserTag
+                .Where(x => x.Uid == tag.Uid && x.Type == (byte)EUserTagType.GENERAL && x.UserId == model.UserId)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.Name, tag.Name));
+        }
 
+        await _dbContext.SaveChangesAsync();
         await tx.CommitAsync();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using todoAPP.DTO;
 using todoAPP.RequestModel;
@@ -30,13 +31,16 @@ public class UserTagController : ControllerBase
     }
 
     [HttpPatch]
-    [Route("{Uid}")]
-    public async Task<IActionResult> PatchUserTagName([FromRoute] GeneralRouteRequestModel route, PatchUserTagNameRequestModel model)
+    public async Task<IActionResult> PatchUserTagName(IEnumerable<PatchUserTagNameRequestModel> model)
     {
-        await _userTag.PatchUserTagName(new PatchUserTagNameDTO
+        await _userTag.PatchUserTagName(new PatchUserTagDTO
         {
-            UserTagId = route.Uid,
-            Name = model.Name,
+            UserId = _user.GetUserId(),
+            TagList = model.Select(x => new PatchUserTagNameDTO
+            {
+                Uid = x.Uid,
+                Name = x.Name,
+            })
         });
         return Ok();
     }

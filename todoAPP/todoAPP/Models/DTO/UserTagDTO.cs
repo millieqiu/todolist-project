@@ -5,8 +5,14 @@ public class GetUserTagListDTO
     public Guid UserId { get; set; }
 }
 
+public class PatchUserTagDTO
+{
+    public Guid UserId { get; set; }
+    public IEnumerable<PatchUserTagNameDTO> TagList { get; set; } = new List<PatchUserTagNameDTO>();
+}
+
 public class PatchUserTagNameDTO
 {
-    public Guid UserTagId { get; set; }
+    public Guid Uid { get; set; }
     public string Name { get; set; } = string.Empty;
 }
