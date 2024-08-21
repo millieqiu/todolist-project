@@ -2,7 +2,7 @@
 
 public class OAuthConfig
 {
-    public const string SectionName = "OAuth";
+	public const string SectionName = "OAuth";
 	public OAuthGoogle Google { get; set; } = null!;
 }
 

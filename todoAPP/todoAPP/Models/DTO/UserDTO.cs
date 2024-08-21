@@ -32,8 +32,3 @@ public class PatchUserRoleDTO
 	public Guid UserId { get; set; }
 	public ERole Role { get; set; }
 }
-
-public class DeleteUserDTO
-{
-	public Guid UserId { get; set; }
-}

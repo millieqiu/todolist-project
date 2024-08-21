@@ -141,7 +141,7 @@ namespace todoAPP.Services
             {
                 model.TagId = await _dbContext.UserTag
                     .Where(x => x.UserId == model.UserId && x.Type == (byte)EUserTagType.DEFAULT)
-                    .Select(x=>x.Uid)
+                    .Select(x => x.Uid)
                     .SingleOrDefaultAsync();
             }
 
