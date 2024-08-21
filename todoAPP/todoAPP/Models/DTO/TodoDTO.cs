@@ -1,9 +1,4 @@
-﻿namespace todoAPP.DTO;
-
-public class GetTodoListDTO
-{
-  public Guid UserId { get; set; }
-}
+﻿namespace todoAPP.Models.DTO;
 
 public class CreateTodoDTO
 {
@@ -26,6 +21,7 @@ public class PatchTodoTagDTO
 {
   public Guid TodoId { get; set; }
   public Guid TagId { get; set; }
+  public Guid UserId { get; set; }
 }
 
 public class PatchGeneralTodoOrderDTO

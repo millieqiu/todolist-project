@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace todoAPP.RequestModel;
+namespace todoAPP.Models.RequestModel;
 
 public class CreateKanbanSwimlaneRequestModel
 {

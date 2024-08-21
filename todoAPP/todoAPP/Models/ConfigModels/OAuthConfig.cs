@@ -1,7 +1,8 @@
-﻿namespace todoAPP.ConfigModels;
+﻿namespace todoAPP.Models.ConfigModels;
 
 public class OAuthConfig
 {
+    public const string SectionName = "OAuth";
 	public OAuthGoogle Google { get; set; } = null!;
 }
 

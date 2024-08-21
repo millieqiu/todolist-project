@@ -1,55 +1,51 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace todoAPP.RequestModel;
+namespace todoAPP.Models.RequestModel;
 
 public class LoginRequestModel
 {
     [Required]
     [MaxLength(50)]
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; set; } = null!;
 
     [Required]
     [MaxLength(50)]
-    public string Password { get; set; } = string.Empty;
+    public string Password { get; set; } = null!;
 }
 
 public class RegisterRequestModel
 {
     [StringLength(50, MinimumLength = 1)]
     [EmailAddress]
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; set; } = null!;
 
     [StringLength(50, MinimumLength = 1)]
-    public string Password { get; set; } = string.Empty;
+    public string Password { get; set; } = null!;
 
     [StringLength(50, MinimumLength = 1)]
     [Compare("Password")]
-    public string ConfirmPassword { get; set; } = string.Empty;
+    public string ConfirmPassword { get; set; } = null!;
 
     [StringLength(50, MinimumLength = 1)]
-    public string Nickname { get; set; } = string.Empty;
+    public string Nickname { get; set; } = null!;
 }
 
 public class PatchUsernameRequestModel
 {
-    [Required]
-    [MaxLength(50)]
+    [StringLength(50, MinimumLength = 1)]
     [EmailAddress]
-    public string Username { get; set; }
+    public string Username { get; set; } = null!;
 }
 
 public class PatchPasswordRequestModel
 {
-    [Required]
-    [MaxLength(50)]
-    public string OldPassword { get; set; } = string.Empty;
+    [StringLength(50, MinimumLength = 1)]
+    public string OldPassword { get; set; } = null!;
 
-    [Required]
-    [MaxLength(50)]
-    public string NewPassword { get; set; } = string.Empty;
+    [StringLength(50, MinimumLength = 1)]
+    public string NewPassword { get; set; } = null!;
 
-    [Required]
-    [MaxLength(50)]
+    [StringLength(50, MinimumLength = 1)]
     [Compare("NewPassword")]
-    public string ConfirmNewPassword { get; set; } = string.Empty;
+    public string ConfirmNewPassword { get; set; } = null!;
 }

@@ -1,4 +1,4 @@
-﻿namespace todoAPP.ViewModel;
+﻿namespace todoAPP.Models.ViewModel;
 
 public class KanbanViewModel
 {

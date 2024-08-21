@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using todoAPP.DTO;
-using todoAPP.RequestModel;
+using todoAPP.Models.DTO;
+using todoAPP.Models.RequestModel;
 using todoAPP.Services;
 
 namespace todoAPP.ApiControllers;
@@ -11,68 +11,68 @@ namespace todoAPP.ApiControllers;
 [Route("/api/[controller]")]
 public class TodoController : ControllerBase
 {
-    private readonly ITodoListService _todo;
+    private readonly ITodoService _todo;
     private readonly IUserService _user;
+    private readonly Guid _userId;
 
-    public TodoController(ITodoListService todo, IUserService user)
+    public TodoController(ITodoService todo, IUserService user)
     {
         _todo = todo;
         _user = user;
+        _userId = _user.GetUserId();
     }
 
     [HttpGet]
     [Route("List")]
-    public async Task<IActionResult> GetTodoList([FromQuery] PaginationRequestModel model)
+    public async Task<IActionResult> GetTodoList()
     {
-        return Ok(await _todo.GetGeneralTodoList(new GetTodoListDTO
-        {
-            UserId = _user.GetUserId(),
-        }));
+        return Ok(await _todo.GetGeneralTodoList(_userId));
     }
 
     [HttpPost]
-    async public Task<IActionResult> CreateTodoItem(CreateTodoRequestModel model)
+    public async Task<IActionResult> CreateTodoItem(CreateTodoRequestModel model)
     {
         return Ok(await _todo.CreateTodo(new CreateTodoDTO
         {
             Title = model.Title,
             Description = model.Description,
-            ExecuteAt = model.ExecuteAt ?? DateTimeOffset.UnixEpoch,
+            ExecuteAt = model.ExecuteAt,
             TagId = model.TagId,
-            UserId = _user.GetUserId(),
+            UserId = _userId,
         }));
     }
 
     [HttpPatch]
-    [Route("{Uid}/Status")]
-    public async Task<IActionResult> ChangeTodoStatus([FromRoute] GeneralRouteRequestModel model)
+    [Route("{todoId}/Status")]
+    public async Task<IActionResult> ChangeTodoStatus(Guid todoId)
     {
-        await _todo.UpdateTodoStatus(model);
+        await _todo.UpdateTodoStatus(todoId);
         return Ok();
     }
 
     [HttpPatch]
-    [Route("{Uid}/Info")]
-    public async Task<IActionResult> UpdateTodoInfo([FromRoute] GeneralRouteRequestModel route, PatchTodoInfoRequestModel model)
+    [Route("{todoId}/Info")]
+    public async Task<IActionResult> UpdateTodoInfo(Guid todoId, PatchTodoInfoRequestModel model)
     {
         await _todo.UpdateTodoInfo(new PatchTodoInfoDTO
         {
             Title = model.Title,
             Description = model.Description,
-            ExecuteAt = model.ExecuteAt ?? DateTimeOffset.UnixEpoch,
-            TodoId = route.Uid,
+            ExecuteAt = model.ExecuteAt,
+            TodoId = todoId,
         });
         return Ok();
     }
 
     [HttpPatch]
-    [Route("{Uid}/Tag")]
-    public async Task<IActionResult> UpdateTodoTag([FromRoute] GeneralRouteRequestModel route, PatchTodoTagRequestModel model)
+    [Route("{todoId}/Tag")]
+    public async Task<IActionResult> UpdateTodoTag(Guid todoId, PatchTodoTagRequestModel model)
     {
         await _todo.UpdateTodoTag(new PatchTodoTagDTO
         {
-            TodoId = route.Uid,
+            TodoId = todoId,
             TagId = model.TagId,
+            UserId = _userId,
         });
         return Ok();
     }
@@ -83,7 +83,7 @@ public class TodoController : ControllerBase
     {
         await _todo.UpdateGeneralTodoOrder(new PatchGeneralTodoOrderDTO
         {
-            UserId = _user.GetUserId(),
+            UserId = _userId,
             DragTodoId = model.DragTodoId,
             DropPrevTodoId = model.DropPrevTodoId,
             DropNextTodoId = model.DropNextTodoId,
@@ -111,16 +111,16 @@ public class TodoController : ControllerBase
     {
         await _todo.DeleteAlreadyDoneTodo(new DeleteAlreadyDoneTodoDTO
         {
-            UserId = _user.GetUserId(),
+            UserId = _userId,
         });
         return Ok();
     }
 
     [HttpDelete]
-    [Route("{Uid}")]
-    public async Task<IActionResult> Delete([FromRoute] GeneralRouteRequestModel model)
+    [Route("{todoId}")]
+    public async Task<IActionResult> Delete(Guid todoId)
     {
-        await _todo.DeleteTodo(model);
+        await _todo.DeleteTodo(todoId);
         return Ok();
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using todoAPP.DTO;
 using todoAPP.Enums;
 using todoAPP.Models;
-using todoAPP.ViewModel;
+using todoAPP.Models.DTO;
+using todoAPP.Models.ViewModel;
 
 namespace todoAPP.Services;
 
@@ -14,7 +14,7 @@ public interface IKanbanService
 	public Task CreateKanbanSwimlane(CreateKanbanSwimlaneDTO model);
 	public Task PatchKanbanSwimlaneName(PatchKanbanSwimlaneNameDTO model);
 	public Task PatchKanbanSwimlaneOrder(PatchKanbanSwimlaneOrderDTO model);
-	public Task DeleteKanbanSwimlane(DeleteKanbanSwimlaneDTO model);
+	public Task DeleteKanbanSwimlane(Guid swimlaneId);
 }
 
 public class KanbanService : IKanbanService
@@ -172,12 +172,12 @@ public class KanbanService : IKanbanService
 		await tx.CommitAsync();
 	}
 
-	public async Task DeleteKanbanSwimlane(DeleteKanbanSwimlaneDTO model)
+	public async Task DeleteKanbanSwimlane(Guid swimlaneId)
 	{
 		using var tx = await _dbContext.Database.BeginTransactionAsync();
 
 		var swimlane = await _dbContext.KanbanSwimlane
-			.Where(x => x.Uid == model.KanbanSwimlaneId)
+			.Where(x => x.Uid == swimlaneId)
 			.SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
 		if (swimlane.Type == (byte)EKanbanSwimlaneType.DEFAULT)
 		{
@@ -185,7 +185,7 @@ public class KanbanService : IKanbanService
 		}
 
 		_dbContext.Todo.RemoveRange(
-			_dbContext.Todo.Where(x => x.KanbanSwimlaneId == model.KanbanSwimlaneId));
+			_dbContext.Todo.Where(x => x.KanbanSwimlaneId == swimlaneId));
 		_dbContext.KanbanSwimlane.Remove(swimlane);
 
 		await _dbContext.SaveChangesAsync();

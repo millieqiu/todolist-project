@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Claims;
-using todoAPP.DTO;
 using todoAPP.Enums;
 using todoAPP.Helpers;
 using todoAPP.Models;
-using todoAPP.RequestModel;
-using todoAPP.ViewModel;
+using todoAPP.Models.DTO;
+using todoAPP.Models.RequestModel;
+using todoAPP.Models.ViewModel;
 
 namespace todoAPP.Services;
 
@@ -16,7 +16,7 @@ public interface IUserService
 {
     public Guid GetUserId();
     public string GetClaim(string type);
-    public Task<UserInfoViewModel> GetUserInfo(GeneralRouteRequestModel model);
+    public Task<UserInfoViewModel> GetUserInfo(Guid userId);
     public Task<User> QueryUser(string username);
     public Task CreateUser(RegisterRequestModel model);
     public Task UpdateUsername(PatchUsernameDTO model);
@@ -25,7 +25,7 @@ public interface IUserService
     public Task<string> GetAvatar();
     public Task UpdateAvatar(PatchAvatarDTO model);
     public Task UpdateUserRole(PatchUserRoleDTO model);
-    public Task DeleteUser(DeleteUserDTO model);
+    public Task DeleteUser(Guid userId);
     public Task SignInUser(HttpContext context, User user);
     public Task<bool> CheckUsernameDuplicated(string username);
 }
@@ -57,10 +57,10 @@ public class UserService : IUserService
         return claimsIdentity.Value ?? throw new UnauthorizedAccessException("Identity not found");
     }
 
-    public async Task<UserInfoViewModel> GetUserInfo(GeneralRouteRequestModel model)
+    public async Task<UserInfoViewModel> GetUserInfo(Guid userId)
     {
         return await _dbContext.User
-            .Where(x => x.Uid == model.Uid)
+            .Where(x => x.Uid == userId)
             .Select(x => new UserInfoViewModel
             {
                 Uid = x.Uid,
@@ -140,13 +140,10 @@ public class UserService : IUserService
         using var tx = await _dbContext.Database.BeginTransactionAsync();
 
         if (await CheckUsernameDuplicated(model.Username))
-        {
-            throw new DuplicateNameException();
-        }
-        var user = await _dbContext.User
+            throw new ArgumentException("使用者名稱已存在");
+        await _dbContext.User
             .Where(x => x.Uid == model.UserId)
-            .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-        user.Username = model.Username;
+            .ExecuteUpdateAsync(setters => setters.SetProperty(x=>x.Username, model.Username));
 
         await _dbContext.SaveChangesAsync();
         await tx.CommitAsync();
@@ -156,11 +153,9 @@ public class UserService : IUserService
     {
         using var tx = await _dbContext.Database.BeginTransactionAsync();
 
-        var user = await _dbContext.User
+        await _dbContext.User
             .Where(x => x.Uid == model.UserId)
-            .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-
-        user.Nickname = model.Nickname;
+            .ExecuteUpdateAsync(setters => setters.SetProperty(x=>x.Nickname, model.Nickname));
 
         await _dbContext.SaveChangesAsync();
         await tx.CommitAsync();
@@ -215,31 +210,24 @@ public class UserService : IUserService
     {
         using var tx = await _dbContext.Database.BeginTransactionAsync();
 
-        var user = await _dbContext.User
+        await _dbContext.User
             .Where(x => x.Uid == model.UserId)
-            .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-        user.Role = (byte)model.Role;
+            .ExecuteUpdateAsync(setters => setters.SetProperty(x=>x.Role, (byte)model.Role));
 
         await _dbContext.SaveChangesAsync();
         await tx.CommitAsync();
     }
 
-    public async Task DeleteUser(DeleteUserDTO model)
+    public async Task DeleteUser(Guid userId)
     {
         using var tx = await _dbContext.Database.BeginTransactionAsync();
 
-        _dbContext.Todo.RemoveRange(
-            _dbContext.Todo.Where(x => x.UserId == model.UserId));
-        _dbContext.KanbanSwimlane.RemoveRange(
-            _dbContext.KanbanSwimlane.Where(x => x.Kanban.UserId == model.UserId));
-        _dbContext.Kanban.RemoveRange(
-            _dbContext.Kanban.Where(x => x.UserId == model.UserId));
-        _dbContext.UserTag.RemoveRange(
-            _dbContext.UserTag.Where(x => x.UserId == model.UserId));
-        var user = await _dbContext.User
-            .Where(x => x.Uid == model.UserId)
-            .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-        _dbContext.User.Remove(user);
+        await _dbContext.Todo.Where(x => x.UserId == userId).ExecuteDeleteAsync();
+        await _dbContext.Todo.Where(x => x.UserId == userId).ExecuteDeleteAsync();
+        await _dbContext.KanbanSwimlane.Where(x => x.Kanban.UserId == userId).ExecuteDeleteAsync();
+        await _dbContext.Kanban.Where(x => x.UserId == userId).ExecuteDeleteAsync();
+        await _dbContext.UserTag.Where(x => x.UserId == userId).ExecuteDeleteAsync();
+        await _dbContext.User.Where(x => x.Uid == userId).ExecuteDeleteAsync();
 
         await _dbContext.SaveChangesAsync();
         await tx.CommitAsync();

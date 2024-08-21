@@ -1,7 +1,8 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Http.Extensions;
-using todoAPP.ConfigModels;
-using todoAPP.ViewModel;
+using Microsoft.Extensions.Options;
+using todoAPP.Models.ConfigModels;
+using todoAPP.Models.ViewModel;
 
 namespace todoAPP.Services;
 
@@ -21,11 +22,11 @@ public class OAuthService : IOAuthService
     private readonly OAuthConfig _oauthConfig;
     private Uri _requestUrl;
 
-    public OAuthService(IHttpContextAccessor accessor, IHttpClientFactory clientFactory, OAuthConfig oauthConfig)
+    public OAuthService(IHttpContextAccessor accessor, IHttpClientFactory clientFactory, IOptions<OAuthConfig> oauthConfig)
     {
         _accessor = accessor;
         _clientFactory = clientFactory;
-        _oauthConfig = oauthConfig;
+        _oauthConfig = oauthConfig.Value;
         _requestUrl = new Uri($"{_accessor.HttpContext!.Request.Scheme}://{_accessor.HttpContext!.Request.Host}");
     }
 

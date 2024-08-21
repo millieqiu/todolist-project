@@ -1,4 +1,4 @@
-﻿namespace todoAPP.DTO;
+﻿namespace todoAPP.Models.DTO;
 
 public class InitKanbanDTO
 {

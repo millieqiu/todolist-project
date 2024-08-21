@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using todoAPP.RequestModel;
+using todoAPP.Models.RequestModel;
 using todoAPP.Services;
 
 namespace todoAPP.ApiControllers;

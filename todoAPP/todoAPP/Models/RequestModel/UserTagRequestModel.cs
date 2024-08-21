@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using todoAPP.ValidationAttributes;
 
-namespace todoAPP.RequestModel;
+namespace todoAPP.Models.RequestModel;
 
 public class PatchUserTagNameRequestModel
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using todoAPP.DTO;
-using todoAPP.RequestModel;
+using todoAPP.Models.DTO;
+using todoAPP.Models.RequestModel;
 using todoAPP.Services;
 
 namespace todoAPP.ApiControllers;
@@ -43,24 +43,24 @@ public class KanbanController : ControllerBase
 	}
 
 	[HttpPost]
-	[Route("{Uid}/Swimlane")]
-	public async Task<IActionResult> CreateKanbanSwimlane([FromRoute] GeneralRouteRequestModel route, CreateKanbanSwimlaneRequestModel model)
+	[Route("{kanbanId}/Swimlane")]
+	public async Task<IActionResult> CreateKanbanSwimlane(Guid kanbanId, CreateKanbanSwimlaneRequestModel model)
 	{
 		await _kanban.CreateKanbanSwimlane(new CreateKanbanSwimlaneDTO
 		{
-			KanbanId = route.Uid,
+			KanbanId = kanbanId,
 			Name = model.Name,
 		});
 		return Ok();
 	}
 
 	[HttpPatch]
-	[Route("Swimlane/{Uid}/Name")]
-	public async Task<IActionResult> PatchKanbanSwimlaneName([FromRoute] GeneralRouteRequestModel route, PatchKanbanSwimlaneNameRequestModel model)
+	[Route("Swimlane/{swimlaneId}/Name")]
+	public async Task<IActionResult> PatchKanbanSwimlaneName(Guid swimlaneId, PatchKanbanSwimlaneNameRequestModel model)
 	{
 		await _kanban.PatchKanbanSwimlaneName(new PatchKanbanSwimlaneNameDTO
 		{
-			KanbanSwimlaneId = route.Uid,
+			KanbanSwimlaneId = swimlaneId,
 			Name = model.Name,
 		});
 		return Ok();
@@ -80,13 +80,10 @@ public class KanbanController : ControllerBase
 	}
 
 	[HttpDelete]
-	[Route("Swimlane/{Uid}")]
-	public async Task<IActionResult> DeleteKanbanSwimlane([FromRoute] GeneralRouteRequestModel route)
+	[Route("Swimlane/{swimlaneId}")]
+	public async Task<IActionResult> DeleteKanbanSwimlane(Guid swimlaneId)
 	{
-		await _kanban.DeleteKanbanSwimlane(new DeleteKanbanSwimlaneDTO
-		{
-			KanbanSwimlaneId = route.Uid,
-		});
+		await _kanban.DeleteKanbanSwimlane(swimlaneId);
 		return Ok();
 	}
 }

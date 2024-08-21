@@ -1,9 +1,4 @@
-﻿namespace todoAPP.DTO;
-
-public class GetUserTagListDTO
-{
-    public Guid UserId { get; set; }
-}
+﻿namespace todoAPP.Models.DTO;
 
 public class PatchUserTagDTO
 {

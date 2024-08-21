@@ -19,15 +19,5 @@ public static class ServiceExtensions
             };
         });
     }
-
-    public static IServiceCollection AddSingletonConfig<TConfig>(this IServiceCollection services, IConfiguration section) where TConfig : class
-    {
-        return services.AddSingleton(p =>
-        {
-            var instance = Activator.CreateInstance<TConfig>();
-            section.Bind(instance);
-            return instance;
-        });
-    }
 }
 

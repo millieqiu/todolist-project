@@ -1,11 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace todoAPP.RequestModel;
-
-public class GetTodoListRequestModel
-{
-	public Guid UserId { get; set; }
-}
+namespace todoAPP.Models.RequestModel;
 
 public class CreateTodoRequestModel
 {
@@ -15,7 +10,7 @@ public class CreateTodoRequestModel
 	[MaxLength(250)]
 	public string Description { get; set; } = string.Empty;
 
-	public DateTimeOffset? ExecuteAt { get; set; } = null;
+	public DateTimeOffset ExecuteAt { get; set; } = DateTimeOffset.UnixEpoch;
 
 	public Guid TagId { get; set; }
 }
@@ -28,7 +23,7 @@ public class PatchTodoInfoRequestModel
 	[MaxLength(250)]
 	public string Description { get; set; } = string.Empty;
 
-	public DateTimeOffset? ExecuteAt { get; set; } = DateTimeOffset.UnixEpoch;
+	public DateTimeOffset ExecuteAt { get; set; } = DateTimeOffset.UnixEpoch;
 }
 
 public class PatchTodoTagRequestModel

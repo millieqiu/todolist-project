@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using todoAPP.Helpers;
-using todoAPP.RequestModel;
+using todoAPP.Models.RequestModel;
 using todoAPP.Services;
 
 namespace todoAPP.Pages

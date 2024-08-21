@@ -1,7 +1,7 @@
 using todoAPP.Enums;
 using TodoAPP_EnumService.Extensions;
 
-namespace todoAPP.ViewModel;
+namespace todoAPP.Models.ViewModel;
 
 public class TodoViewModel
 {

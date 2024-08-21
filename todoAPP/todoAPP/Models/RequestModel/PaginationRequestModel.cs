@@ -1,4 +1,4 @@
-namespace todoAPP.RequestModel;
+namespace todoAPP.Models.RequestModel;
 
 public class PaginationRequestModel
 {

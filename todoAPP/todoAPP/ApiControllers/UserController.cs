@@ -1,79 +1,67 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using todoAPP.RequestModel;
 using todoAPP.Services;
 using Microsoft.AspNetCore.StaticFiles;
-using System.Data;
-using todoAPP.DTO;
+using todoAPP.Models.RequestModel;
+using todoAPP.Models.DTO;
 
 namespace todoAPP.ApiControllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/[controller]")]
 public class UserController : ControllerBase
 {
     private readonly IUserService _user;
     private readonly AvatarService _avartar;
+    private readonly Guid _userId;
 
     public UserController(IUserService user, AvatarService avartar)
     {
         _user = user;
         _avartar = avartar;
+        _userId = _user.GetUserId();
     }
 
     [HttpGet]
-    [Authorize]
     [Route("Info")]
     public async Task<IActionResult> GetUserInfo()
     {
-        return Ok(await _user.GetUserInfo(new GeneralRouteRequestModel
-        {
-            Uid = _user.GetUserId()
-        }));
+        return Ok(await _user.GetUserInfo(_userId));
     }
 
     [HttpPatch]
-    [Authorize]
     [Route("Username")]
     public async Task<IActionResult> PatchUsername(PatchUsernameRequestModel model)
     {
-        try
+        await _user.UpdateUsername(new PatchUsernameDTO
         {
-            await _user.UpdateUsername(new PatchUsernameDTO
-            {
-                UserId = _user.GetUserId(),
-                Username = model.Username
-            });
-        }
-        catch (DuplicateNameException)
-        {
-            return BadRequest("帳號已存在");
-        }
+            UserId = _userId,
+            Username = model.Username
+        });
 
         return Ok();
     }
 
     [HttpPatch]
-    [Authorize]
     [Route("Nickname")]
     public async Task<IActionResult> PatchUserNickname(PatchNicknameRequestModel model)
     {
         await _user.UpdateNickname(new PatchNicknameDTO
         {
-            UserId = _user.GetUserId(),
+            UserId = _userId,
             Nickname = model.Nickname
         });
         return Ok();
     }
 
     [HttpPatch]
-    [Authorize]
     [Route("Password")]
     public async Task<IActionResult> PatchUserPassword(PatchPasswordRequestModel model)
     {
         await _user.ChangePassword(new PatchPasswordDTO
         {
-            UserId = _user.GetUserId(),
+            UserId = _userId,
             OldPassword = model.OldPassword,
             NewPassword = model.NewPassword,
         });
@@ -82,7 +70,6 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     [Route("Avatar")]
     public async Task<IActionResult> GetUserAvatar()
     {
@@ -104,7 +91,6 @@ public class UserController : ControllerBase
     }
 
     [HttpPatch]
-    [Authorize]
     [Route("Avatar")]
     public async Task<IActionResult> PatchUserAvatar([FromForm] IFormFile avatarFile)
     {
@@ -115,7 +101,7 @@ public class UserController : ControllerBase
 
         await _user.UpdateAvatar(new PatchAvatarDTO
         {
-            UserId = _user.GetUserId(),
+            UserId = _userId,
             File = avatarFile,
         });
 
@@ -123,15 +109,10 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete]
-    [Authorize]
     public async Task<IActionResult> DeleteUser()
     {
-        await _user.DeleteUser(new DeleteUserDTO
-        {
-            UserId = _user.GetUserId(),
-        });
+        await _user.DeleteUser(_userId);
         return Ok();
     }
-
 }
 

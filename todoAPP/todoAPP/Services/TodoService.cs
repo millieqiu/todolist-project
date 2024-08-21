@@ -1,38 +1,38 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using todoAPP.DTO;
 using todoAPP.Enums;
 using todoAPP.Models;
-using todoAPP.RequestModel;
-using todoAPP.ViewModel;
+using todoAPP.Models.DTO;
+using todoAPP.Models.RequestModel;
+using todoAPP.Models.ViewModel;
 
 namespace todoAPP.Services
 {
-    public interface ITodoListService
+    public interface ITodoService
     {
-        public Task<IEnumerable<TodoViewModel>> GetGeneralTodoList(GetTodoListDTO model);
+        public Task<IEnumerable<TodoViewModel>> GetGeneralTodoList(Guid userId);
         public Task<Guid> CreateTodo(CreateTodoDTO model);
-        public Task UpdateTodoStatus(GeneralRouteRequestModel model);
+        public Task UpdateTodoStatus(Guid todoId);
         public Task UpdateTodoInfo(PatchTodoInfoDTO model);
         public Task UpdateTodoTag(PatchTodoTagDTO model);
         public Task UpdateGeneralTodoOrder(PatchGeneralTodoOrderDTO model);
         public Task UpdateSwimlaneTodoOrder(PatchSwimlaneTodoOrderDTO model);
         public Task DeleteAlreadyDoneTodo(DeleteAlreadyDoneTodoDTO model);
-        public Task DeleteTodo(GeneralRouteRequestModel model);
+        public Task DeleteTodo(Guid todoId);
     }
 
-    public class TodoListService : ITodoListService
+    public class TodoService : ITodoService
     {
         private readonly DBContext _dbContext;
 
-        public TodoListService(DBContext dbContext)
+        public TodoService(DBContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<TodoViewModel>> GetGeneralTodoList(GetTodoListDTO model)
+        public async Task<IEnumerable<TodoViewModel>> GetGeneralTodoList(Guid userId)
         {
             return await _dbContext.Todo
-                .Where(x => x.UserId == model.UserId)
+                .Where(x => x.UserId == userId)
                 .OrderBy(x => x.GeneralTodoPosition)
                 .Select(x => new TodoViewModel
                 {
@@ -73,17 +73,12 @@ namespace todoAPP.Services
                 .Select(x => x.SwimlaneTodoPosition)
                 .FirstOrDefaultAsync();
 
-            Guid tagId;
             if (model.TagId == Guid.Empty)
             {
-                tagId = await _dbContext.UserTag
+                model.TagId = await _dbContext.UserTag
                     .Where(x => x.UserId == model.UserId && x.Type == (byte)EUserTagType.DEFAULT)
                     .Select(x => x.Uid)
                     .SingleOrDefaultAsync();
-            }
-            else
-            {
-                tagId = model.TagId;
             }
 
             await _dbContext.Todo.AddAsync(new Todo
@@ -97,7 +92,7 @@ namespace todoAPP.Services
                 ExecuteAt = model.ExecuteAt.ToUniversalTime(),
                 GeneralTodoPosition = maxGeneralTodoPosition + 1,
                 SwimlaneTodoPosition = maxSwimlaneTodoPosition + 1,
-                TagId = tagId,
+                TagId = model.TagId,
                 KanbanSwimlaneId = swimlane.Uid,
                 UserId = model.UserId,
             });
@@ -108,16 +103,15 @@ namespace todoAPP.Services
             return todoId;
         }
 
-        public async Task UpdateTodoStatus(GeneralRouteRequestModel model)
+        public async Task UpdateTodoStatus(Guid todoId)
         {
             var tx = await _dbContext.Database.BeginTransactionAsync();
 
-            var todoItem = await _dbContext.Todo
-                .Where(x => x.Uid == model.Uid)
-                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-            todoItem.Status = (byte)(todoItem.Status == (byte)ETodoStatus.UNDONE ?
-                ETodoStatus.DONE : ETodoStatus.UNDONE);
-            todoItem.UpdateAt = DateTimeOffset.UtcNow;
+            await _dbContext.Todo
+                .Where(x => x.Uid == todoId)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(x => x.Status, x => x.Status == (byte)ETodoStatus.UNDONE ? (byte)ETodoStatus.DONE : (byte)ETodoStatus.UNDONE)
+                    .SetProperty(y => y.UpdateAt, DateTimeOffset.UtcNow));
 
             await _dbContext.SaveChangesAsync();
             await tx.CommitAsync();
@@ -127,13 +121,13 @@ namespace todoAPP.Services
         {
             using var tx = await _dbContext.Database.BeginTransactionAsync();
 
-            var todoItem = await _dbContext.Todo
+            await _dbContext.Todo
                 .Where(x => x.Uid == model.TodoId)
-                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-            todoItem.Title = model.Title;
-            todoItem.Description = model.Description;
-            todoItem.ExecuteAt = model.ExecuteAt;
-            todoItem.UpdateAt = DateTimeOffset.UtcNow;
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(x => x.Title, model.Title)
+                    .SetProperty(x => x.Description, model.Description)
+                    .SetProperty(x => x.ExecuteAt, model.ExecuteAt)
+                    .SetProperty(x => x.UpdateAt, DateTimeOffset.UtcNow));
 
             await _dbContext.SaveChangesAsync();
             await tx.CommitAsync();
@@ -143,21 +137,19 @@ namespace todoAPP.Services
         {
             using var tx = await _dbContext.Database.BeginTransactionAsync();
 
-            var todoItem = await _dbContext.Todo
-                .Where(x => x.Uid == model.TodoId)
-                .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
             if (model.TagId == Guid.Empty)
             {
-                var deafultTag = await _dbContext.UserTag
-                    .Where(x => x.UserId == todoItem.UserId && x.Type == (byte)EUserTagType.DEFAULT)
-                    .SingleOrDefaultAsync() ?? throw new KeyNotFoundException();
-                todoItem.TagId = deafultTag.Uid;
+                model.TagId = await _dbContext.UserTag
+                    .Where(x => x.UserId == model.UserId && x.Type == (byte)EUserTagType.DEFAULT)
+                    .Select(x=>x.Uid)
+                    .SingleOrDefaultAsync();
             }
-            else
-            {
-                todoItem.TagId = model.TagId;
-            }
-            todoItem.UpdateAt = DateTimeOffset.UtcNow;
+
+            await _dbContext.Todo
+                .Where(x => x.Uid == model.TodoId)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(x => x.TagId, model.TagId)
+                    .SetProperty(x => x.UpdateAt, DateTimeOffset.UtcNow));
 
             await _dbContext.SaveChangesAsync();
             await tx.CommitAsync();
@@ -286,20 +278,19 @@ namespace todoAPP.Services
         {
             using var tx = await _dbContext.Database.BeginTransactionAsync();
 
-            var todoListQuery = _dbContext.Todo.Where(x => x.UserId == model.UserId && x.Status == (byte)ETodoStatus.DONE);
-            var todoIdList = await todoListQuery.Select(x => x.Uid).ToListAsync();
-            _dbContext.RemoveRange(todoListQuery);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.Todo
+                .Where(x => x.UserId == model.UserId && x.Status == (byte)ETodoStatus.DONE)
+                .ExecuteDeleteAsync();
 
+            await _dbContext.SaveChangesAsync();
             await tx.CommitAsync();
         }
 
-        public async Task DeleteTodo(GeneralRouteRequestModel model)
+        public async Task DeleteTodo(Guid todoId)
         {
             using var tx = await _dbContext.Database.BeginTransactionAsync();
 
-            _dbContext.Todo.RemoveRange(
-                _dbContext.Todo.Where(x => x.Uid == model.Uid));
+            await _dbContext.Todo.Where(x => x.Uid == todoId).ExecuteDeleteAsync();
 
             await _dbContext.SaveChangesAsync();
             await tx.CommitAsync();

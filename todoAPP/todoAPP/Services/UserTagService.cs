@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using todoAPP.DTO;
 using todoAPP.Enums;
 using todoAPP.Models;
-using todoAPP.ViewModel;
+using todoAPP.Models.DTO;
+using todoAPP.Models.ViewModel;
 
 namespace todoAPP.Services;
 
 public interface IUserTagService
 {
-    public Task<IEnumerable<UserTagViewModel>> GetUserTagList(GetUserTagListDTO model);
+    public Task<IEnumerable<UserTagViewModel>> GetUserTagList(Guid userId);
     public Task PatchUserTagName(PatchUserTagDTO model);
 }
 
@@ -21,10 +21,10 @@ public class UserTagService : IUserTagService
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<UserTagViewModel>> GetUserTagList(GetUserTagListDTO model)
+    public async Task<IEnumerable<UserTagViewModel>> GetUserTagList(Guid userId)
     {
         return await _dbContext.UserTag
-            .Where(x => x.UserId == model.UserId)
+            .Where(x => x.UserId == userId)
             .Select(x => new UserTagViewModel
             {
                 Uid = x.Uid,

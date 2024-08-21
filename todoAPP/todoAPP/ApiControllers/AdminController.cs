@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using todoAPP.DTO;
-using todoAPP.RequestModel;
+using todoAPP.Models.DTO;
+using todoAPP.Models.RequestModel;
 using todoAPP.Services;
 
 namespace todoAPP.ApiControllers;
@@ -12,8 +12,8 @@ namespace todoAPP.ApiControllers;
 public class AdminController : ControllerBase
 {
     private readonly IUserService _user;
-    private readonly ITodoListService _todo;
-    public AdminController(IUserService user, ITodoListService todo)
+    private readonly ITodoService _todo;
+    public AdminController(IUserService user, ITodoService todo)
     {
         _user = user;
         _todo = todo;
@@ -21,37 +21,31 @@ public class AdminController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    [Route("User/{Uid}/Todo/List")]
-    public async Task<IActionResult> AdminGetUserTodoList([FromRoute] GeneralRouteRequestModel route)
+    [Route("User/{userId}/Todo/List")]
+    public async Task<IActionResult> AdminGetUserTodoList(Guid userId)
     {
-        return Ok(await _todo.GetGeneralTodoList(new GetTodoListDTO
-        {
-            UserId = route.Uid
-        }));
+        return Ok(await _todo.GetGeneralTodoList(userId));
     }
 
 
     [HttpPatch]
     [Authorize(Roles = "Admin")]
-    [Route("User/{Uid}/Role")]
-    public async Task<IActionResult> PatchUserRole([FromRoute] GeneralRouteRequestModel route, PatchRoleRequestModel model)
+    [Route("User/{userId}/Role")]
+    public async Task<IActionResult> PatchUserRole(Guid userId, PatchRoleRequestModel model)
     {
         await _user.UpdateUserRole(new PatchUserRoleDTO
         {
-            UserId = route.Uid,
+            UserId = userId,
             Role = model.Role,
         });
         return Ok();
     }
 
     [HttpDelete]
-    [Route("User/{Uid}")]
-    public async Task<IActionResult> DeleteUser([FromRoute] GeneralRouteRequestModel route)
+    [Route("User/{userId}")]
+    public async Task<IActionResult> DeleteUser(Guid userId)
     {
-        await _user.DeleteUser(new DeleteUserDTO
-        {
-            UserId = route.Uid,
-        });
+        await _user.DeleteUser(userId);
         return Ok();
     }
 }

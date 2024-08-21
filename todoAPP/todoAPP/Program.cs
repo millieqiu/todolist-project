@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
-using todoAPP.ConfigModels;
 using todoAPP.Extensions;
 using todoAPP.Models;
+using todoAPP.Models.ConfigModels;
 using todoAPP.Services;
 
 namespace todoAPP;
@@ -58,8 +58,8 @@ public class Program
         builder.Services.AddHttpClient();
         builder.Services.AddHttpContextAccessor();
 
-        builder.Services.AddSingletonConfig<OAuthConfig>(builder.Configuration.GetSection("OAuth"));
-        builder.Services.AddTransient<ITodoListService, TodoListService>();
+        builder.Services.Configure<OAuthConfig>(builder.Configuration.GetSection(OAuthConfig.SectionName));
+        builder.Services.AddTransient<ITodoService, TodoService>();
         builder.Services.AddTransient<IUserService, UserService>();
         builder.Services.AddTransient<AvatarService>();
         builder.Services.AddTransient<IOAuthService, OAuthService>();
