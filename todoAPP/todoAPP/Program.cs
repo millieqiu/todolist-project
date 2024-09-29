@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 using todoAPP.Extensions;
+using todoAPP.Middlewares;
 using todoAPP.Models;
 using todoAPP.Models.ConfigModels;
 using todoAPP.Services;
@@ -33,8 +34,8 @@ public class Program
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
+                options.Cookie.Name = "TODOLIST";
                 options.LoginPath = "/Login";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
                 options.SlidingExpiration = true;
 
                 // 當要存取內容但驗證沒過時，會RedirectToLogin
@@ -78,23 +79,16 @@ public class Program
             app.UseHsts();
         }
 
-        app.UseExceptionHandleMiddleware();
+        app.UseMiddleware<ExceptionHandleMiddleware>();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
-        app.UseRouting();
 
         app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapRazorPages();
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapRazorPages();
-            endpoints.MapControllers();
-        });
+        app.MapControllers();
 
         app.UseOpenApi();
         app.UseSwaggerUi3();

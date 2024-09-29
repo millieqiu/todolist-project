@@ -49,6 +49,7 @@ namespace todoAPP.Services
                         Uid = x.Tag.Uid,
                         Type = x.Tag.Type,
                         Name = x.Tag.Name,
+                        Color = x.Tag.Color,
                     }
                 })
                 .ToListAsync();

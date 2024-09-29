@@ -29,7 +29,8 @@ public class UserTagService : IUserTagService
             {
                 Uid = x.Uid,
                 Type = x.Type,
-                Name = x.Name
+                Name = x.Name,
+                Color = x.Color,
             })
             .OrderBy(x => x.Type)
             .ThenBy(x => x.Name)
