@@ -25,7 +25,7 @@
     <base-page-title :title="'@ViewData["Title"]'"></base-page-title>
     <div class="flex-1">
       <table class="table table-todo">
-        <tr class="hover" v-for="(item, index) in todoList.filter((x) => x.status == 0)">
+        <tr class="hover" v-for="(item, index) in todoList.filter((x) => x.status == 0)" :key="item.uid">
           <td class="text-center border-l-4 border-indigo-500 w-8">
             <label>
               <input type="checkbox" class="checkbox" :checked="item.status" @@change="changeTodoStatus(item.uid)" />
@@ -111,7 +111,7 @@
         <div class="divider my-0"></div>
       </div>
       <table class="table table-todo" v-if="!isHideDoneTodo">
-        <tr class="hover" v-for="(item, index) in todoList.filter((x) => x.status == 1)">
+        <tr class="hover" v-for="(item, index) in todoList.filter((x) => x.status == 1)" :key="item.uid">
           <td class="text-center border-l-4 border-indigo-500 w-8">
             <label>
               <input type="checkbox" class="checkbox" :checked="item.status" @@change="changeTodoStatus(item.uid)" />

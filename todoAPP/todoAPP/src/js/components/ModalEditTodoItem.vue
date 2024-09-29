@@ -14,11 +14,9 @@
               d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
           </svg>
         </label>
-        <select class="select select-bordered w-full">
+        <select class="select select-bordered w-full" v-model="todoForm.tagId">
           <option disabled selected>待辦事項標籤</option>
-          <option>Normal Apple</option>
-          <option>Normal Orange</option>
-          <option>Normal Tomato</option>
+          <option v-for="item in labelList" :key="item.uid" :value="item.uid">{{ item.name }}</option>
         </select>
         <textarea class="textarea textarea-bordered" rows="5" placeholder="備註及描述"
           v-model="todoForm.description"></textarea>
@@ -53,9 +51,12 @@ export default {
       title: "",
       executeAt: null,
       description: "",
-      isComplete: false
+      isComplete: false,
+      tagId: null
     };
     const todoForm = reactive({ ...defaultTodoForm });
+
+    const labelList = ref([]);
 
     const updateList = inject("update");
 
@@ -64,6 +65,7 @@ export default {
     function openModal(item) {
       isEdit.value = item ? true : false;
       Object.assign(todoForm, item);
+      getLabelList();
       modalEl.value.showModal();
     }
 
@@ -77,7 +79,8 @@ export default {
       let params = {
         title: todoForm.title,
         description: todoForm.description,
-        executeAt: todoForm.executeAt
+        executeAt: todoForm.executeAt,
+        tagId: todoForm.tagId
       }
       axios.post('/api/Todo', params)
         .then(function (response) {
@@ -107,6 +110,16 @@ export default {
         closeModal();
     }
 
+    function getLabelList() {
+      axios.get(`/api/UserTag/List`)
+        .then(function (response) {
+          labelList.value = response.data.filter((i) => i.type);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
     return {
       modalEl,
       openModal,
@@ -115,6 +128,7 @@ export default {
       isEdit,
       todoForm,
       formatDateTime,
+      labelList,
 
       createTodoItem,
       editTodoItem,

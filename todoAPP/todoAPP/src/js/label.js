@@ -2,7 +2,7 @@
 import "../css/label.scss";
 
 // # Vue
-import { createApp, ref } from "vue";
+import { createApp, ref, onMounted } from "vue";
 
 // # Custom Components
 import BaseHeader from "./components/BaseHeader.vue";
@@ -11,6 +11,7 @@ import BasePageTitle from "./components/BasePageTitle.vue";
 
 // # Enums & Functions
 import { tagColorsEnum } from "./common/enum";
+import axios from "axios";
 
 const app = createApp({
   components: {
@@ -22,40 +23,19 @@ const app = createApp({
 
     const isEdit = ref(false);
 
-    const fakeLabelList = ref([
-      {
-        name: "工作",
-        color: "fill-rose-400"
-      },
-      {
-        name: "待辦事項",
-        color: "fill-amber-400"
-      },
-      {
-        name: "約會",
-        color: "fill-amber-400"
-      },
-      {
-        name: "紀念日",
-        color: "fill-amber-400"
-      },
-      {
-        name: "出去玩",
-        color: "fill-amber-400"
-      },
-      {
-        name: "還沒想好名稱",
-        color: "fill-amber-400"
-      },
-      {
-        name: "還沒想好名稱",
-        color: "fill-amber-400"
-      },
-      {
-        name: "超長的標籤名稱最多25個字超長的標籤名稱最多25個字超長的標籤名稱最多25個字",
-        color: "fill-amber-400"
-      },
-    ])
+    const labelList = ref([]);
+
+    async function getLabelList() {
+      await axios
+        .get("/api/UserTag/List")
+        .then((res) => {
+          console.log(res);
+          labelList.value = res.data.filter((i) => i.type);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
 
     function editTags() {
       isEdit.value = true;
@@ -72,8 +52,12 @@ const app = createApp({
       // 資料復原
     }
 
+    onMounted(async () => {
+      await getLabelList();
+    });
+
     return {
-      fakeLabelList,
+      labelList,
       tagColorsEnum,
       isEdit,
       editTags,
