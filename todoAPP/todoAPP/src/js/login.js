@@ -5,7 +5,7 @@ import "../css/login.scss";
 import { createApp, ref } from "vue";
 
 // TODO: 把 axios 拆出去
-import axios from "axios";
+import axios from "./common/api";
 
 const app = createApp({
   setup() {

@@ -25,6 +25,7 @@
     "sass": "^1.65.1",
     "sass-loader": "^13.3.2",
     "style-loader": "^3.3.3",
+    "sweetalert2": "^11.14.1",
     "terser-webpack-plugin": "^5.3.9",
     "vue": "^3.4.19",
     "vue-loader": "^17.4.2",

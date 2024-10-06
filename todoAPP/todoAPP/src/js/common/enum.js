@@ -6,6 +6,6 @@ export const tagColorsEnum = {
   5: "fill-sky-400",
   6: "fill-violet-400",
   7: "fill-pink-400",
-  8: "fill-stone-500"
+  8: "fill-stone-400"
 }
 

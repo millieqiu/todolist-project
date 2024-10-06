@@ -10,7 +10,6 @@ import BaseSidebar from "./components/BaseSidebar.vue";
 import BasePageTitle from "./components/BasePageTitle.vue";
 
 // # Enums & Functions
-import { tagColorsEnum } from "./common/enum";
 import axios from "axios";
 
 const app = createApp({
@@ -58,7 +57,6 @@ const app = createApp({
 
     return {
       labelList,
-      tagColorsEnum,
       isEdit,
       editTags,
       updateTags,

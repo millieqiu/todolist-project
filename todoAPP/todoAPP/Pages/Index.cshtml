@@ -26,7 +26,8 @@
     <div class="flex-1">
       <table class="table table-todo">
         <tr class="hover" v-for="(item, index) in todoList.filter((x) => x.status == 0)" :key="item.uid">
-          <td class="text-center border-l-4 border-indigo-500 w-8">
+          <!-- FIXME: 待修正（由於 tailwind 使用 treeshaking，無法用變數的方式 gen 出顏色的 class 名稱，需直接 config variants）-->
+          <td class="text-center border-l-4 w-8" :class="`border-${item.tag?.color}-400`">
             <label>
               <input type="checkbox" class="checkbox" :checked="item.status" @@change="changeTodoStatus(item.uid)" />
             </label>
@@ -112,7 +113,7 @@
       </div>
       <table class="table table-todo" v-if="!isHideDoneTodo">
         <tr class="hover" v-for="(item, index) in todoList.filter((x) => x.status == 1)" :key="item.uid">
-          <td class="text-center border-l-4 border-indigo-500 w-8">
+          <td class="text-center border-l-4 w-8" :class="`border-${item.tag?.color}-400`">
             <label>
               <input type="checkbox" class="checkbox" :checked="item.status" @@change="changeTodoStatus(item.uid)" />
             </label>
